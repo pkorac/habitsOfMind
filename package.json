@@ -1,0 +1,20 @@
+{
+  "name": "AuthExample",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "dependencies": {
+	  "bcrypt": "*",
+	  "express": "3.3.5",
+	  "connect-flash": "0.1.1",
+	  "passport": "0.1.17",
+	  "passport-local": "0.1.6",
+	  "ejs": "0.8.3"
+  },
+  "author": "",
+  "license": "BSD"
+}
