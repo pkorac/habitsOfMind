@@ -19,7 +19,7 @@ var depth = 12;
 passport.use(new LocalStrategy(
 	function(username, password, done) {
 		process.nextTick( function(){
-			
+			console.log("authentication strategy called");
 			findUserByName( username, function(err, user){
 				if(err) return done(err); // tough shit
 				if(!user) return done( null, false, {message: "No such user"} ); // wrong username
@@ -34,7 +34,6 @@ passport.use(new LocalStrategy(
 
 // Authenticate function (called on post)
 function authenticate( success, failure ){
-	console.log("authenticating");
 	return passport.authenticate('local', { 
 									successRedirect: success,
 									failureRedirect: failure,
@@ -44,23 +43,33 @@ function authenticate( success, failure ){
 
 // Session serialisation
 passport.serializeUser(function(user, done) {
-  done(null, user.name);
+  done(null, [user.name, user.type] );
 });
 
-passport.deserializeUser(function(username, done) {
-	findUserByName( username, function(err, user){
-		done( err, user );
+passport.deserializeUser(function(userdata, done) {
+	findUserByName( userdata[0], function(err, user){
+		done( err, [user.name, user.type] );
 	} );
 });
+
+/*
+passport.deserializeUser(function(username, done) {
+	findUserByName( username, function(err, user){
+		done( err, [user.name, user.type] );
+	} );
+});
+*/
 
 
 
 
 // Authentication Check (whether we're authenticated or not)
 function authCheck( req, res, next ){
+	console.log( req.user );
 	if ( req.isAuthenticated() ) return next();
 	res.redirect('login');
 }
+
 
 // Logout
 function logout( path ){

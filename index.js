@@ -37,8 +37,9 @@ app.configure( function(){
 ////////////////////////////////////
 // Routes
 ////////////////////////////////////
+// GET
 app.get('/', function(req, res ){
-	res.render('index', { title: "Authentication example" } );
+	res.render('index', { title: "Authentication start" } );
 } );
 
 app.get('/login', function(req, res){
@@ -46,11 +47,20 @@ app.get('/login', function(req, res){
 });
 
 app.get('/userarea', auth.authCheck, function(req,res){
-	res.render('userarea', { title: "Authentication example" } );
+	res.render('userarea', { title: "Students authenticated" } );
 });
 
-app.get('/logout', auth.logout('/login') );
+app.get('/teacherarea', auth.authCheck, function(req,res){
+	res.render('teacherarea', { title: "Teacher authenticated" } );
+});
 
+app.get('/admin', auth.authCheck, function( req, res ){
+	res.render('admin', {title: "Authentication start" });
+} );
+
+app.get('/logout', auth.logout('/') );
+
+// POST
 app.post('/login', auth.authenticate('/userarea', '/login') );
 
 
