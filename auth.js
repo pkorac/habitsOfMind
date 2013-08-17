@@ -43,24 +43,16 @@ function authenticate( success, failure ){
 
 // Session serialisation
 passport.serializeUser(function(user, done) {
-  done(null, [user.name, user.type] );
+	console.log("serialising");
+	done(null, user.name );
 });
 
-passport.deserializeUser(function(userdata, done) {
-	findUserByName( userdata[0], function(err, user){
-		done( err, [user.name, user.type] );
-	} );
-});
-
-/*
 passport.deserializeUser(function(username, done) {
+	console.log("de-serialising");
 	findUserByName( username, function(err, user){
-		done( err, [user.name, user.type] );
+		done( err, user );
 	} );
 });
-*/
-
-
 
 
 // Authentication Check (whether we're authenticated or not)

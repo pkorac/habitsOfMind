@@ -46,8 +46,8 @@ app.get('/login', function(req, res){
 	res.render('login', { message: req.flash('error') } );
 });
 
-app.get('/userarea', auth.authCheck, function(req,res){
-	res.render('userarea', { title: "Students authenticated" } );
+app.get('/studentarea', auth.authCheck, function(req,res){
+	res.render('studentarea', { title: "Students authenticated" } );
 });
 
 app.get('/teacherarea', auth.authCheck, function(req,res){
@@ -61,7 +61,7 @@ app.get('/admin', auth.authCheck, function( req, res ){
 app.get('/logout', auth.logout('/') );
 
 // POST
-app.post('/login', auth.authenticate('/userarea', '/login') );
+app.post('/login', auth.authenticate('/studentarea', '/login') );
 
 
 
