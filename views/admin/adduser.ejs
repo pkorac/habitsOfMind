@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>Admin - Add User</title>
+	<link rel="stylesheet" href="../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+
+	
+</head>
+<body>
+	
+	<h1>Admin area</h1>
+	<h3>Add User</h3>
+	
+	<form>
+		<div>
+	        <label>Username:</label>
+	        <input type="text" name="username"/>
+	    </div>
+	    <div>
+	        <label>Password:</label>
+	        <input type="text" name="password"/>
+	    </div>
+	    <div>
+	    	<label>Type</label>
+	    	
+	    	<select name="usertype">
+	    		<% for ( var type in types ){ %>
+					<option value="<%= type %>"><%= type %></option>
+				<% } %>
+			</select>
+	    	
+	    </div>
+	    <div>
+	        <input type="submit" value="Add"/>
+	    </div>	
+	</form>
+	
+	
+
+</body>
+</html>
