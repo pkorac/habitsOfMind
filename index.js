@@ -1,5 +1,5 @@
 // External Modules
-var express = require('express'),
+var express = require('express'),	
 	flash = require('connect-flash');
 
 var app = express();
@@ -20,10 +20,10 @@ app.configure( function(){
 	app.use(express.cookieParser());
 	app.use(express.cookieSession({ secret: 'shakabum', 
 							  cookie: { maxAge: 180000 } })); // session expiry in 3 minutes
-	app.use(flash());
+	app.use( flash() );
 });
 
-
+var flasherror = 'error';
 
 
 
@@ -36,7 +36,8 @@ app.get('/', function(req, res ){
 } );
 
 app.get('/login', function(req, res){
-	res.render('login', { message: req.flash('error') } );
+	
+	res.render('login', { message: req.flash( flasherror ) } );
 });
 
 app.get('/studentarea', auth.check, function(req,res){

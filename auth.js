@@ -1,10 +1,12 @@
 // Requires
 var	express = require('express'),
+	flash = require('connect-flash'),
 	bcrypt = require('bcrypt');
 
 var db = require('./db');
 
 var loginRoute = '/login';
+var flasherror = 'error';
 	
 // Config
 var depth = 12;
@@ -19,10 +21,12 @@ function login( req, res, next ){
 		var user = findUserbyName( req.body.username );
 		if ( !user ) {
 			//console.log( "Wrong user" );
+			req.flash('error', 'Wrong username');
 			res.redirect( loginRoute );
 			return false;
 		} else if( !req.body.password || !bcrypt.compareSync( req.body.password, user.password ) ){
-			console.log( "Wrong password" );
+			//console.log( "Wrong password" );
+			req.flash('error', 'Wrong password');
 			res.redirect( loginRoute );
 			return false;
 		} else{
