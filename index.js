@@ -31,6 +31,14 @@ var flasherror = 'error';
 // Routes
 ////////////////////////////////////
 // GET
+
+// Https redirect
+app.all('*', function(req,res,next){
+	var stuff = req.host;
+	res.send( stuff );
+});
+
+// Carry on
 app.get('/', function(req, res ){
 	res.render('index', { title: "Authentication start" } );
 } );
