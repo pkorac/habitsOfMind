@@ -1,7 +1,6 @@
 // External Modules
 var express = require('express'),
-	flash = require('connect-flash'),
-	passport = require('passport');
+	flash = require('connect-flash');
 
 var app = express();
 
@@ -17,17 +16,11 @@ app.configure( function(){
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
 	app.use( express.static('bs') );
-	
-	app.use(express.cookieParser());
 	app.use(express.bodyParser());
-	app.use(express.methodOverride());
-	app.use(express.session({ secret: 'shakabum', 
+	app.use(express.cookieParser());
+	app.use(express.cookieSession({ secret: 'shakabum', 
 							  cookie: { maxAge: 180000 } })); // session expiry in 3 minutes
-	app.use(flash());	
-	app.use(passport.initialize());
-	app.use(passport.session());
-	app.use(app.router);
-
+	app.use(flash());
 });
 
 
@@ -46,22 +39,26 @@ app.get('/login', function(req, res){
 	res.render('login', { message: req.flash('error') } );
 });
 
-app.get('/studentarea', auth.authCheck, function(req,res){
+app.get('/studentarea', auth.check, function(req,res){
 	res.render('studentarea', { title: "Students authenticated" } );
 });
 
-app.get('/teacherarea', auth.authCheck, function(req,res){
+app.get('/teacherarea', auth.check, function(req,res){
 	res.render('teacherarea', { title: "Teacher authenticated" } );
 });
 
-app.get('/admin', auth.authCheck, function( req, res ){
+app.get('/admin', auth.check, function( req, res ){
 	res.render('admin', {title: "Authentication start" });
 } );
 
-app.get('/logout', auth.logout('/') );
+app.get('/logout', auth.logout, function(req,res){
+	res.send("Logged out");
+} );
 
 // POST
-app.post('/login', auth.authenticate('/studentarea', '/login') );
+app.post('/login', auth.login, function(req, res){
+	res.send("Logged in");
+} );
 
 
 

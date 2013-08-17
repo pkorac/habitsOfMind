@@ -1,11 +1,10 @@
 // Requires
 var	express = require('express'),
-	passport = require('passport'),
-	LocalStrategy = require('passport-local').Strategy,
-	flash = require('connect-flash'),
 	bcrypt = require('bcrypt');
 
 var db = require('./db');
+
+var loginRoute = '/login';
 	
 // Config
 var depth = 12;
@@ -14,77 +13,56 @@ var depth = 12;
 ///////////////////////////////////////////////////////////////////////////
 // Authentication functions
 
-
-// Authentication strategy && password verification
-passport.use(new LocalStrategy(
-	function(username, password, done) {
-		process.nextTick( function(){
-			console.log("authentication strategy called");
-			findUserByName( username, function(err, user){
-				if(err) return done(err); // tough shit
-				if(!user) return done( null, false, {message: "No such user"} ); // wrong username
-				if( !bcrypt.compareSync( password, user.password ) ) return done(null, false, {message: "Wrong password"}); // wrong password
-				return done( null, user ); // all good
-				
-			} );
-			
-		} );
-	}
-));
-
-// Authenticate function (called on post)
-function authenticate( success, failure ){
-	return passport.authenticate('local', { 
-									successRedirect: success,
-									failureRedirect: failure,
-									failureFlash: true });
-
-}
-
-// Session serialisation
-passport.serializeUser(function(user, done) {
-	console.log("serialising");
-	done(null, user.name );
-});
-
-passport.deserializeUser(function(username, done) {
-	console.log("de-serialising");
-	findUserByName( username, function(err, user){
-		done( err, user );
-	} );
-});
-
-
-// Authentication Check (whether we're authenticated or not)
-function authCheck( req, res, next ){
-	console.log( req.user );
-	if ( req.isAuthenticated() ) return next();
-	res.redirect('login');
-}
-
-
-// Logout
-function logout( path ){
-	return function(req, res){
-		req.logout();
-		res.redirect( path );
+// LOGIN
+function login( req, res, next ){
+	if ( req.body && req.body.username ){
+		var user = findUserbyName( req.body.username );
+		if ( !user ) {
+			//console.log( "Wrong user" );
+			res.redirect( loginRoute );
+			return false;
+		} else if( !req.body.password || !bcrypt.compareSync( req.body.password, user.password ) ){
+			console.log( "Wrong password" );
+			res.redirect( loginRoute );
+			return false;
+		} else{
+			//console.log( "Should start logging in" );
+			req.session.auth = true;
+			next();
+		}
 	}
 }
+
+// LOGOUT
+function logout(req,res,next){
+	req.session = null;
+	next();
+}
+
+// AUTHENTICATION CHECK
+function check( req, res, next ){
+	if ( req.session && req.session.auth === true ){
+		next();	
+	} else{
+		res.redirect( loginRoute );
+	}
+}
+
 
 
 ///////////////////////////////////////////////////////////////////////////
 // Supporting functions
 
-// Find users by name
-function findUserByName( user, fn ){
+// Find User by Name
+function findUserbyName( name ){
 	var users = db.uandp();
-	for (var i = 0; i < users.length; i++){
-		if( user === users[i].name ){
-			return fn(null, users[i] );
+	for ( var i = 0; i < users.length; i++ ){
+		if ( users[i].name === name ){
+			return users[i];
 		}
 	}
-	return fn(null, null);
-};
+	return null;
+}
 
 
 // Hash the password
@@ -107,9 +85,11 @@ function hash( pass ){
 ///////////////////////////////////////////////////////////////////////////
 // Exports
 exports.hash = hash;
-exports.authCheck = authCheck;
-exports.authenticate = authenticate;
+exports.check = check;
+exports.login = login;
 exports.logout = logout;
+
+
 
 
 
