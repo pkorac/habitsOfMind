@@ -35,6 +35,8 @@ var flasherror = 'error';
 // Https redirect
 app.all('*', function(req,res,next){
 	var stuff = req.host;
+	stuff += " : " + req.originalUrl;
+	if ( !req.secure ) stuff += "<br/> NOT SECURE";
 	res.send( stuff );
 });
 
