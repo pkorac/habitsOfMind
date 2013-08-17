@@ -1,4 +1,5 @@
-habitsOfMind
-============
+# Habits of mind
 
-Habits of Mind project
+### A web app focusing on learning habits instead of grades
+
+Created by Peter Koraca in collaboration with Thomas Tallis School
