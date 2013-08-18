@@ -1,46 +1,67 @@
 // Requires
 var	express = require('express'),
 	flash = require('connect-flash'),
-	bcrypt = require('bcrypt'),
 	url = require('url');
 
 var db = require('./db'),
 	config = require('./config');
 
-var loginRoute = config.loginRoute;
-var deniedRoute = config.deniedRoute;
-	
-// Config
-var depth = 12;
-
 
 ///////////////////////////////////////////////////////////////////////////
+//
 // Authentication functions
+//
+///////////////////////////////////////////////////////////////////////////
 
 // LOGIN
+
 function login( req, res, next ){
-	process.nextTick( function(){
-		if ( req.body && req.body.username ){
-			var user = db.findUserbyName( req.body.username );
-			if ( !user ) {
-				//console.log( "Wrong user" );
-				req.flash('error', 'Wrong username');
+	if ( req.body && req.body.username ){
+		
+		db.findUserbyName( req.body.username, function(err, user){
+			
+			if (!user){
+				// No such user
+				req.flash( config.flashError, 'Wrong username');
 				res.redirect( loginRoute );
 				return false;
-			} else if( !req.body.password || !bcrypt.compareSync( req.body.password, user.password ) ){
-				//console.log( "Wrong password" );
-				req.flash('error', 'Wrong password');
-				res.redirect( loginRoute );
-				return false;
-			} else {
-				//console.log( "Should start logging in" );
-				req.session.usertype = user.type;
-				req.session.auth = true;
-				next();
+
+			} else{
+				
+				if ( user.validationtoken ){
+					// should authorize with the token
+					res.redirect( config.registerRoute );
+					return false;
+				}
+				
+				db.checkPassword( req.body.password, user.password, function(err, passcheck){
+					
+					if (!passcheck || err){
+						// wrong pass
+						req.flash('error', 'Wrong password');
+						res.redirect( config.loginRoute );
+						return false;
+					} else{
+						// right pass
+						req.session.username = user.name
+						req.session.usertype = user.type;
+						req.session.auth = true;
+						next();
+					}
+					
+				} );
 			}
-		}
-	} );
+			
+		} );
+		
+	} else{
+		// No username submited
+		req.flash( config.flashError, 'No username or data submitted');
+		res.redirect( loginRoute );
+		return false;
+	}
 }
+
 
 // LOGOUT
 function logout(req,res,next){
@@ -65,54 +86,22 @@ function check( req, res, next ){
 			}
 		}
 		//console.log( "Not allowed here" );
-		res.redirect( deniedRoute );		
+		res.redirect( config.deniedRoute );		
 	} else{
-		res.redirect( loginRoute );
+		res.redirect( config.loginRoute );
 	}
 }
 
 
 
 ///////////////////////////////////////////////////////////////////////////
-// Supporting functions
-
-// Find User by Name
-function findUserbyName( name ){
-	var users = db.users();
-	for ( var i = 0; i < users.length; i++ ){
-		if ( users[i].name === name ){
-			return users[i];
-		}
-	}
-	return null;
-}
-
-
-// Hash the password
-function hash( pass ){
-	if ( pass ){
-		console.log("Hashing " + pass );
-		bcrypt.hash( pass, depth, function(err, hash){
-			if (!err) {
-				console.log(hash);
-				return false;
-			} else{
-				return hash;
-			}
-		} );
-	}
-	return false;
-}
-
-
-///////////////////////////////////////////////////////////////////////////
+//
 // Exports
-exports.hash = hash;
+//
+///////////////////////////////////////////////////////////////////////////
 exports.check = check;
 exports.login = login;
 exports.logout = logout;
-
-
 
 
 

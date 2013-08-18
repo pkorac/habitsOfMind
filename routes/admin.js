@@ -61,3 +61,12 @@ exports.populateclass = function(req,res){
 exports.classpopulated = function(req,res){
 	res.render('admin/classpopulated', {});
 };
+
+
+exports.test = function(req,res){
+
+	db.generateEmptyUsers( 40, function(err, tokens){
+		console.log( tokens );
+		res.send(tokens);
+	} );
+};

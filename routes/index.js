@@ -1,6 +1,6 @@
 
 // Landing page
-var landing = require('./landing'),
+var indexlanding = require('./index-landing'),
 	login = require('./login'),
 	logout = require('./logout'),
 	students = require('./students'),
@@ -13,7 +13,7 @@ var landing = require('./landing'),
 module.exports = function(app, config, auth){
 	
 	// Landing page
-	app.get('/', landing );
+	app.get('/', indexlanding );
 	
 	// Log in and out
 	app.get( config.loginRoute, login.login );
@@ -40,6 +40,8 @@ module.exports = function(app, config, auth){
 	app.post('/admin/classes/populate', auth.check, admin.populateclass ); // post
 	app.get('/admin/classes/populated', auth.check, admin.classpopulated );
 		
+		
+	app.get('/admin/test', auth.check, admin.test );
 
 	// OTHER ////////
 		

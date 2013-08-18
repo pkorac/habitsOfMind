@@ -1,15 +1,21 @@
 
 // Database
-// array of values for now
 
+// Bcrypt depth
+exports.hashDepth = 10;
+
+
+// Session Cookie secret
+exports.secret = "oranges";
 
 // Login and denied routes
 exports.loginRoute = '/login';
 exports.deniedRoute = '/denied';
+exports.registerRoute = '/register';
 
 
 // Flash Error message
-exports.flasherror = 'error';
+exports.flashError = 'error';
 
 
 // User types & access
@@ -18,3 +24,5 @@ exports.userTypes = {
 	"student": [ "students" ],
 	"teacher": [ "teachers" ]
 };
+
+exports.defaultUserType = "student";
