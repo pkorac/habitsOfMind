@@ -10,7 +10,9 @@ exports.landing = function( req, res ){
 /////////////////////////////////////////////
 // USERS
 exports.listusers = function( req, res ){
-	res.render('admin/userslist', {users: db.listUsers() } );
+	db.listUsers( function(err, users){
+		res.render('admin/userslist', {users: users } );
+	} );
 };
 
 // New
@@ -61,3 +63,16 @@ exports.populateclass = function(req,res){
 exports.classpopulated = function(req,res){
 	res.render('admin/classpopulated', {});
 };
+
+
+/*
+exports.test = function(req,res){
+
+	db.generateEmptyUsers( 50, function(err, tokens){
+		res.send( tokens );
+	} );
+	
+};
+
+
+*/

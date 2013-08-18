@@ -19,7 +19,7 @@ app.configure( function(){
 	app.use( express.static('public') );
 	app.use(express.bodyParser());
 	app.use(express.cookieParser());
-	app.use(express.cookieSession( { secret: 'shakabum' } )); // session expiry in 3 minutes
+	app.use(express.cookieSession( { secret: config.secret } )); // session expiry in 3 minutes
 
 /*
 	app.use(express.cookieSession({ secret: 'shakabum', 
