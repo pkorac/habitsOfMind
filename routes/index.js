@@ -24,6 +24,14 @@ module.exports = function(app, config, auth){
 	app.get('/students', auth.check, students.landing );
 	app.get('/teachers', auth.check, teachers.landing );
 	
+	// Register
+	// - landing
+	// - add your details now
+	app.get('/register', function(req,res){
+		
+		res.send("all god");
+	});
+	
 	// Admin
 	app.get('/admin', auth.check, admin.landing );
 
