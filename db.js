@@ -6,6 +6,8 @@ var users = [
 		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", content: "I like carrots" },
 		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", content: "I like banoffy pie" }];
 
+var classes = [ { name: "8jn", yead: 8, teacher: "Jon" },
+				{ name: "7pk", yead: 7, teacher: "Peter" } ];
 
 // Find (and return) user by name
 function findUserbyName( name ){

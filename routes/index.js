@@ -11,15 +11,14 @@ var landing = require('./landing'),
 
 
 module.exports = function(app, config, auth){
-
-	// GET ////////
 	
 	// Landing page
 	app.get('/', landing );
 	
 	// Log in and out
-	app.get( config.loginRoute, login );
-	app.get('/logout', auth.logout, logout );
+	app.get( config.loginRoute, login.login );
+	app.post( config.loginRoute, auth.login, login.loginsuccess); // post
+	app.get('/logout', auth.logout, login.logout );
 	
 	// Students and teachers
 	app.get('/students', auth.check, students.landing );
@@ -27,19 +26,20 @@ module.exports = function(app, config, auth){
 	
 	// Admin
 	app.get('/admin', auth.check, admin.landing );
-	app.get('/admin/users', auth.check, admin.users );
-	app.get('/admin/adduser', auth.check, function(req,res){
-		console.log( config.userTypes );
-		res.render( 'admin/adduser', { types: config.userTypes } );
-	} );
 
-	// POST ////////
-	
-	// Login
-	app.post( config.loginRoute, auth.login, function(req, res){
-		res.send("Logged in");
-	} );
+	app.get('/admin/users', auth.check, admin.listusers );
+	app.get('/admin/users/new', auth.check, admin.newuser );
+	app.post('/admin/users/new', auth.check, admin.adduser ); // post
+	app.get('/admin/users/created', auth.check, admin.usercreated );
 
+	app.get('/admin/classes', auth.check, admin.listclasses );
+	app.get('/admin/classes/new', auth.check, admin.newclass );
+	app.post('/admin/classes/new', auth.check, admin.addclass ); // post
+	app.get('/admin/classes/created', auth.check, admin.classcreated );
+	app.get('/admin/classes/populate', auth.check, admin.newpopulation );
+	app.post('/admin/classes/populate', auth.check, admin.populateclass ); // post
+	app.get('/admin/classes/populated', auth.check, admin.classpopulated );
+		
 
 	// OTHER ////////
 		
