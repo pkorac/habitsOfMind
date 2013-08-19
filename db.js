@@ -4,6 +4,7 @@
 	Takes Care of the database and model	
 	
 	User profile functions:
+
 	- listUsers( fn )
 		- fn( err, users)
 	- findUserbyName( name, fn )
@@ -53,6 +54,7 @@
 	- generateValidationToken( fn )
 		- fn( err, token )
 		
+
 */
 
 // Temp db
@@ -514,6 +516,28 @@ function editClass( id, name, year, teacher, fn ){
 		
 	} );
 	
+}
+
+// DELETE Class
+function deleteClass( id, fn ){
+
+	findClassbyId( id, function(err, theClass){
+		if ( !theClass || err ){
+			fn( new Error("No such class") );
+		} else{
+
+			var index = 0;
+			for ( var i = 0; i < classes.length; i++ ){
+				if ( classes[i].id === id ){
+					index = i;
+				}
+			}
+			//console.log( "Removing %s's class", classes[index].teacher );
+			classes.splice( index, 1 );
+			fn(null);
+		}		
+		
+	} );
 }
 
 // DELETE Class

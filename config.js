@@ -1,8 +1,12 @@
 
 // Database
 
+<<<<<<< HEAD
 // Encription
 exports.defaultUserSecret = "plums";
+=======
+// Bcrypt depth
+>>>>>>> ee96613c820779bd2b6d545253fa5b70d683632a
 exports.hashDepth = 10;
 
 
@@ -26,5 +30,9 @@ exports.userTypes = {
 	"teacher": [ "teachers" ]
 };
 
+<<<<<<< HEAD
 exports.defaultUserType = "student";
 exports.defaultClass = "others";
+=======
+exports.defaultUserType = "student";
+>>>>>>> ee96613c820779bd2b6d545253fa5b70d683632a
