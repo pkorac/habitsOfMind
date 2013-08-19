@@ -65,7 +65,7 @@ exports.classpopulated = function(req,res){
 };
 
 
-<<<<<<< HEAD
+
 
 ///////// TESTS ///////////
 exports.test = function(req,res){
@@ -75,14 +75,3 @@ exports.test = function(req,res){
 	} );
 	
 };
-
-
-=======
-exports.test = function(req,res){
-
-	db.generateEmptyUsers( 40, function(err, tokens){
-		console.log( tokens );
-		res.send(tokens);
-	} );
-};
->>>>>>> ee96613c820779bd2b6d545253fa5b70d683632a

@@ -47,12 +47,8 @@ module.exports = function(app, config, auth){
 	app.get('/admin/classes/populate', auth.check, admin.newpopulation );
 	app.post('/admin/classes/populate', auth.check, admin.populateclass ); // post
 	app.get('/admin/classes/populated', auth.check, admin.classpopulated );
-<<<<<<< HEAD
 
-=======
-		
-		
->>>>>>> ee96613c820779bd2b6d545253fa5b70d683632a
+
 	app.get('/admin/test', auth.check, admin.test );
 
 	// OTHER ////////
