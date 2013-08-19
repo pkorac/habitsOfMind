@@ -158,6 +158,15 @@ function generateValidationToken( fn ){
 }
 
 
+function listValidationTokens( fn ){
+	var tokens = [];
+	for( var i= 0; i < users.length; i++){
+		if( users[i].validationToken ) tokens.push( users[i].validationToken );
+	}
+	fn( null, tokens );
+}
+
+
 ///////////////////////////////////////////////////////////////////////////
 //
 // USERS' Functions
@@ -207,8 +216,7 @@ function findUserbyValidationToken( token, fn ){
 
 
 
-
-// Create a User
+// CREATE a User
 function createUser( secret, type, email, habitsClass, fn ){
 
 	secret = secret || config.defaultUserSecret;
@@ -226,6 +234,8 @@ function createUser( secret, type, email, habitsClass, fn ){
 						var newUser = new HabitsUser( id, name, pass, type, email, habitsClass );
 						newUser.validationToken = token;
 						newUser.validationSecret = hashedSecret;
+
+						users.push( newUser ); // or done with DB
 						
 						fn( null, newUser, token );
 
@@ -236,24 +246,15 @@ function createUser( secret, type, email, habitsClass, fn ){
 	} );
 	
 }
-// Create Empty User
+
+// CREATE Empty User
 function createEmptyUser( secret, type, fn ){
 	createUser( secret, type, null, null, fn );
 }
 
 
-// ADD user one by one
-function addUser( user, fn ){
-	if( user ){		
-		users.push( user );
-		fn( null );		
-	} else{
-		fn( new Erro("No user to add") );
-	}
-}
-
-// Add Students
-function addStudents( howMany, secret, habitsClass, fn ){ // habits class needs to be checked etc
+// CREATE Students
+function createStudents( howMany, secret, habitsClass, fn ){ // habits class needs to be checked etc
 	
 	if ( howMany < 1679616 ){ 	// no more than possible combinations using randomFour()
 		
@@ -261,40 +262,55 @@ function addStudents( howMany, secret, habitsClass, fn ){ // habits class needs 
 		secret = secret || config.defaultUserSecret;
 		habitsClass = habitsClass || config.defaultClass;
 
+			
 		var clones = new Array();
-		var tokens = new Array();		
+		var tokens = new Array();
+		
 		
 		var counter = 0;
 		var generateUsers = function(){
-			counter++;		
+			counter++;
 			if ( counter <= howMany ) {
-				// Create a user
-				createUser( secret, type, null, habitsClass, function(err, user, token){
-					clones.push( user );
-					tokens.push( token );
-					
-					generateUsers();
+				
+				randomHash( function(err, id){
+					if(!err) randomHash( function(err, name){
+							if(!err) randomHash( function(err, pass){				
+								hashPassword( secret, function(err, hashedSecret){					
+											
+									// Create the user
+									var newUser = new HabitsUser( id, name, pass, type, null, habitsClass );
+									var token = randomFourCharacters();
+									newUser.validationToken = token;
+									newUser.validationSecret = hashedSecret;
+
+									tokens.push(token);
+									clones.push( newUser ); // or done with DB
+
+									generateUsers();
+							} );
+						} );
+					} );
 				} );
-			
+				
+				
+				
 			} else{
 				
 				// BULK SAVE them in the db now
 				users = users.concat( clones );
 				fn( null, tokens );
-
+	
 			}
-
+	
 		};
 		generateUsers();
-		
 	} else{
 		fn( new Error("Can't generate that many"), null );
 	}
 }
 
 
-
-// Cleanup empty users
+// CLEANUP empty users
 function cleanupEmptyUsers( fn ){
 
 	listUsers( function(err, users){
@@ -437,8 +453,8 @@ function findClassbyId( id, fn ){
 	return;
 }
 
-// ADD a new class
-function addClass( name, year, teacher, fn ){
+// CREATE a new class
+function createClass( name, year, teacher, fn ){
 	
 	if ( !name ){
 		fn( new Error("No name") );
@@ -580,9 +596,7 @@ exports.findUserbyValidationToken = findUserbyValidationToken;
 
 exports.createUser = createUser;
 exports.createEmptyUser = createEmptyUser;
-
-exports.addUser = addUser;
-exports.addStudents = addStudents
+exports.createStudents = createStudents;
 
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
@@ -592,7 +606,7 @@ exports.cleanupEmptyUsers = cleanupEmptyUsers;
 // Classes
 exports.listClasses = listClasses;
 exports.findClassbyId = findClassbyId;
-exports.addClass = addClass;
+exports.createClass = createClass;
 exports.editClass = editClass;
 exports.deleteClass = deleteClass;
 

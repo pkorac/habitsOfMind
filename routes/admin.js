@@ -69,7 +69,7 @@ exports.classpopulated = function(req,res){
 ///////// TESTS ///////////
 exports.test = function(req,res){
 
-	db.addStudents( 30, "oranges", "9mm", function(err, tokens){
+	db.createStudents( 80, "oranges", "9mm", function(err, tokens){
 		res.send( tokens );
 	} );
 	
