@@ -10,14 +10,20 @@
 		- fn( err, user )
 	- findUserbyId( id, fn )
 		- fn ( err, user )
-	- addUser( name, password, type, fn )
+	- findUserbyValidationToken( token, fn )
+		- fn (err, user )
+	- createUser( secret, type, email, habitsClass, fn )
 		- fn( err, user )
-	- generateEmptyUsers( howMany, fn )
-		- fn( err, validationTokens )		
+	- createEmptyUser( secret, type, fn )
+		- fn( err, user )
+	- createStudents( howMany, secret, habitsClass, fn )
+		- fn( err, validationTokens )
 
 	- cleanupEmptyusers
-	- editUser
-	
+		- fn( err )
+
+	- editUser( id, name, pass, type, email, habitsClass, validationToken, fn )
+		- fn( err, editedUser )	
 	- deleteUser( id, fn )
 		- fn ( err )
 
@@ -27,10 +33,10 @@
 		- fn( err, classes )
 	- findClassbyId( id, fn )
 		- fn( err, class )
-	- addClass( name, year, teacher, fn )
-		- fn( err )
+	- createClass( name, year, teacher, fn )
+		- fn( err, newClass )
 	- editClass( id, name, year, teacher, fn )
-		- fn( err )
+		- fn( err, editedClass )
 	
 	
 	Helper Functions
@@ -38,10 +44,14 @@
 		- fn( err, hash )
 	- checkPassword( pass, hash, fn )
 		- fn( err, check )
+	- randomHash( fn )
+		- fn( err, hash )
 	- randomHashSync() // sync
 		- returns hash
 	- randomFourCharacters() // sync
 		- returns four characters
+	- generateValidationToken( fn )
+		- fn( err, token )
 		
 */
 
@@ -474,9 +484,9 @@ function createClass( name, year, teacher, fn ){
 
 
 // EDIT a class
-function editClass( id, name, year, teacher, fn ){
+function editClass( id, name, year, teacher, fn )
 	if ( !id ){
-		fn( new Error("No ID") );
+		fn( new Error("No ID"), null );
 		return;
 	} 
 	
@@ -499,7 +509,7 @@ function editClass( id, name, year, teacher, fn ){
 			}
 			//console.log( "Removing %s's class", classes[index].teacher );
 			classes.splice( index, 1, theClass );
-			fn( null );
+			fn( null, theClass );
 		}		
 		
 	} );
