@@ -265,16 +265,16 @@ function createEmptyUser( secret, type, fn ){
 
 // CREATE Students
 function createStudents( howMany, secret, habitsClass, fn ){ // habits class needs to be checked etc
-	
-	if ( howMany < 1679616 ){ 	// no more than possible combinations using randomFour()
+
+	if ( howMany < 1679616 ){ // the max possible combinations with random four characters
 		
 		type = studentUserType;
 		secret = secret || config.defaultUserSecret;
 		habitsClass = habitsClass || config.defaultClass;
 
 			
-		var clones = new Array();
-		var tokens = new Array();
+		var clones = [];
+		var tokens = [];
 		
 		
 		var counter = 0;
@@ -329,7 +329,7 @@ function cleanupEmptyUsers( fn ){
 		if (users){
 		
 			// Find which ones to remove
-			var usersToRemove = new Array();
+			var usersToRemove = [];
 			for( var i = 0; i < users.length; i++ ){
 				if ( users[i].validationToken ) {
 					usersToRemove.push( users[i].id );
@@ -346,8 +346,8 @@ function cleanupEmptyUsers( fn ){
 			};
 
 			// Go through them and remove them
-			for ( var i = 0; i < usersToRemove.length; i++){
-				remove( usersToRemove[i] );
+			for ( var j = 0; j < usersToRemove.length; j++){
+				remove( usersToRemove[j] );
 			}
 			fn(null);
 			
@@ -357,7 +357,7 @@ function cleanupEmptyUsers( fn ){
 		
 	});
 	
-};
+}
 
 // EDIT user
 function editUser( id, name, pass, type, email, habitsClass, validationToken, fn ){	
@@ -381,7 +381,7 @@ function editUser( id, name, pass, type, email, habitsClass, validationToken, fn
 			}
 			
 			
-			function userReplacement( user, fn ){
+			var userReplacement = function( user, fn ){
 				// replace the old one with the new one
 				listUsers( function(err, users){
 					for ( var i = 0; i < users.length; i++ ){
@@ -392,7 +392,7 @@ function editUser( id, name, pass, type, email, habitsClass, validationToken, fn
 						}
 					}
 				} );				
-			}
+			};
 
 			
 		}else{
@@ -484,7 +484,7 @@ function createClass( name, year, teacher, fn ){
 
 
 // EDIT a class
-function editClass( id, name, year, teacher, fn )
+function editClass( id, name, year, teacher, fn ){
 	if ( !id ){
 		fn( new Error("No ID"), null );
 		return;
