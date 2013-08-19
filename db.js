@@ -55,7 +55,7 @@ var util = require('util'),
 var users = [
 		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habbitsClass: "123" },
 		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habbitsClass: "123" },
-		{ id: 'b0a6be7e2fc403ee5236e1c8c38c1a24f31699ab0323f102bcf7138bd9f8', name: '5833a8cca6b4ea2e1fd51c478f2d5ed931d848f8756da61d76108f19457c', type: 'teacher', password: 'd237578da6dd322debd81d49339bd4cff1bea0279d2a88e03c70f8f4136c', email: null, habitsClass: 'others', validationToken: '$2a$10$q6DOF9S3UqhNm0wO1elX..DT.Y2ROjnCcxgwnbmMqLrMAjzuMRvhu' }];
+		{ id: 'c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888',name: '7158e8d519766b8e5ed99d24151c2ae53de337d026a85f4b74de957238a4',type: 'student',password: '9719377ba92fb56e3265656645700ad0ccbf290ac5dc4f5eeddb98859743',email: null,habitsClass: '8pk',validationToken: '7777',validationSecret: 'sweet nothings' }];
 
 var classes = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },
 				{ id: "1234", name: "7pk", year: 7, teacher: "Peter" } ];
@@ -85,6 +85,7 @@ var HabitsClass = function( id, name, year, teacher ){
 	this.teacher = teacher;
 };
 
+var studentUserType = "student";
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -121,6 +122,7 @@ function randomHash( fn ){
 	} );
 }
 
+// Token Generation
 var characterPalette = "abcdefghijklmnopqrstuvwxyz0123456789";
 var paletteSize = characterPalette.length;
 
@@ -132,23 +134,28 @@ function randomFourCharacters(){
 	return randomFour;
 }
 
-function emptyUser( fn ){
+function generateValidationToken( fn ){
 	
+	var generateToken = function(){
+
+		// Generate the random token
+		var token = randomFourCharacters();
+		
+		findUserbyValidationToken( token, function(err, user){
+			if( user){
+				// token already exists
+				//console.log( "bad token: " + token );
+				generateToken();
+			} else{
+				//console.log( "good token: " + token );
+				fn(null, token);
+				return;
+			}
+		} );
+				
+	};
+	generateToken();	
 }
-
-function emptyClass( fn ){
-	
-	randomHash( function(err, id){
-		if(!err){
-			var newHabitsClass = new HabitsClass( id, null, null, null );
-			fn( null, newHabitsClass );
-		} else{
-			fn( err, null );
-		}
-	} );
-
-}
-
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -187,21 +194,55 @@ function findUserbyId( id, fn ){
 }
 
 // FIND user by validation token
+// this should be async
 function findUserbyValidationToken( token, fn ){
 	for ( var i = 0; i < users.length; i++ ){
-		if( users[i].validationToken ){
-			if ( users[i].validationToken === token ){
-				fn( null, users[i] );
-				return;
-			}
+		if( users[i].validationToken === token ){
+			fn( null, users[i] );
+			return;
 		}
 	}
 	fn( new Error("No such user"), null );
-	return;
 }
 
 
-// ADD user manually
+
+
+// Create a User
+function createUser( secret, type, email, habitsClass, fn ){
+
+	secret = secret || config.defaultUserSecret;
+	type = type || config.defaultUserType;
+	habitsClass = habitsClass || config.defaultClass;
+	email = email || null;
+	
+	randomHash( function(err, id){
+		if(!err) randomHash( function(err, name){
+			if(!err) randomHash( function(err, pass){				
+				hashPassword( secret, function(err, hashedSecret){					
+					generateValidationToken( function(err, token){
+
+						// Create the user
+						var newUser = new HabitsUser( id, name, pass, type, email, habitsClass );
+						newUser.validationToken = token;
+						newUser.validationSecret = hashedSecret;
+						
+						fn( null, newUser, token );
+
+					} );
+				} );				
+			} );			
+		} );
+	} );
+	
+}
+// Create Empty User
+function createEmptyUser( secret, type, fn ){
+	createUser( secret, type, null, null, fn );
+}
+
+
+// ADD user one by one
 function addUser( user, fn ){
 	if( user ){		
 		users.push( user );
@@ -211,70 +252,24 @@ function addUser( user, fn ){
 	}
 }
 
-// Create a User
-function createUser( type, email, habitsClass, fn ){
-
-	type = type || config.defaultUserType;
-	habitsClass = habitsClass || config.defaultClass;
-	email = email || null;
-	
-	randomHash( function(err, id){
-		if(!err) randomHash( function(err, name){
-			if(!err) randomHash( function(err, pass){
-				
-				var token = randomFourCharacters();
-				if(!err) hashPassword( token, function(err, hashedToken){
-
-					if( err ){
-						fn( new Error("Something went wrong"), null);
-					} else{					
-						// Create the user
-						var newUser = new HabitsUser( id, name, pass, type, email, habitsClass );
-						newUser.validationToken = hashedToken;
-						
-						fn( null, newUser, token );
-					}
-					
-				} );
-				
-			} );			
-		} );
-	} );
-	
-}
-// Create Empty User
-function createEmptyUser( type, fn ){
-	createUser( type, null, null, fn );
-}
-
-
-// Add empty users
-function addEmptyUsers( howMany, type, fn ){
+// Add Students
+function addStudents( howMany, secret, habitsClass, fn ){ // habits class needs to be checked etc
 	
 	if ( howMany < 1679616 ){ 	// no more than possible combinations using randomFour()
 		
-		type = type || config.defaultUserType;
+		type = studentUserType;
+		secret = secret || config.defaultUserSecret;
+		habitsClass = habitsClass || config.defaultClass;
 
 		var clones = new Array();
-		var tokens = new Array();
-		
-		var generateToken = function(){
-			
-			var token = randomFourCharacters();
-			for( var i = 0; i < clones.length; i++ ){
-				if ( clones[i].validationToken === token ) {
-					token = generateToken();
-				}
-			}
-			return token;
-		}
+		var tokens = new Array();		
 		
 		var counter = 0;
 		var generateUsers = function(){
 			counter++;		
 			if ( counter <= howMany ) {
 				// Create a user
-				createEmptyUser( type, function(err, user, token){
+				createUser( secret, type, null, habitsClass, function(err, user, token){
 					clones.push( user );
 					tokens.push( token );
 					
@@ -296,8 +291,6 @@ function addEmptyUsers( howMany, type, fn ){
 		fn( new Error("Can't generate that many"), null );
 	}
 }
-
-
 
 
 
@@ -527,15 +520,46 @@ function deleteClass( id, fn ){
 
 console.log( "---------------------------" );
 
-addEmptyUsers( 1, "student", function(err, tokens){
-	console.log( tokens );
+
+// single Token
+/*
+console.log("started");
+generateValidationToken( function(err, token){
+	console.log(token);
+} );
+*/
+
+
+// Create User
+/*
+createUser( "oranges", "person", "me@me.com", "8pk", function(err, user, token){
+	console.log( token );
+	console.log( util.inspect( user, {colors: true} ) );
 	
-	listUsers( function(err, users){
+	
+	console.log("--------");
+	
+	createEmptyUser( "plums", "alien", function(err, user, token){
+		console.log( token );
+		console.log( util.inspect( user, {colors: true} ) );
 		
-		console.log( util.inspect( users, {colors: true} ) );
 	} );
 	
 } );
+*/
+
+// Create Students
+/*
+addStudents( 3, "oranges", "9mm", function(err, tokens){
+	
+	console.log(tokens);
+	listUsers( function(err, students){
+		console.log( util.inspect( students, {colors: true} ) );
+	} );
+	
+} );
+*/
+
 
 
 ////////////////////////////////////////////////////////////
@@ -558,7 +582,7 @@ exports.createUser = createUser;
 exports.createEmptyUser = createEmptyUser;
 
 exports.addUser = addUser;
-exports.addEmptyUsers = addEmptyUsers;
+exports.addStudents = addStudents
 
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;

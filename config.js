@@ -1,7 +1,8 @@
 
 // Database
 
-// Bcrypt depth
+// Encription
+exports.defaultUserSecret = "plums";
 exports.hashDepth = 10;
 
 

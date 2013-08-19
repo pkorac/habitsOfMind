@@ -65,14 +65,14 @@ exports.classpopulated = function(req,res){
 };
 
 
-/*
+
+///////// TESTS ///////////
 exports.test = function(req,res){
 
-	db.generateEmptyUsers( 50, function(err, tokens){
+	db.addStudents( 30, "oranges", "9mm", function(err, tokens){
 		res.send( tokens );
 	} );
 	
 };
 
 
-*/
