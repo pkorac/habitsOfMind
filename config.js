@@ -1,10 +1,24 @@
+// Users and routes
+//	- defines which users can go where
+//	- the first route in the array is the default landing screen
+//  (for example admin users get taken to admin screen after login)
+exports.userTypes = {
+	"admin": ["admin", "students", "teachers"],
+	"student": [ "students" ],
+	"teacher": [ "teachers" ]
+};
+
+exports.defaultUserType = "student";
+exports.defaultClass = "others";
+
+exports.defaultUserSecret = "plums";
+
+
 
 // Database
 
-// Encription
-exports.defaultUserSecret = "plums";
+// Hashing
 exports.hashDepth = 10;
-
 
 // Session Cookie secret
 exports.secret = "oranges";
@@ -15,17 +29,5 @@ exports.deniedRoute = '/denied';
 exports.registerRoute = '/register';
 
 
-// Flash Error message
-exports.flashError = 'error';
-
-
-// User
-exports.userTypes = {
-	"admin": ["students", "teachers", "admin"],
-	"student": [ "students" ],
-	"teacher": [ "teachers" ]
-};
-
-
-exports.defaultUserType = "student";
-exports.defaultClass = "others";
+// Flash message
+exports.flashMessage = 'message';

@@ -22,8 +22,8 @@ function login( req, res, next ){
 			
 			if (!user){
 				// No such user
-				req.flash( config.flashError, 'Wrong username');
-				res.redirect( loginRoute );
+				req.flash( config.flashMessage, 'Wrong username');
+				res.redirect( config.loginRoute );
 				return false;
 
 			} else{
@@ -38,7 +38,7 @@ function login( req, res, next ){
 					
 					if (!passcheck || err){
 						// wrong pass
-						req.flash('error', 'Wrong password');
+						req.flash(config.flashMessage, 'Wrong password');
 						res.redirect( config.loginRoute );
 						return false;
 					} else{
@@ -56,8 +56,8 @@ function login( req, res, next ){
 		
 	} else{
 		// No username submited
-		req.flash( config.flashError, 'No username or data submitted');
-		res.redirect( loginRoute );
+		req.flash( config.flashMessage, 'No username or data submitted');
+		res.redirect( config.loginRoute );
 		return false;
 	}
 }

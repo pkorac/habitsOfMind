@@ -16,14 +16,15 @@
 	- createUser( secret, type, email, habitsClass, fn )
 		- fn( err, user )
 	- createEmptyUser( secret, type, fn )
-		- fn( err, user )
+		- fn( err, user, token )
 	- createStudents( howMany, secret, habitsClass, fn )
 		- fn( err, validationTokens )
 
 	- cleanupEmptyusers
 		- fn( err )
 
-	- editUser( id, name, pass, type, email, habitsClass, validationToken, fn )
+	- editUser( id, params, fn )
+		- params( type, habitsClass, email, password )
 		- fn( err, editedUser )	
 	- deleteUser( id, fn )
 		- fn ( err )
@@ -65,9 +66,9 @@ var util = require('util'),
 
 // Temp DB
 var users = [
-		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habbitsClass: "123" },
-		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habbitsClass: "123" },
-		{ id: 'c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888',name: '7158e8d519766b8e5ed99d24151c2ae53de337d026a85f4b74de957238a4',type: 'student',password: '9719377ba92fb56e3265656645700ad0ccbf290ac5dc4f5eeddb98859743',email: null,habitsClass: '8pk',validationToken: '7777',validationSecret: 'sweet nothings' }];
+		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habitsClass: "123" },
+		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habitsClass: "123" },
+		{ id: 'c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888',name: '7158e8d519766b8e5ed99d24151c2ae53de337d026a85f4b74de957238a4',type: 'student',password: '9719377ba92fb56e3265656645700ad0ccbf290ac5dc4f5eeddb98859743',email: null,habitsClass: '8pk',validationToken: '7777',validationSecret: 'plums' }];
 
 var classes = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },
 				{ id: "1234", name: "7pk", year: 7, teacher: "Peter" } ];
@@ -362,40 +363,44 @@ function cleanupEmptyUsers( fn ){
 }
 
 // EDIT user
-function editUser( id, name, pass, type, email, habitsClass, validationToken, fn ){	
+function editUser( id, params, fn ){
 
-	findUserbyId( id, function(err, user){		
+	findUserbyId( id, function(err, user){
 		if ( user ){
 			
-			if( name ) user.name = name;
-			if( type ) user.type = type;
-			if( email ) user.email = email;
-			if( habitsClass ) user.habits = habitsClass;
-			if( validationToken ) user.validationToken = validationToken;
-
-			if( pass ) {
-				hashPassword( pass, function(err, hashedPass){
-					user.password = hashedPass;
-					fn( null, user );
-				} );
-			} else{
-				userReplacement( user, fn );				
-			}
+			user.type = params.type || user.type;
+			user.email = params.email || user.email;
+			user.habitsClass = params.habitsClass || user.habitsClass;			
 			
-			
-			var userReplacement = function( user, fn ){
-				// replace the old one with the new one
-				listUsers( function(err, users){
-					for ( var i = 0; i < users.length; i++ ){
-						if ( users[i].id === user.id ){
-							users.splice( i, 1, user );
-							fn( null, user );
-							break;
+			var updateUser = function( user, callback ){
+				listUsers( function( err, users ){
+					for( var i = 0; i < users.length; i++ ){
+						if( users[i].id === user.id ){
+							users = users.splice( i, 1, user );
+							callback( null, user );
 						}
 					}
-				} );				
+				} );
 			};
-
+			
+			if ( params.password ){
+				// do stuff
+				hashPassword( params.password, function(err, hashedPassword){
+					user.password = hashedPassword;
+					
+					updateUser( user, function(err, user){
+						if(err)console.log(err);
+						fn( null, user );
+					} );
+					
+				} );
+				
+			} else{
+				updateUser( user, function(err, user){
+					if(err)console.log(err);
+					fn( null, user );
+				} );
+			}
 			
 		}else{
 			fn( new Error("No such user"), null );
@@ -403,6 +408,64 @@ function editUser( id, name, pass, type, email, habitsClass, validationToken, fn
 		
 	} );
 }
+
+
+// Register user
+function registerUser( id, name, password, email, fn ){
+	findUserbyId( id, function( err, user ){
+		if(err){
+			fn( new Error("No such user"), null);
+		}else if( !name || !password || !email ){
+			fn( new Error("Not enough data"), null);
+		} else{
+			// Basic check done, let us continue
+			
+			// CHeck if the username exists
+			findUserbyName( name, function(err, existinguser){
+				if(existinguser){
+					fn( new Error("User already exists"), null );
+				} else{
+
+					// All good let's register the lad
+					hashPassword( password, function(err, hashedPass){
+						if( err ){
+							fn(err,null);
+							return;
+						} else{
+							
+							user.password = hashedPass;
+							user.name = name;
+							user.email = email;
+							
+							user.validationToken = null;
+							user.validationSecret = null;
+							
+							var updateUser = function( user, callback ){
+								listUsers( function( err, users ){
+									for( var i = 0; i < users.length; i++ ){
+										if( users[i].id === user.id ){
+											users = users.splice( i, 1, user );
+											callback( null, user );
+										}
+									}
+								} );
+							};
+							updateUser( user, fn );
+							
+						}
+					} );
+					
+				}
+			} );
+			
+		}
+	} );
+}
+
+
+
+
+
 
 // Change Password
 function changePassword( id, newPass ){
@@ -571,45 +634,14 @@ function deleteClass( id, fn ){
 console.log( "---------------------------" );
 
 
-// single Token
 /*
-console.log("started");
-generateValidationToken( function(err, token){
-	console.log(token);
-} );
-*/
-
-
-// Create User
-/*
-createUser( "oranges", "person", "me@me.com", "8pk", function(err, user, token){
-	console.log( token );
+registerUser( "c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888", 
+				"Mike", "sadf", "magic@mike.com", function( err,user ){
+	if(err)console.log(err);
 	console.log( util.inspect( user, {colors: true} ) );
-	
-	
-	console.log("--------");
-	
-	createEmptyUser( "plums", "alien", function(err, user, token){
-		console.log( token );
-		console.log( util.inspect( user, {colors: true} ) );
-		
-	} );
-	
+					
 } );
 */
-
-// Create Students
-/*
-addStudents( 3, "oranges", "9mm", function(err, tokens){
-	
-	console.log(tokens);
-	listUsers( function(err, students){
-		console.log( util.inspect( students, {colors: true} ) );
-	} );
-	
-} );
-*/
-
 
 
 ////////////////////////////////////////////////////////////
@@ -630,6 +662,7 @@ exports.findUserbyValidationToken = findUserbyValidationToken;
 
 exports.createUser = createUser;
 exports.createEmptyUser = createEmptyUser;
+exports.registerUser = registerUser;
 exports.createStudents = createStudents;
 
 exports.editUser = editUser;

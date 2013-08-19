@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>Admin - Add User</title>
+	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+
+	
+</head>
+<body>
+	
+	<h1>Admin area</h1>
+	<h3>Add User</h3>
+	
+	<form method="post" action="/admin/users/create">
+		<div>
+			<label>Secret</label>
+			<input type="text" name="secret" value="<%= defaultSecret %>" />
+		</div>
+	    <div>
+	    	<label>Type</label>
+	    	
+	    	<select name="usertype">
+	    		<% for ( var type in allTypes ){ %>
+	    			<option value="<%= type %>" <% if( defaultType === type ){ %>selected<% } %> ><%= type %></option>
+				<% } %>
+			</select>
+	    	
+	    </div>
+	    <div>
+	        <input type="submit" value="Create"/>
+	    </div>	
+	</form>
+	
+	
+
+</body>
+</html>

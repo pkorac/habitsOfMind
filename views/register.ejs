@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>Register</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+
+	
+</head>
+<body>
+	
+	<h1>Register</h1>
+
+	<% if ( message ) { %>
+	<%= message %>
+	<% } %>
+	
+	<p>Enter your secret and registration code</p>
+	<form method="POST" action="/register">
+		<div>
+	        <label>Secret:</label>
+	        <input type="text" name="secret"/>
+	    </div>
+	    <div>
+	        <label>Registration code:</label>
+	        <input type="text" name="token"/>
+	    </div>
+	    <div>
+	        <input type="submit" value="Register"/>
+	    </div>	
+	</form>
+
+</body>
+</html>

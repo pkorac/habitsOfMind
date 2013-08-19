@@ -4,15 +4,21 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 	<title><%= title %></title>
-	<link rel="stylesheet" href="../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
 	
 </head>
 <body>
+
+	<h1><%= title %></h1>
 	
-	<h1>Admin area</h1>
-	<h3><%= title %></h3>
+	<ul>
+		<li><a href="users/">List users</a>
+		<li><a href="users/create/">Create a new user</a>
+		<li><a href="classes/create/">Create a class</a>
+		<li><a href="classes/populate/">Populate a class</a>
+	</ul>
 
 	
 

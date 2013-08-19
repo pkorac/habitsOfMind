@@ -1,10 +1,10 @@
 
 // Landing page
-var indexlanding = require('./index-landing'),
+var landing = require('./landing'),
 	login = require('./login'),
-	logout = require('./logout'),
-	students = require('./students'),
+	students = require('./students'),	
 	teachers = require('./teachers'),
+	classes = require('./classes'),
 	admin = require('./admin'),
 	lost = require('./lost'),
 	denied = require('./denied');
@@ -13,40 +13,56 @@ var indexlanding = require('./index-landing'),
 module.exports = function(app, config, auth){
 	
 	// Landing page
-	app.get('/', indexlanding );
+	app.get('/', landing.landing );
+	app.get('/about', landing.about );
+	app.get('/contact', landing.contact );
 	
 	// Log in and out
 	app.get( config.loginRoute, login.login );
-	app.post( config.loginRoute, auth.login, login.loginsuccess); // post
+	app.post( config.loginRoute, auth.login, login.loginSuccess); // post
 	app.get('/logout', auth.logout, login.logout );
 	
+	app.get('/register', login.register );
+	app.post('/register', login.registerSubmit ); // post
+	app.post('/register/details', login.registerDetails ); // post
+
+	
 	// Students and teachers
-	app.get('/students', auth.check, students.landing );
-	app.get('/teachers', auth.check, teachers.landing );
+	app.get('/students/', auth.check, students.landing );
+	app.get('/teachers/', auth.check, teachers.landing );
 	
-	// Register
-	// - landing
-	// - add your details now
-	app.get('/register', function(req,res){
+	// Classes
+	app.get('/classes/', classes.landing);
 		
-		res.send("all god");
-	});
-	
 	// Admin
-	app.get('/admin', auth.check, admin.landing );
+	app.get('/admin/', auth.check, admin.landing );
 
-	app.get('/admin/users', auth.check, admin.listusers );
-	app.get('/admin/users/new', auth.check, admin.newuser );
-	app.post('/admin/users/new', auth.check, admin.adduser ); // post
-	app.get('/admin/users/created', auth.check, admin.usercreated );
+	app.get('/admin/users/', auth.check, admin.listUsers );
+	
+	app.get('/admin/users/create', auth.check, admin.createUser );
+	app.post('/admin/users/create', auth.check, admin.createUserSubmit ); // post
+	
+	app.get('/admin/users/edit', auth.check, admin.editUser );
+	app.post('/admin/users/edit', auth.check, admin.editUserSubmit ); // post
+	
+	app.get('/admin/users/delete', auth.check, admin.deleteUser );
+	app.post('/admin/users/delete', auth.check, admin.deleteUserSubmit ); // post
 
-	app.get('/admin/classes', auth.check, admin.listclasses );
-	app.get('/admin/classes/new', auth.check, admin.newclass );
-	app.post('/admin/classes/new', auth.check, admin.addclass ); // post
-	app.get('/admin/classes/created', auth.check, admin.classcreated );
-	app.get('/admin/classes/populate', auth.check, admin.newpopulation );
-	app.post('/admin/classes/populate', auth.check, admin.populateclass ); // post
-	app.get('/admin/classes/populated', auth.check, admin.classpopulated );
+
+
+	app.get('/admin/classes/', auth.check, admin.listClasses );
+	
+	app.get('/admin/classes/create', auth.check, admin.createClass );
+	app.post('/admin/classes/create', auth.check, admin.createClassSubmit ); // post
+	
+	app.get('/admin/classes/populate', auth.check, admin.populate );
+	app.post('/admin/classes/populate', auth.check, admin.populateSubmit ); // post
+	
+	app.get('/admin/classes/edit', auth.check, admin.editClass );
+	app.post('/admin/classes/edit', auth.check, admin.editClassSubmit ); // post	
+	
+	app.get('/admin/classes/delete', auth.check, admin.deleteClass );
+	app.post('/admin/classes/delete', auth.check, admin.deleteClassSubmit ); // post
 
 
 	app.get('/admin/test', auth.check, admin.test );

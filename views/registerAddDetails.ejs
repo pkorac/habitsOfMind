@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>Registration - add details</title>
+	<link rel="stylesheet" href="../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+
+	
+</head>
+<body>
+	
+	<h1>Registration - add details</h1>
+
+	<% if ( message ) { %>
+	<%= message %>
+	<% } %>
+	
+	<p>Enter your secret and registration code</p>
+	<form method="POST" action="/register/details">
+        <input type="hidden" name="id" value="<%= id %>" />
+		<div>
+	        <label>User name:</label>
+	        <input type="text" name="username"/>
+	    </div>
+	    <div>
+	        <label>Email:</label>
+	        <input type="email" name="email"/>
+	    </div>
+	    <div>
+	        <label>Password:</label>
+	        <input type="password" name="password"/>
+	    </div>
+	    <div>
+	        <input type="submit" value="Register"/>
+	    </div>	
+	</form>
+
+</body>
+</html>

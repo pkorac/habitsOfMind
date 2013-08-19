@@ -1,6 +1,5 @@
 
 
 module.exports = function(req,res){
-	res.writeHead(404);
-	res.end("Computer says no...");
+	res.render( '404' );
 };

@@ -13,9 +13,11 @@ var config= require('./config'),
 // Middleware & Config
 ////////////////////////////////////
 var port = process.env.PORT || 3003;
+
 app.configure( function(){
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
+//	app.set('view cache', true );
 	app.use( express.static('public') );
 	app.use(express.bodyParser());
 	app.use(express.cookieParser());
@@ -34,7 +36,6 @@ app.configure( function(){
 ////////////////////////////////////
 
 var	routes = require('./routes')(app, config, auth);
-
 
 ////////////////////////////////////
 app.listen(port);

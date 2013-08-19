@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - User created</title>
+	<title>Admin - Add User</title>
 	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
@@ -10,11 +10,15 @@
 </head>
 <body>
 	
+	<h3>Delete <%= username %></h3>
+	Are you sure?
+	<form method="post" action="/admin/users/delete/">
+		<input type="hidden" name="id" value="<%= id %>" />
+		<input type="hidden" name="username" value="<%= username %>" />]
+		<input type="button" value="no" />
+		<input type="submit" value="Yes" />
+	</form>
 	
-	<div class="alert alert-success">
-		New User Created with the secret: <strong><%= secret %></strong> and registration code: <strong><%= token %></strong>
-	</div>
-	
-	
+
 </body>
 </html>
