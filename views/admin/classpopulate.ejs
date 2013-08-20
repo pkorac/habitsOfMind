@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>Add students to a class</title>
+	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+
+	
+</head>
+<body>
+	
+	<h1>Admin area</h1>
+	<h3>Add students to a class</h3>
+	
+	<% if ( message ){ %>
+		<%= message %>	
+	<% } %>
+	
+	<form method="post" action="/admin/classes/populate">
+	    <div>
+	    	<label>Select class</label>	    	
+	    	<select name="classid">
+				<% for ( var i = 0; i < classes.length; i++ ){ %>
+					<% if ( classes[i].id === id ) { %>
+						<option value="<%= classes[i].id %>" selected><%= classes[i].name %></option>	
+					<% } else { %>
+						<option value="<%= classes[i].id %>"><%= classes[i].name %></option>
+					<% } %>
+				<% } %>
+			</select>
+	    	
+	    </div>
+		<div>
+			<label>Secret</label>
+			<input type="text" name="secret" value="<%= defaultSecret %>" />
+		</div>	
+		<div>
+			<label>How many students to add</label>
+			<input type="number" name="howMany" />
+		</div>			
+	    <div>
+	        <input type="submit" value="Add students"/>
+	    </div>	
+	</form>
+	
+	
+
+</body>
+</html>

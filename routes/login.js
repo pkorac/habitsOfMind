@@ -70,7 +70,7 @@ exports.registerDetails = function(req,res,next){
 			
 			db.registerUser( id, username, password, email, function( err, user ){
 				if(err){
-					console.log(err);
+					//console.log(err);
 					req.flash( config.flashMessage, err.message );
 					res.render('registerAddDetails', {message: req.flash(config.flashMessage), id: id} );
 				} else if(user){

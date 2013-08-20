@@ -1,5 +1,7 @@
 // Users and routes
 //	- defines which users can go where
+//  - each key denotes a user type
+//  - each value holds an array of routes that user type has access to
 //	- the first route in the array is the default landing screen
 //  (for example admin users get taken to admin screen after login)
 exports.userTypes = {
@@ -7,9 +9,12 @@ exports.userTypes = {
 	"student": [ "students" ],
 	"teacher": [ "teachers" ]
 };
+exports.genders = ["boy", "girl"];
+exports.defaultGender = "boy";
 
 exports.defaultUserType = "student";
 exports.defaultClass = "others";
+exports.defaultYear = 7;
 
 exports.defaultUserSecret = "plums";
 

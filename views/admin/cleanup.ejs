@@ -1,21 +1,26 @@
+
 <!doctype html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Class created</title>
+	<title>Clean-up empty users</title>
 	<link rel="stylesheet" href="../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
 	
 </head>
 <body>
+
+	<h1>Clean up empty users</h1>
+	<p>This will invalidate any unused validation tokens and remove the empty users.</p>
+	
+	<form method="post" action="/admin/cleanup">
+		<input type="hidden" name="forsure" value="forsure" />
+		<input type="button" value="Cancel" onclick="javascript:history.back()" />
+		<input type="submit" value="Cleanup" />
+	</form>
 	
 	
-	<div class="alert alert-success">
-		Class Created
-	</div>
-	<a href="populate?id=<%= id %>">Populate</a> it with students now
-	
-	
+
 </body>
 </html>

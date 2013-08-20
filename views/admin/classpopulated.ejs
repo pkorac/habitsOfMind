@@ -15,6 +15,17 @@
 		Class Populated
 	</div>
 	
+	<div>
+		<p>The secret for the class is <strong><%= secret %></strong> and here are the registration numbers: </p>
+		
+		
+		<ul>
+			<% for (var i = 0; i < tokens.length; i++ ){ %>
+				<li><strong><%= tokens[i] %></strong></li>
+			<% } %>
+		</ul>
+	</div>
+	
 	
 </body>
 </html>

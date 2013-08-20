@@ -16,7 +16,7 @@ exports.listUsers = function( req, res ){
 	} );
 };
 
-// Create User
+// Create User Page
 exports.createUser = function(req,res){
 	res.render( 'admin/usercreate', { allTypes: config.userTypes, 
 										defaultType: config.defaultUserType,
@@ -32,16 +32,20 @@ exports.createUserSubmit = function(req,res){
 		var type = req.body.usertype;
 		
 		if (secret && type){
-			db.createEmptyUser( secret, type,  function(err, user, token){
-				if(err){
+			var habitsClass = req.body.habitsClass || null;
+			//var year = parseInt(req.body.year) || config.defaultYear;
+			
+			// Create the user
+			db.createUser( secret, type, null, habitsClass, null, function(err, newUser, token){
+				if( err ){
 					next();
 				} else{
-					console.log( util.inspect( user, {colors: true} ) );
-					console.log( token );
-					
+					//console.log( util.inspect( newUser, {colors: true} ) );
 					res.render('admin/usercreated', { secret: secret, token: token });
 				}
+				
 			} );
+			
 		} else{
 			next();
 		}		
@@ -51,7 +55,7 @@ exports.createUserSubmit = function(req,res){
 };
 
 
-// Edit user
+// Edit user Page
 exports.editUser = function(req,res,next){
 	var id = req.query.id;
 	if ( id ){
@@ -63,7 +67,9 @@ exports.editUser = function(req,res,next){
 						email: user.email || "",
 						habitsClass: user.habitsClass,
 						id: user.id,
-						allTypes: config.userTypes
+						allTypes: config.userTypes,
+						genders: config.genders,
+						gender: user.gender
 					} );	
 			} else{
 				next();
@@ -74,19 +80,23 @@ exports.editUser = function(req,res,next){
 	}
 };
 
+// Edit user submit
 exports.editUserSubmit = function(req,res,next){
 
 	if( req.body ){
 	
 		var edit = {
+			id: req.body.id,
 			email: req.body.email,
 			habitsClass: req.body.habitsClass,
 			type: req.body.usertype,
-			password: req.body.password
+			password: req.body.password,
+			gender: req.body.gender
 		};
 		if ( edit.password.length < 1 )edit.password = null;	
 	
-		db.editUser( req.body.id, edit, function(err, user){
+		db.editUser( edit.id, edit, function(err, user){
+
 			if( user ){
 				res.redirect("/admin/users/edit/?id="+user.id);
 			}else{
@@ -98,7 +108,7 @@ exports.editUserSubmit = function(req,res,next){
 	}
 };
 
-// Delete user
+// Delete user Page
 exports.deleteUser = function(req,res, next){
 	
 	if ( req.query ){
@@ -115,7 +125,7 @@ exports.deleteUser = function(req,res, next){
 	}
 };
 
-// DeleteUser submit
+// Delete User submit
 exports.deleteUserSubmit = function(req,res,next){
 	
 	var id = req.body.id;
@@ -139,42 +149,207 @@ exports.deleteUserSubmit = function(req,res,next){
 
 /////////////////////////////////////////////
 // CLASSES
-exports.listClasses = function(req,res){
-	res.send("Listing classes");
+exports.listClasses = function(req,res,next){
+	db.listClasses( function(err, classes){
+		if(err){ 
+			next(); 
+			return;
+		}
+		res.render('admin/classlist', { classes: classes });		
+	} );
 };
 
-exports.createClass = function(req,res){
-	res.render('admin/classnew', {});
+// Create class
+exports.createClass = function(req,res,next){
+	res.render('admin/classcreate', { year: config.defaultYear, message: req.flash(config.flashMessage) });
 };
 
-exports.createClassSubmit = function(req,res){
-	res.send("Created");
+// Create Class submit
+exports.createClassSubmit = function(req,res,next){
+	if( req.body ){
+	
+		var name = req.body.habitsClass;
+		var year = parseInt( req.body.year );
+		var teacher = req.body.teacher;
+		
+		if ( name && year && teacher ){
+			db.createClass( name, year, teacher, function(err, newClass){
+				if ( err ) {
+					req.flash(config.flashMessage,err.message );
+					res.redirect('/admin/classes/create');
+					return;
+				} else{
+					// all good let's populate it with students now
+					res.render('admin/classcreated', { id: newClass.id });
+				}
+			} );	
+		} else{
+			req.flash(config.flashMessage, "All fields must be filled out");
+			res.redirect( '/admin/classes/create');
+		}		
+	} else{
+		req.flash(config.flashMessage, "All fields must be filled out");
+		res.redirect( '/admin/classes/create');
+	}
 };
 
+// Populate a class
 exports.populate = function(req,res){
-	res.send("Populate Class");
+	var id = null;
+	if ( req.query && req.query.id) id = req.query.id;
+	db.listClasses( function(err, classes){
+		if ( err ){
+			next();
+		}{
+			res.render('admin/classpopulate', { classes: classes, 
+												defaultSecret: config.defaultUserSecret,
+												message: req.flash(config.flashMessage),
+												id: id} );
+		}
+	} );
 };
 
-exports.populateSubmit = function(req,res){
-	res.send("Populated");
+// Populate class submit
+exports.populateSubmit = function(req,res,next){
+	if( req.body ){
+		
+		console.log( util.inspect( req.body, {colors: true} ) );
+		
+		var classid = req.body.classid;
+		var secret = req.body.secret;
+		var howMany = req.body.howMany;
+		if( classid && secret && howMany ){
+			
+			db.createStudents( howMany, secret, classid, function(err, tokens){
+				if( err ){
+					req.flash(config.flashMessage, err.message );
+					res.redirect('/admin/classes/populate');
+				} else{
+					// all good
+					res.render( 'admin/classpopulated', { tokens: tokens, secret: secret } );
+				}
+				
+			} );
+		} else{
+			req.flash(config.flashMessage, "All the fields must be filled out");
+			res.redirect('/admin/classes/populate');			
+		}
+	} else{
+		req.flash(config.flashMessage, "All the fields must be filled out");
+		res.redirect('/admin/classes/populate');		
+	} 
 };
 
-
-exports.editClass = function(req,res){
-	res.send("Edit Class");
+// Edit class page
+exports.editClass = function(req,res,next){
+	
+	if( req.query ){
+	
+		var id = req.query.id;
+	
+		if ( id ){
+			db.findClassbyId( id, function(err, habitsClass){				
+				console.log( util.inspect( habitsClass, {colors: true} ) );
+				if ( err ){
+					next();
+					return;
+				} else{
+					res.render('admin/classedit', { message: req.flash(config.flashMessage),	
+													teacher: habitsClass.teacher,
+													year: habitsClass.year,
+													name: habitsClass.name,
+													id: habitsClass.id});
+	
+				}				
+			} );		
+		} else{
+			next();
+			return;
+		}		
+	} else{
+		next();
+		return;				
+	}
 };
 
-exports.editClassSubmit = function(req,res){
-	res.send("Edited");
+// Edit class submit
+exports.editClassSubmit = function(req,res,next){
+
+	if( req.body && req.body.id ){
+	
+		var params = {
+			id: req.body.id,
+			teacher: req.body.teacher,
+			year: req.body.year,
+			name: req.body.name
+		};
+		if( params.id && params.teacher && params.year && params.name ){			
+			db.editClass( params.id, params.name, params.year, params.teacher, function(err, editedClass){
+				if(err){
+					req.flash(config.flashMessage, err.message);
+					res.redirect('/admin/classes/edit/?id='+params.id);
+				}else{
+					req.flash(config.flashMessage, "Successfully saved");
+					res.redirect('/admin/classes/edit/?id='+params.id);
+				}
+			} );
+		} else{
+			req.flash(config.flashMessage, "All the fields must be filled out");
+			res.redirect('/admin/classes/edit/?id='+params.id);
+		}		
+	} else{
+		next();
+	}
 };
 
-
-exports.deleteClass = function(req,res){
-	res.send("Delete Class");
+// Delete Class
+exports.deleteClass = function(req,res,next){
+	if (req.query && req.query.id){
+		db.findClassbyId( req.query.id, function(err, theClass){
+			if( err ){
+				next();
+			} else{
+				res.render('admin/classdelete', { id: theClass.id,
+												  name: theClass.name });
+			}
+		} );
+	} else{
+		next();
+	}
 };
 
 exports.deleteClassSubmit = function(req,res){
-	res.send("Deleted");
+	if ( req.body && req.body.id ){
+		db.deleteClass( req.body.id, function(err){
+			if( err ){
+				next();
+			} else{
+				res.render('admin/classdeleted');
+			}
+		} );
+	} else{
+		next();
+	}
+};
+
+
+
+exports.cleanup = function(req,res){
+	res.render('admin/cleanup');
+};
+
+
+exports.cleanupSubmit = function(req,res,next){
+console.log("here");
+	if(req.body && req.body.forsure){
+		db.cleanupEmptyUsers( function(err){
+			if ( err ){
+				res.send( err.message );
+			}else{
+				res.render("admin/cleanedup");
+			}
+		});
+	}
 };
 
 

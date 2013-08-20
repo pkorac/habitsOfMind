@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Add User</title>
+	<title>Admin - Delete class</title>
 	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
@@ -10,11 +10,11 @@
 </head>
 <body>
 	
-	<h3>Delete <%= username %></h3>
+	<h3>Delete <%= name %></h3>
 	Are you sure?
-	<form method="post" action="/admin/users/delete/">
+	<form method="post" action="/admin/classes/delete/">
 		<input type="hidden" name="id" value="<%= id %>" />
-		<input type="hidden" name="username" value="<%= username %>" />
+		<input type="hidden" name="name" value="<%= name %>" />
 		<input type="button" value="no" onclick="javascript:history.back()" />
 		<input type="submit" value="Yes" />
 	</form>

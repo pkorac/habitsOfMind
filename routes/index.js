@@ -29,6 +29,7 @@ module.exports = function(app, config, auth){
 	
 	// Students and teachers
 	app.get('/students/', auth.check, students.landing );
+	app.post('/students/landing', auth.check, students.editProfileSubmit ); // post
 	app.get('/teachers/', auth.check, teachers.landing );
 	
 	// Classes
@@ -64,6 +65,8 @@ module.exports = function(app, config, auth){
 	app.get('/admin/classes/delete', auth.check, admin.deleteClass );
 	app.post('/admin/classes/delete', auth.check, admin.deleteClassSubmit ); // post
 
+	app.get('/admin/cleanup', auth.check, admin.cleanup );
+	app.post('/admin/cleanup', auth.check, admin.cleanupSubmit ); // post
 
 	app.get('/admin/test', auth.check, admin.test );
 
