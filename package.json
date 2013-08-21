@@ -1,7 +1,7 @@
 {
-  "name": "AuthExample",
-  "version": "0.0.0",
-  "description": "",
+  "name": "Habits Of Mind",
+  "version": "0.0.1",
+  "description": "A web app focusing on developing learning habits instead of grades",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,6 +13,6 @@
 	  "connect-flash": "0.1.1",
 	  "ejs": "0.8.3"
   },
-  "author": "",
+  "author": "Peter Koraca",
   "license": "BSD"
 }
