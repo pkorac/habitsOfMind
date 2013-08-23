@@ -16,7 +16,10 @@
 	  "connect-flash": "0.1.1",
 	  "ejs": "0.8.3"
   },
-  "engine": "node >= 0.10.15",
+  "engines": {
+    "node": "0.10.x",
+    "npm":  "1.3.x"
+  },
   "author": "Peter Koraca",
   "license": "BSD"
 }
