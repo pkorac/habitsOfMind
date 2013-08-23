@@ -4,7 +4,7 @@ var landing = require('./landing'),
 	login = require('./login'),
 	students = require('./students'),	
 	teachers = require('./teachers'),
-	classes = require('./classes'),
+	groups = require('./groups'),
 	admin = require('./admin'),
 	lost = require('./lost'),
 	denied = require('./denied');
@@ -32,8 +32,8 @@ module.exports = function(app, config, auth){
 	app.post('/students/landing', auth.check, students.editProfileSubmit ); // post
 	app.get('/teachers/', auth.check, teachers.landing );
 	
-	// Classes
-	app.get('/classes/', classes.landing);
+	// Groups
+	app.get('/groups/', groups.landing);
 		
 	// Admin
 	app.get('/admin/', auth.check, admin.landing );
@@ -51,19 +51,19 @@ module.exports = function(app, config, auth){
 
 
 
-	app.get('/admin/classes/', auth.check, admin.listClasses );
+	app.get('/admin/groups/', auth.check, admin.listGroups );
 	
-	app.get('/admin/classes/create', auth.check, admin.createClass );
-	app.post('/admin/classes/create', auth.check, admin.createClassSubmit ); // post
+	app.get('/admin/groups/create', auth.check, admin.createGroup );
+	app.post('/admin/groups/create', auth.check, admin.createGroupSubmit ); // post
 	
-	app.get('/admin/classes/populate', auth.check, admin.populate );
-	app.post('/admin/classes/populate', auth.check, admin.populateSubmit ); // post
+	app.get('/admin/groups/populate', auth.check, admin.populate );
+	app.post('/admin/groups/populate', auth.check, admin.populateSubmit ); // post
 	
-	app.get('/admin/classes/edit', auth.check, admin.editClass );
-	app.post('/admin/classes/edit', auth.check, admin.editClassSubmit ); // post	
+	app.get('/admin/groups/edit', auth.check, admin.editGroup );
+	app.post('/admin/groups/edit', auth.check, admin.editGroupSubmit ); // post	
 	
-	app.get('/admin/classes/delete', auth.check, admin.deleteClass );
-	app.post('/admin/classes/delete', auth.check, admin.deleteClassSubmit ); // post
+	app.get('/admin/groups/delete', auth.check, admin.deleteGroup );
+	app.post('/admin/groups/delete', auth.check, admin.deleteGroupSubmit ); // post
 
 	app.get('/admin/cleanup', auth.check, admin.cleanup );
 	app.post('/admin/cleanup', auth.check, admin.cleanupSubmit ); // post

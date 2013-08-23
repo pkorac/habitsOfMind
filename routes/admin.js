@@ -32,11 +32,11 @@ exports.createUserSubmit = function(req,res){
 		var type = req.body.usertype;
 		
 		if (secret && type){
-			var habitsClass = req.body.habitsClass || null;
+			var habitsGroup = req.body.habitsGroup || null;
 			//var year = parseInt(req.body.year) || config.defaultYear;
 			
 			// Create the user
-			db.createUser( secret, type, null, habitsClass, null, function(err, newUser, token){
+			db.createUser( secret, type, null, habitsGroup, null, function(err, newUser, token){
 				if( err ){
 					next();
 				} else{
@@ -65,7 +65,7 @@ exports.editUser = function(req,res,next){
 						username: user.name,
 						usertype: user.type,
 						email: user.email || "",
-						habitsClass: user.habitsClass,
+						habitsGroup: user.habitsGroup,
 						id: user.id,
 						allTypes: config.userTypes,
 						genders: config.genders,
@@ -88,7 +88,7 @@ exports.editUserSubmit = function(req,res,next){
 		var edit = {
 			id: req.body.id,
 			email: req.body.email,
-			habitsClass: req.body.habitsClass,
+			habitsGroup: req.body.habitsGroup,
 			type: req.body.usertype,
 			password: req.body.password,
 			gender: req.body.gender
@@ -149,59 +149,59 @@ exports.deleteUserSubmit = function(req,res,next){
 
 /////////////////////////////////////////////
 // CLASSES
-exports.listClasses = function(req,res,next){
-	db.listClasses( function(err, classes){
+exports.listGroups = function(req,res,next){
+	db.listGroups( function(err, groups){
 		if(err){ 
 			next(); 
 			return;
 		}
-		res.render('admin/classlist', { classes: classes });		
+		res.render('admin/grouplist', { groups: groups });		
 	} );
 };
 
-// Create class
-exports.createClass = function(req,res,next){
-	res.render('admin/classcreate', { year: config.defaultYear, message: req.flash(config.flashMessage) });
+// Create group
+exports.createGroup = function(req,res,next){
+	res.render('admin/groupcreate', { year: config.defaultYear, message: req.flash(config.flashMessage) });
 };
 
-// Create Class submit
-exports.createClassSubmit = function(req,res,next){
+// Create Group submit
+exports.createGroupSubmit = function(req,res,next){
 	if( req.body ){
 	
-		var name = req.body.habitsClass;
+		var name = req.body.habitsGroup;
 		var year = parseInt( req.body.year );
 		var teacher = req.body.teacher;
 		
 		if ( name && year && teacher ){
-			db.createClass( name, year, teacher, function(err, newClass){
+			db.createGroup( name, year, teacher, function(err, newGroup){
 				if ( err ) {
 					req.flash(config.flashMessage,err.message );
-					res.redirect('/admin/classes/create');
+					res.redirect('/admin/groups/create');
 					return;
 				} else{
-					// all good let's populate it with students now
-					res.render('admin/classcreated', { id: newClass.id });
+					// all good let's populate it with users now
+					res.render('admin/groupcreated', { id: newGroup.id });
 				}
 			} );	
 		} else{
 			req.flash(config.flashMessage, "All fields must be filled out");
-			res.redirect( '/admin/classes/create');
+			res.redirect( '/admin/groups/create');
 		}		
 	} else{
 		req.flash(config.flashMessage, "All fields must be filled out");
-		res.redirect( '/admin/classes/create');
+		res.redirect( '/admin/groups/create');
 	}
 };
 
-// Populate a class
+// Populate a group
 exports.populate = function(req,res){
 	var id = null;
 	if ( req.query && req.query.id) id = req.query.id;
-	db.listClasses( function(err, classes){
+	db.listGroups( function(err, groups){
 		if ( err ){
 			next();
 		}{
-			res.render('admin/classpopulate', { classes: classes, 
+			res.render('admin/grouppopulate', { groups: groups, 
 												defaultSecret: config.defaultUserSecret,
 												message: req.flash(config.flashMessage),
 												id: id} );
@@ -209,56 +209,54 @@ exports.populate = function(req,res){
 	} );
 };
 
-// Populate class submit
+// Populate group submit
 exports.populateSubmit = function(req,res,next){
 	if( req.body ){
 		
-		console.log( util.inspect( req.body, {colors: true} ) );
-		
-		var classid = req.body.classid;
+		var groupid = req.body.groupid;
 		var secret = req.body.secret;
 		var howMany = req.body.howMany;
-		if( classid && secret && howMany ){
+		if( groupid && secret && howMany ){
 			
-			db.createStudents( howMany, secret, classid, function(err, tokens){
+			db.createUsers( howMany, secret, groupid, function(err, tokens){
 				if( err ){
 					req.flash(config.flashMessage, err.message );
-					res.redirect('/admin/classes/populate');
+					res.redirect('/admin/groups/populate');
 				} else{
 					// all good
-					res.render( 'admin/classpopulated', { tokens: tokens, secret: secret } );
+					res.render( 'admin/grouppopulated', { tokens: tokens, secret: secret } );
 				}
 				
 			} );
 		} else{
 			req.flash(config.flashMessage, "All the fields must be filled out");
-			res.redirect('/admin/classes/populate');			
+			res.redirect('/admin/groups/populate');			
 		}
 	} else{
 		req.flash(config.flashMessage, "All the fields must be filled out");
-		res.redirect('/admin/classes/populate');		
+		res.redirect('/admin/groups/populate');		
 	} 
 };
 
-// Edit class page
-exports.editClass = function(req,res,next){
+// Edit group page
+exports.editGroup = function(req,res,next){
 	
 	if( req.query ){
 	
 		var id = req.query.id;
 	
 		if ( id ){
-			db.findClassbyId( id, function(err, habitsClass){				
-				console.log( util.inspect( habitsClass, {colors: true} ) );
+			db.findGroupbyId( id, function(err, habitsGroup){				
+				//console.log( util.inspect( habitsGroup, {colors: true} ) );
 				if ( err ){
 					next();
 					return;
 				} else{
-					res.render('admin/classedit', { message: req.flash(config.flashMessage),	
-													teacher: habitsClass.teacher,
-													year: habitsClass.year,
-													name: habitsClass.name,
-													id: habitsClass.id});
+					res.render('admin/groupedit', { message: req.flash(config.flashMessage),	
+													teacher: habitsGroup.teacher,
+													year: habitsGroup.year,
+													name: habitsGroup.name,
+													id: habitsGroup.id});
 	
 				}				
 			} );		
@@ -272,8 +270,8 @@ exports.editClass = function(req,res,next){
 	}
 };
 
-// Edit class submit
-exports.editClassSubmit = function(req,res,next){
+// Edit group submit
+exports.editGroupSubmit = function(req,res,next){
 
 	if( req.body && req.body.id ){
 	
@@ -284,33 +282,33 @@ exports.editClassSubmit = function(req,res,next){
 			name: req.body.name
 		};
 		if( params.id && params.teacher && params.year && params.name ){			
-			db.editClass( params.id, params.name, params.year, params.teacher, function(err, editedClass){
+			db.editGroup( params.id, params.name, params.year, params.teacher, function(err, editedGroup){
 				if(err){
 					req.flash(config.flashMessage, err.message);
-					res.redirect('/admin/classes/edit/?id='+params.id);
+					res.redirect('/admin/groups/edit/?id='+params.id);
 				}else{
 					req.flash(config.flashMessage, "Successfully saved");
-					res.redirect('/admin/classes/edit/?id='+params.id);
+					res.redirect('/admin/groups/edit/?id='+params.id);
 				}
 			} );
 		} else{
 			req.flash(config.flashMessage, "All the fields must be filled out");
-			res.redirect('/admin/classes/edit/?id='+params.id);
+			res.redirect('/admin/groups/edit/?id='+params.id);
 		}		
 	} else{
 		next();
 	}
 };
 
-// Delete Class
-exports.deleteClass = function(req,res,next){
+// Delete Group
+exports.deleteGroup = function(req,res,next){
 	if (req.query && req.query.id){
-		db.findClassbyId( req.query.id, function(err, theClass){
+		db.findGroupbyId( req.query.id, function(err, theGroup){
 			if( err ){
 				next();
 			} else{
-				res.render('admin/classdelete', { id: theClass.id,
-												  name: theClass.name });
+				res.render('admin/groupdelete', { id: theGroup.id,
+												  name: theGroup.name });
 			}
 		} );
 	} else{
@@ -318,13 +316,13 @@ exports.deleteClass = function(req,res,next){
 	}
 };
 
-exports.deleteClassSubmit = function(req,res){
+exports.deleteGroupSubmit = function(req,res){
 	if ( req.body && req.body.id ){
-		db.deleteClass( req.body.id, function(err){
+		db.deleteGroup( req.body.id, function(err){
 			if( err ){
 				next();
 			} else{
-				res.render('admin/classdeleted');
+				res.render('admin/groupdeleted');
 			}
 		} );
 	} else{
@@ -340,7 +338,6 @@ exports.cleanup = function(req,res){
 
 
 exports.cleanupSubmit = function(req,res,next){
-console.log("here");
 	if(req.body && req.body.forsure){
 		db.cleanupEmptyUsers( function(err){
 			if ( err ){
@@ -358,7 +355,7 @@ console.log("here");
 ///////// TESTS ///////////
 exports.test = function(req,res){
 
-	db.createStudents( 80, "oranges", "9mm", function(err, tokens){
+	db.createUsers( 80, "oranges", "9mm", function(err, tokens){
 		res.send( tokens );
 	} );
 	

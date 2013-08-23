@@ -13,32 +13,32 @@
 		- fn ( err, user )
 	- findUserbyValidationToken( token, fn )
 		- fn (err, user )
-	- createUser( secret, type, email, habitsClass, fn )
+	- createUser( secret, type, email, habitsGroup, fn )
 		- fn( err, user )
 	- createEmptyUser( secret, type, fn )
 		- fn( err, user, token )
-	- createStudents( howMany, secret, habitsClass, fn )
+	- createUsers( howMany, secret, habitsGroup, fn )
 		- fn( err, validationTokens )
 
 	- cleanupEmptyusers
 		- fn( err )
 
 	- editUser( id, params, fn )
-		- params( type, habitsClass, email, password )
+		- params( type, habitsGroup, email, password )
 		- fn( err, editedUser )	
 	- deleteUser( id, fn )
 		- fn ( err )
 
 
-	Classes
-	- listClasses( fn )
-		- fn( err, classes )
-	- findClassbyId( id, fn )
-		- fn( err, class )
-	- createClass( name, year, teacher, fn )
-		- fn( err, newClass )
-	- editClass( id, name, year, teacher, fn )
-		- fn( err, editedClass )
+	Groups
+	- listGroups( fn )
+		- fn( err, groups )
+	- findGroupbyId( id, fn )
+		- fn( err, group )
+	- createGroup( name, year, teacher, fn )
+		- fn( err, newGroup )
+	- editGroup( id, name, year, teacher, fn )
+		- fn( err, editedGroup )
 	
 	
 	Helper Functions
@@ -66,11 +66,11 @@ var util = require('util'),
 
 // Temp DB
 var users = [
-		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habitsClass: "123"},
-		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habitsClass: "123"},
-		{ id: 'c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888',name: '7158e8d519766b8e5ed99d24151c2ae53de337d026a85f4b74de957238a4',type: 'student',password: '9719377ba92fb56e3265656645700ad0ccbf290ac5dc4f5eeddb98859743',email: null,habitsClass: '8pk', validationToken: '7777',validationSecret: 'plums' }];
+		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habitsGroup: "123"},
+		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habitsGroup: "123"},
+		{ id: 'c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888',name: '7158e8d519766b8e5ed99d24151c2ae53de337d026a85f4b74de957238a4',type: 'student',password: '9719377ba92fb56e3265656645700ad0ccbf290ac5dc4f5eeddb98859743',email: null,habitsGroup: '8pk', validationToken: '7777',validationSecret: 'plums' }];
 
-var classes = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },
+var groups = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },
 				{ id: "1234", name: "7pk", year: 7, teacher: "Peter" } ];
 
 
@@ -81,25 +81,24 @@ var classes = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },
 ///////////////////////////////////////////////////////////////////////////
 
 // Users
-var HabitsUser = function( id, name, pass, type, email, habitsClass, gender ){
+var HabitsUser = function( id, name, pass, type, email, habitsGroup, gender ){
 	this.id = id;
 	this.name = name;
 	this.type = type;
 	this.password = pass;
 	this.email = email;
-	this.habitsClass = habitsClass;
+	this.habitsGroup = habitsGroup;
 	this.gender = gender;
 };
 
-// Classes
-var HabitsClass = function( id, name, year, teacher ){
+// Groups
+var HabitsGroup = function( id, name, year, teacher ){
 	this.id = id;
 	this.name = name;
 	this.year = year;
 	this.teacher = teacher;
 };
 
-var studentUserType = "student";
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -231,11 +230,11 @@ function findUserbyValidationToken( token, fn ){
 
 
 // CREATE a User
-function createUser( secret, type, email, habitsClass, gender, fn ){ // check if the class exists perhaps
+function createUser( secret, type, email, habitsGroup, gender, fn ){ // check if the group exists perhaps
 
 	secret = secret || config.defaultUserSecret;
 	type = type || config.defaultUserType;
-	habitsClass = habitsClass || null;
+	habitsGroup = habitsGroup || null;
 	email = email || null;
 	gender = gender || config.defaultGender;
 	
@@ -246,7 +245,7 @@ function createUser( secret, type, email, habitsClass, gender, fn ){ // check if
 					generateValidationToken( function(err, token){
 
 						// Create the user
-						var newUser = new HabitsUser( id, name, pass, type, email, habitsClass, gender );
+						var newUser = new HabitsUser( id, name, pass, type, email, habitsGroup, gender );
 						newUser.validationToken = token;
 						newUser.validationSecret = hashedSecret;
 
@@ -270,14 +269,14 @@ function createEmptyUser( secret, type, fn ){
 */
 
 
-// CREATE Students
-function createStudents( howMany, secret, habitsClass, fn ){ // habits class needs to be checked etc
+// CREATE Users
+function createUsers( howMany, secret, habitsGroup, fn ){ // habits group needs to be checked etc
 
 	if ( howMany < 1679616 ){ // the max possible combinations with random four characters
 		
-		type = studentUserType;
+		type = config.defaultUserType;
 		secret = secret || config.defaultUserSecret;
-		habitsClass = habitsClass || config.defaultClass;
+		habitsGroup = habitsGroup || config.defaultGroup;
 
 			
 		var clones = [];
@@ -296,7 +295,7 @@ function createStudents( howMany, secret, habitsClass, fn ){ // habits class nee
 											
 									// Create the user
 									var newUser = new HabitsUser( id, name, pass, type, null,
-																  habitsClass, config.defaultGender );
+																  habitsGroup, config.defaultGender );
 									var token = randomFourCharacters();
 									newUser.validationToken = token;
 									newUser.validationSecret = hashedSecret;
@@ -384,7 +383,7 @@ function editUser( id, params, fn ){
 
 			user.type = params.type || user.type;
 			user.email = params.email || user.email;
-			user.habitsClass = params.habitsClass || user.habitsClass;
+			user.habitsGroup = params.habitsGroup || user.habitsGroup;
 			user.gender = params.gender || user.gender;
 			
 			var updateUser = function( user, callback ){
@@ -534,27 +533,27 @@ function deleteUser( id, fn ){
 //
 ///////////////////////////////////////////////////////////////////////////
 
-// LIST classes
-function listClasses( fn ){
-	fn( null, classes );
+// LIST groups
+function listGroups( fn ){
+	fn( null, groups );
 }
 
 
-// FIND class by id
-function findClassbyId( id, fn ){
-	for ( var i = 0; i < classes.length; i++ ){
-		if ( classes[i].id === id ){
-			fn( null, classes[i] );
+// FIND group by id
+function findGroupbyId( id, fn ){
+	for ( var i = 0; i < groups.length; i++ ){
+		if ( groups[i].id === id ){
+			fn( null, groups[i] );
 			return;
 		}
 	}
-	fn( new Error("No such class"), null );
+	fn( new Error("No such group"), null );
 	return;
 }
 
 
-// CREATE a new class
-function createClass( name, year, teacher, fn ){
+// CREATE a new group
+function createGroup( name, year, teacher, fn ){
 	
 	if ( !name ){
 		fn( new Error("No name") );
@@ -562,9 +561,9 @@ function createClass( name, year, teacher, fn ){
 		// Generate an id
 		randomHash( function(err, id){
 			if(!err){				
-				var newHabitsClass = new HabitsClass( id, name, year, teacher );
-				classes.push( newHabitsClass );
-				fn( null, newHabitsClass );
+				var newHabitsGroup = new HabitsGroup( id, name, year, teacher );
+				groups.push( newHabitsGroup );
+				fn( null, newHabitsGroup );
 			} else {
 				fn( err, null );
 			}
@@ -574,71 +573,71 @@ function createClass( name, year, teacher, fn ){
 
 
 
-// EDIT a class
-function editClass( id, name, year, teacher, fn ){
+// EDIT a group
+function editGroup( id, name, year, teacher, fn ){
 	if ( !id ){
 		fn( new Error("No ID"), null );
 		return;
 	} 
 	
-	findClassbyId( id, function(err, theClass){
+	findGroupbyId( id, function(err, theGroup){
 	
-		if ( !theClass || err ){
-			fn( new Error("No such class") );	
+		if ( !theGroup || err ){
+			fn( new Error("No such group") );	
 		} else{
-			theClass.name = name;
-			theClass.year = year;
-			theClass.teacher = teacher;
+			theGroup.name = name;
+			theGroup.year = year;
+			theGroup.teacher = teacher;
 			
-			// add the new class to the DB
+			// add the new group to the DB
 			// for the moment array splicing
 			var index = 0;
-			for ( var i = 0; i < classes.length; i++ ){
-				if ( classes[i].id === id ){
+			for ( var i = 0; i < groups.length; i++ ){
+				if ( groups[i].id === id ){
 					index = i;
 				}
 			}
-			//console.log( "Removing %s's class", classes[index].teacher );
-			classes.splice( index, 1, theClass );
-			fn( null, theClass );
+			//console.log( "Removing %s's group", groups[index].teacher );
+			groups.splice( index, 1, theGroup );
+			fn( null, theGroup );
 		}		
 		
 	} );
 	
 }
 
-// DELETE Class
-function deleteClass( id, fn ){
+// DELETE Group
+function deleteGroup( id, fn ){
 
-	findClassbyId( id, function(err, theClass){
-		if ( !theClass || err ){
-			fn( new Error("No such class") );
+	findGroupbyId( id, function(err, theGroup){
+		if ( !theGroup || err ){
+			fn( new Error("No such group") );
 		} else{
 
 			var index = 0;
-			for ( var i = 0; i < classes.length; i++ ){
-				if ( classes[i].id === id ){
+			for ( var i = 0; i < groups.length; i++ ){
+				if ( groups[i].id === id ){
 					index = i;
 				}
 			}
-			//console.log( "Removing %s's class", classes[index].teacher );
+			//console.log( "Removing %s's group", groups[index].teacher );
 			for ( var i = 0; i < users.length; i++ ){
-						if( users[i].habitsClass === id ) {
-							users[i].habitsClass = null;
+						if( users[i].habitsGroup === id ) {
+							users[i].habitsGroup = null;
 						}
 					}
-			classes.splice( index, 1 );
+			groups.splice( index, 1 );
 			fn(null);					
 			// really should do something with the users
 /*
 			listUsers( function(err, users){
 				if (!err){
 					for ( var i = 0; i < users.length; i++ ){
-						if( users[i].habitsClass === id ) {
-							users[i].habitsClass = null;
+						if( users[i].habitsGroup === id ) {
+							users[i].habitsGroup = null;
 						}
 					}
-					classes.splice( index, 1 );
+					groups.splice( index, 1 );
 					fn(null);					
 				}else{
 					fn( err );
@@ -691,19 +690,19 @@ exports.findUserbyValidationToken = findUserbyValidationToken;
 exports.createUser = createUser;
 
 exports.registerUser = registerUser;
-exports.createStudents = createStudents;
+exports.createUsers = createUsers;
 
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
 
 exports.cleanupEmptyUsers = cleanupEmptyUsers;
 
-// Classes
-exports.listClasses = listClasses;
-exports.findClassbyId = findClassbyId;
-exports.createClass = createClass;
-exports.editClass = editClass;
-exports.deleteClass = deleteClass;
+// Groups
+exports.listGroups = listGroups;
+exports.findGroupbyId = findGroupbyId;
+exports.createGroup = createGroup;
+exports.editGroup = editGroup;
+exports.deleteGroup = deleteGroup;
 
 
 

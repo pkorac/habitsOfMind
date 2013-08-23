@@ -1,8 +1,9 @@
+
 <!doctype html>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Class created</title>
+	<title>Admin - Groups</title>
 	<link rel="stylesheet" href="../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
@@ -10,12 +11,22 @@
 </head>
 <body>
 	
+	<h1>Admin area</h1>
+	<h3>Groups</h3>
 	
-	<div class="alert alert-success">
-		Class Created
-	</div>
-	<a href="populate?id=<%= id %>">Populate</a> it with students now
+	<a href="create">Create New</a> | 
+	<a href="populate">Add students</a>
 	
+	<ul>
+	<% for ( var i = 0; i < groups.length; i ++ ){ %>
+		<li>
+		<strong><%= groups[i].name %></strong><br />
+		<a href="edit/?id=<%= groups[i].id %>">Edit</a> | 
+		<a href="delete/?id=<%= groups[i].id %>"> Delete</a>
+		</li>
+	<% } %>
+	</ul>
 	
+
 </body>
 </html>

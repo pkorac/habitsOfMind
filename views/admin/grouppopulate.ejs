@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Add students to a class</title>
+	<title>Add students to a group</title>
 	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
@@ -11,21 +11,21 @@
 <body>
 	
 	<h1>Admin area</h1>
-	<h3>Add students to a class</h3>
+	<h3>Add students to a group</h3>
 	
 	<% if ( message ){ %>
 		<%= message %>	
 	<% } %>
 	
-	<form method="post" action="/admin/classes/populate">
+	<form method="post" action="/admin/groups/populate">
 	    <div>
-	    	<label>Select class</label>	    	
-	    	<select name="classid">
-				<% for ( var i = 0; i < classes.length; i++ ){ %>
-					<% if ( classes[i].id === id ) { %>
-						<option value="<%= classes[i].id %>" selected><%= classes[i].name %></option>	
+	    	<label>Select group</label>	    	
+	    	<select name="groupid">
+				<% for ( var i = 0; i < groups.length; i++ ){ %>
+					<% if ( groups[i].id === id ) { %>
+						<option value="<%= groups[i].id %>" selected><%= groups[i].name %></option>	
 					<% } else { %>
-						<option value="<%= classes[i].id %>"><%= classes[i].name %></option>
+						<option value="<%= groups[i].id %>"><%= groups[i].name %></option>
 					<% } %>
 				<% } %>
 			</select>
