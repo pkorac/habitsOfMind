@@ -13,7 +13,7 @@ exports.genders = ["boy", "girl"];
 exports.defaultGender = "boy";
 
 exports.defaultUserType = "student";
-exports.defaultClass = "others";
+exports.defaultClass = "Everyone else";
 exports.defaultYear = 7;
 
 exports.defaultUserSecret = "plums";

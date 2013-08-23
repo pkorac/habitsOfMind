@@ -35,12 +35,17 @@
 			<label>Secret</label>
 			<input type="text" name="secret" value="<%= defaultSecret %>" />
 		</div>	
-		<div>
-			<label>How many students to add</label>
-			<input type="number" name="howMany" />
-		</div>			
+		<div class="pull-left">
+			<label>Boys:</label>
+			<input type="number" name="howManyBoys" class="input-mini" value="0" />
+		</div>
+		<div class="pull-left">
+			<label>Girls:</label>
+			<input type="number" name="howManyGirls" class="input-mini" value="0" />
+		</div>
+		<div class="clearfix"></div>
 	    <div>
-	        <input type="submit" value="Add students"/>
+	        <input type="submit" value="Add students" class="btn btn-primary"/>
 	    </div>	
 	</form>
 	

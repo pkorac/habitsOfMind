@@ -18,12 +18,25 @@
 	<div>
 		<p>The secret for the group is <strong><%= secret %></strong> and here are the registration numbers: </p>
 		
-		
+		<% if ( boyTokens.length > 0 ) { %>
+			<h3>Boys</h3>
+			<ul>
+				<% for (var i = 0; i < boyTokens.length; i++ ){ %>
+					<li><strong><%= boyTokens[i] %></strong></li>
+				<% } %>
+			</ul>
+		<% } %>
+
+		<% if ( girlTokens.length > 0 ) { %>		
+		<h3>Girls</h3>
 		<ul>
-			<% for (var i = 0; i < tokens.length; i++ ){ %>
-				<li><strong><%= tokens[i] %></strong></li>
+			<% for (var i = 0; i < girlTokens.length; i++ ){ %>
+				<li><strong><%= girlTokens[i] %></strong></li>
 			<% } %>
 		</ul>
+		<% } %>
+		
+		
 	</div>
 	
 	

@@ -29,12 +29,29 @@
 	    	
 	    </div>
 	    <div>
-	    	<label>Year</label>
-	    	<input type="number" name="year" />
-	    </div>
+			<label>Gender</label>
+			<select name="gender">
+				<% for ( var i = 0; i < genders.length; i ++ ) { %> 
+					<% if ( i == 0 ) { %>
+						<option value="<%= genders[i] %>" selected><%= genders[i] %></option>
+					<% } else { %>
+						<option value="<%= genders[i] %>"><%= genders[i] %></option>
+					<% } %>
+				<% } %>
+			</select>			
+		</div>
 	    <div>
-	    	<label>Group</label>
-	    	<input type="text" name="habitsGroup" />
+	    	<label>Select group</label>	    	
+	    	<select name="groupid">
+				<% for ( var i = 0; i < groups.length; i++ ){ %>
+					<% if ( i == 0 ) { %>
+						<option value="<%= groups[i].id %>" selected><%= groups[i].name %></option>	
+					<% } else { %>
+						<option value="<%= groups[i].id %>"><%= groups[i].name %></option>
+					<% } %>
+				<% } %>
+			</select>
+	    	
 	    </div>
 	    <div>
 	        <input type="submit" value="Create"/>

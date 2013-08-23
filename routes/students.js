@@ -1,5 +1,6 @@
 var db = require('../db'),
-	config = require('../config');
+	config = require('../config'),
+	util = require('util');
 
 exports.landing = function(req,res){
 	db.findUserbyName( req.session.username, function(err, user){
@@ -24,11 +25,8 @@ exports.editProfileSubmit = function(req,res,next){
 		var id = req.body.id;
 		var params = {
 			email: req.body.email,
-			password: req.body.password,
-			gender: req.body.gender
+			password: req.body.password
 		};
-		
-		console.log( params );
 		
 		db.editUser( id, params, function(err, updatedUser){
 			if( err ){
@@ -36,6 +34,7 @@ exports.editProfileSubmit = function(req,res,next){
 				res.redirect( '/students/' );
 			} else{
 				
+				console.log( util.inspect( updatedUser, {colors: true} ) );
 				req.flash( config.flashMessage, "Details Saved");
 				res.redirect( '/students/' );							
 			}			

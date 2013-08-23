@@ -18,9 +18,19 @@ exports.listUsers = function( req, res ){
 
 // Create User Page
 exports.createUser = function(req,res){
-	res.render( 'admin/usercreate', { allTypes: config.userTypes, 
+
+	db.listGroups( function(err, groups){
+		if ( err ) {
+			next();
+		} else{
+			res.render( 'admin/usercreate', { allTypes: config.userTypes, 
 										defaultType: config.defaultUserType,
-										defaultSecret: config.defaultUserSecret } );
+										defaultSecret: config.defaultUserSecret,
+										genders: config.genders,
+										groups: groups } );	
+		}		
+	});
+
 };
 
 // Craete User Submit
@@ -28,20 +38,22 @@ exports.createUserSubmit = function(req,res){
 	
 	if ( req.body ){
 
-		var secret = req.body.secret;
-		var type = req.body.usertype;
+		var params = {
+			secret: req.body.secret,
+			type: req.body.usertype,
+			gender: req.body.gender,
+			groupid: req.body.groupid
+		};
 		
-		if (secret && type){
-			var habitsGroup = req.body.habitsGroup || null;
-			//var year = parseInt(req.body.year) || config.defaultYear;
+		if (params.secret && params.type && params.gender && params.groupid){
 			
 			// Create the user
-			db.createUser( secret, type, null, habitsGroup, null, function(err, newUser, token){
+			db.createUser( params, function(err, newUser, token){
 				if( err ){
 					next();
 				} else{
 					//console.log( util.inspect( newUser, {colors: true} ) );
-					res.render('admin/usercreated', { secret: secret, token: token });
+					res.render('admin/usercreated', { secret: params.secret, token: token });
 				}
 				
 			} );
@@ -82,7 +94,7 @@ exports.editUser = function(req,res,next){
 
 // Edit user submit
 exports.editUserSubmit = function(req,res,next){
-
+	
 	if( req.body ){
 	
 		var edit = {
@@ -173,6 +185,8 @@ exports.createGroupSubmit = function(req,res,next){
 		var teacher = req.body.teacher;
 		
 		if ( name && year && teacher ){
+			
+			// Create the group		
 			db.createGroup( name, year, teacher, function(err, newGroup){
 				if ( err ) {
 					req.flash(config.flashMessage,err.message );
@@ -182,7 +196,8 @@ exports.createGroupSubmit = function(req,res,next){
 					// all good let's populate it with users now
 					res.render('admin/groupcreated', { id: newGroup.id });
 				}
-			} );	
+			} );						
+			
 		} else{
 			req.flash(config.flashMessage, "All fields must be filled out");
 			res.redirect( '/admin/groups/create');
@@ -215,16 +230,32 @@ exports.populateSubmit = function(req,res,next){
 		
 		var groupid = req.body.groupid;
 		var secret = req.body.secret;
-		var howMany = req.body.howMany;
-		if( groupid && secret && howMany ){
+		var boys = req.body.howManyBoys || 0;
+		var girls = req.body.howManyGirls || 0;
+		
+		if( groupid && secret && (boys+girls > 0) ){
 			
-			db.createUsers( howMany, secret, groupid, function(err, tokens){
+			// ADD BOYS
+			db.createUsers( boys, secret, groupid, config.genders[0], function(err, boyTokens){
+				// Boy issues
 				if( err ){
 					req.flash(config.flashMessage, err.message );
 					res.redirect('/admin/groups/populate');
 				} else{
-					// all good
-					res.render( 'admin/grouppopulated', { tokens: tokens, secret: secret } );
+
+					// ADD GIRLS		
+					db.createUsers( girls, secret, groupid, config.genders[1], function(err, girlTokens){
+						// Girl issues
+						if( err ){
+							req.flash(config.flashMessage, err.message );
+							res.redirect('/admin/groups/populate');
+						} else{
+
+							// all good
+							res.render( 'admin/grouppopulated', { boyTokens: boyTokens, girlTokens: girlTokens, secret: secret } );
+						}
+						
+					} );
 				}
 				
 			} );

@@ -26,20 +26,6 @@
 			<label>Password</label>
 			<input type="password" name="password" />
 		</div>
-		<div>
-			<label>Gender</label>
-			<select name="gender">
-				<% for ( var i = 0; i < genders.length; i ++ ) { %>
-					<% if ( gender === genders[i] ) { %>
-						<option value="<%= genders[i] %>" selected><%= genders[i] %></option>
-					<% } else { %>
-						<option value="<%= genders[i] %>"><%= genders[i] %></option>
-					<% } %>
-				<% } %>
-			</select>			
-		</div>
-
-
 		<input type="submit" value="Save changes" />
 	</form>
 

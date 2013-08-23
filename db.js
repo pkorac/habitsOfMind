@@ -66,12 +66,13 @@ var util = require('util'),
 
 // Temp DB
 var users = [
-		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habitsGroup: "123"},
-		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habitsGroup: "123"},
+		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habitsGroup: "123", gender: 'boy'},
+		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habitsGroup: "123", gender: 'girl'},
 		{ id: 'c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888',name: '7158e8d519766b8e5ed99d24151c2ae53de337d026a85f4b74de957238a4',type: 'student',password: '9719377ba92fb56e3265656645700ad0ccbf290ac5dc4f5eeddb98859743',email: null,habitsGroup: '8pk', validationToken: '7777',validationSecret: 'plums' }];
 
 var groups = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },
-				{ id: "1234", name: "7pk", year: 7, teacher: "Peter" } ];
+				{ id: "1234", name: "7pk", year: 7, teacher: "Peter" },
+				{ id: "12345", name: "Everyone else", year: 3000, teacher: "No one"} ];
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -230,13 +231,15 @@ function findUserbyValidationToken( token, fn ){
 
 
 // CREATE a User
-function createUser( secret, type, email, habitsGroup, gender, fn ){ // check if the group exists perhaps
 
-	secret = secret || config.defaultUserSecret;
-	type = type || config.defaultUserType;
-	habitsGroup = habitsGroup || null;
-	email = email || null;
-	gender = gender || config.defaultGender;
+function createUser( params, fn ){ // check if the group exists perhaps
+
+	
+	var secret = params.secret || config.defaultUserSecret,
+	type = params.type || config.defaultUserType,
+	habitsGroup = params.habitsGroup || null,
+	email = params.email || null,
+	gender = params.gender || config.defaultGender;
 	
 	randomHash( function(err, id){
 		if(!err) randomHash( function(err, name){
@@ -261,22 +264,17 @@ function createUser( secret, type, email, habitsGroup, gender, fn ){ // check if
 	
 }
 
-// CREATE Empty User
-/*
-function createEmptyUser( secret, type, fn ){
-	createUser( secret, type, null, null, null, fn );
-}
-*/
 
 
 // CREATE Users
-function createUsers( howMany, secret, habitsGroup, fn ){ // habits group needs to be checked etc
+function createUsers( howMany, secret, habitsGroup, gender, fn ){ // habits group needs to be checked etc
 
 	if ( howMany < 1679616 ){ // the max possible combinations with random four characters
 		
 		type = config.defaultUserType;
 		secret = secret || config.defaultUserSecret;
 		habitsGroup = habitsGroup || config.defaultGroup;
+		gender = gender || config.defaultGender;
 
 			
 		var clones = [];
@@ -295,7 +293,7 @@ function createUsers( howMany, secret, habitsGroup, fn ){ // habits group needs 
 											
 									// Create the user
 									var newUser = new HabitsUser( id, name, pass, type, null,
-																  habitsGroup, config.defaultGender );
+																  habitsGroup, gender );
 									var token = randomFourCharacters();
 									newUser.validationToken = token;
 									newUser.validationSecret = hashedSecret;
