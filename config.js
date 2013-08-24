@@ -36,3 +36,43 @@ exports.registerRoute = '/register';
 
 // Flash message
 exports.flashMessage = 'message';
+
+
+// Setup
+exports.firstGroup = {
+	"_id": "007",
+	"name": "Everyone else", 
+	"year": 2013, 
+	"teacher": "No one",
+	"docType": "group"
+};
+exports.firstUser  = {
+	"name": "admin", 
+	"type": "admin",
+	"habitsGroup": "007",
+	"docType": "user"
+};
+
+exports.views = {};
+exports.views.lists = {
+	_id: "_design/lists",
+	language: "javascript",
+	views: {
+		listusers: {
+			map: 'function(doc) { if( doc.docType === "user" ) emit( doc._id, doc ); }'
+		},
+		listgroups:{
+			map: 'function(doc) { if( doc.docType === "group" ) emit( doc._id, doc ); }'
+		}
+	}
+};
+
+
+
+
+
+
+
+
+
+// Have fun

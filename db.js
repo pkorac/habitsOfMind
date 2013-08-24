@@ -1,68 +1,24 @@
 /*
 
-	DB Module
-	Takes Care of the database and model	
-	
-	User profile functions:
-
-	- listUsers( fn )
-		- fn( err, users)
-	- findUserbyName( name, fn )
-		- fn( err, user )
-	- findUserbyId( id, fn )
-		- fn ( err, user )
-	- findUserbyValidationToken( token, fn )
-		- fn (err, user )
-	- createUser( secret, type, email, habitsGroup, fn )
-		- fn( err, user )
-	- createEmptyUser( secret, type, fn )
-		- fn( err, user, token )
-	- createUsers( howMany, secret, habitsGroup, fn )
-		- fn( err, validationTokens )
-
-	- cleanupEmptyusers
-		- fn( err )
-
-	- editUser( id, params, fn )
-		- params( type, habitsGroup, email, password )
-		- fn( err, editedUser )	
-	- deleteUser( id, fn )
-		- fn ( err )
-
-
-	Groups
-	- listGroups( fn )
-		- fn( err, groups )
-	- findGroupbyId( id, fn )
-		- fn( err, group )
-	- createGroup( name, year, teacher, fn )
-		- fn( err, newGroup )
-	- editGroup( id, name, year, teacher, fn )
-		- fn( err, editedGroup )
-	
-	
-	Helper Functions
-	- hashPassword( pass, fn )
-		- fn( err, hash )
-	- checkPassword( pass, hash, fn )
-		- fn( err, check )
-	- randomHash( fn )
-		- fn( err, hash )
-	- randomHashSync() // sync
-		- returns hash
-	- randomFourCharacters() // sync
-		- returns four characters
-	- generateValidationToken( fn )
-		- fn( err, token )
-		
-
+	DB Module	
+	A bit of a GOD class at the moment...
 */
 
 // Temp db
 var util = require('util'),
 	config = require('./config'),
 	bcrypt = require('bcrypt'),
-	crypto = require('crypto');
+	crypto = require('crypto'),
+	fs = require('fs'),
+	couchrequest = require('couch-request');
+	
+	
+var creds = JSON.parse( fs.readFileSync( 'creds.json' ).toString() ); // database credentials
+var usersDB = couchrequest( {databaseUrl: creds.profilesDB} ); // user profiles
+
+
+
+
 
 // Temp DB
 var users = [
