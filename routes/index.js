@@ -12,12 +12,14 @@ var landing = require('./landing'),
 
 module.exports = function(app, config, auth){
 	
+	////////////////////////////////////////////////////////////////////////////////
 	// Landing page
 	app.get('/', landing.landing );
 	app.get('/about', landing.about );
 	app.get('/contact', landing.contact );
 	
-	// Log in and out
+	////////////////////////////////////////////////////////////////////////////////
+	// Log in, out and register
 	app.get( config.loginRoute, login.login );
 	app.post( config.loginRoute, auth.login, login.loginSuccess); // post
 	app.get('/logout', auth.logout, login.logout );
@@ -25,16 +27,32 @@ module.exports = function(app, config, auth){
 	app.get('/register', login.register );
 	app.post('/register', login.registerSubmit ); // post
 	app.post('/register/details', login.registerDetails ); // post
-
 	
-	// Students and teachers
+
+	////////////////////////////////////////////////////////////////////////////////	
+	// Students
 	app.get('/students/', auth.check, students.landing );
 	app.post('/students/landing', auth.check, students.editProfileSubmit ); // post
-	app.get('/teachers/', auth.check, teachers.landing );
-	
+
+
+	////////////////////////////////////////////////////////////////////////////////	
 	// Groups
 	app.get('/groups/', groups.landing);
-		
+
+	
+	////////////////////////////////////////////////////////////////////////////////
+	// Teachers
+	app.get('/teachers/', auth.check, teachers.landing );
+	app.get('/teachers/groups/', auth.check, teachers.listGroups );
+	
+	app.get('/teachers/groups/create', auth.check, teachers.createGroup );
+	app.post('/teachers/groups/create', auth.check, teachers.createGroupSubmit ); // post
+	
+	app.get('/teachers/groups/populate', auth.check, teachers.populate );
+	app.post('/teachers/groups/populate', auth.check, teachers.populateSubmit ); // post	
+
+	
+	////////////////////////////////////////////////////////////////////////////////
 	// Admin
 	app.get('/admin/', auth.check, admin.landing );
 
@@ -49,8 +67,7 @@ module.exports = function(app, config, auth){
 	app.get('/admin/users/delete', auth.check, admin.deleteUser );
 	app.post('/admin/users/delete', auth.check, admin.deleteUserSubmit ); // post
 
-
-
+	
 	app.get('/admin/groups/', auth.check, admin.listGroups );
 	
 	app.get('/admin/groups/create', auth.check, admin.createGroup );
@@ -69,8 +86,10 @@ module.exports = function(app, config, auth){
 	app.post('/admin/cleanup', auth.check, admin.cleanupSubmit ); // post
 
 	app.get('/admin/test', auth.check, admin.test );
+	
 
-	// OTHER ////////
+	////////////////////////////////////////////////////////////////////////////////
+	// Other
 		
 	// Denied
 	app.get( config.deniedRoute, denied );

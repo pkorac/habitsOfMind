@@ -160,7 +160,7 @@ exports.deleteUserSubmit = function(req,res,next){
 
 
 /////////////////////////////////////////////
-// CLASSES
+// GROUPS
 exports.listGroups = function(req,res,next){
 	db.listGroups( function(err, groups){
 		if(err){ 

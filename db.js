@@ -67,7 +67,7 @@ var util = require('util'),
 // Temp DB
 var users = [
 		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habitsGroup: "123", gender: 'boy'},
-		{ id: "593kdsa", name: "ali", type: "student", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habitsGroup: "123", gender: 'girl'},
+		{ id: "593kdsa", name: "ali", type: "teacher", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habitsGroup: "123", gender: 'girl'},
 		{ id: 'c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888',name: '7158e8d519766b8e5ed99d24151c2ae53de337d026a85f4b74de957238a4',type: 'student',password: '9719377ba92fb56e3265656645700ad0ccbf290ac5dc4f5eeddb98859743',email: null,habitsGroup: '8pk', validationToken: '7777',validationSecret: 'plums' }];
 
 var groups = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>Add students to a group</title>
+	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+
+	
+</head>
+<body>
+	
+	<h1>Admin area</h1>
+	<h3>Add students to a group</h3>
+	
+	<% if ( message ){ %>
+		<%= message %>	
+	<% } %>
+	
+	<form method="post" action="/teachers/groups/populate">
+	    <div>
+	    	<label>Select group</label>	    	
+	    	<select name="groupid">
+				<% for ( var i = 0; i < groups.length; i++ ){ %>
+					<% if ( groups[i].id === id ) { %>
+						<option value="<%= groups[i].id %>" selected><%= groups[i].name %></option>	
+					<% } else { %>
+						<option value="<%= groups[i].id %>"><%= groups[i].name %></option>
+					<% } %>
+				<% } %>
+			</select>
+	    	
+	    </div>
+		<div>
+			<label>Secret</label>
+			<input type="text" name="secret" value="<%= defaultSecret %>" />
+		</div>	
+		<div class="pull-left">
+			<label>Boys:</label>
+			<input type="number" name="howManyBoys" class="input-mini" value="0" />
+		</div>
+		<div class="pull-left">
+			<label>Girls:</label>
+			<input type="number" name="howManyGirls" class="input-mini" value="0" />
+		</div>
+		<div class="clearfix"></div>
+	    <div>
+	        <input type="submit" value="Add students" class="btn btn-primary"/>
+	    </div>	
+	</form>
+	
+	
+
+</body>
+</html>
