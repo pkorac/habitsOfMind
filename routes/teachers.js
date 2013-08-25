@@ -40,7 +40,7 @@ exports.createGroupSubmit = function(req,res,next){
 					return;
 				} else{
 					// all good let's populate it with users now
-					res.render('teachers/groupcreated', { id: newGroup.id });
+					res.render('teachers/groupcreated', { id: newGroup._id });
 				}
 			} );						
 			

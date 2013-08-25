@@ -29,14 +29,13 @@ function clearDB( db, callback ){
 			
 			
 			db( '_bulk_docs', docsToDelete, function(err, data){
-				if( data ){
-					
-					callback(null);
-										
+				if( !err ){
+					callback(null);		
 				} else{
-					callback(new Error("Something went wrong with the clearing."));
+					callback( err );
 				}
 			} );
+			
 		} else{
 			callback(new Error("Couldn't find anything here. Check the database url"));
 		}						

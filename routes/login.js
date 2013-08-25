@@ -43,7 +43,7 @@ exports.registerSubmit = function(req,res,next){
 					return;
 				} else{
 					res.render('registerAddDetails', {message: req.flash(config.flashMessage),
-														id: user.id } );
+														id: user._id } );
 				}
 			});		
 			

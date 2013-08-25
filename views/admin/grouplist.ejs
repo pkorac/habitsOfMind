@@ -21,8 +21,8 @@
 	<% for ( var i = 0; i < groups.length; i ++ ){ %>
 		<li>
 		<strong><%= groups[i].name %></strong><br />
-		<a href="edit/?id=<%= groups[i].id %>">Edit</a> | 
-		<a href="delete/?id=<%= groups[i].id %>"> Delete</a>
+		<a href="edit/?id=<%= groups[i]._id %>">Edit</a> | 
+		<a href="delete/?id=<%= groups[i]._id %>"> Delete</a>
 		</li>
 	<% } %>
 	</ul>

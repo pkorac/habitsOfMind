@@ -12,24 +12,21 @@ var util = require('util'),
 	fs = require('fs'),
 	couchrequest = require('couch-request');
 	
-	
+// Credentials for the database (defined in creds.json)
 var creds = JSON.parse( fs.readFileSync( 'creds.json' ).toString() ); // database credentials
 var usersDB = couchrequest( {databaseUrl: creds.profilesDB} ); // user profiles
 
 
+// View urls (defined in config.js)
+var listusernames = config.views.lists.views.listusernames.url;
+var listuserids = config.views.lists.views.listuserids.url;
+var listusertokens = config.views.lists.views.listusertokens.url;
+var listgroupnames = config.views.lists.views.listgroupnames.url;
+var listgroupids = config.views.lists.views.listgroupids.url;
 
 
 
 // Temp DB
-var users = [
-		{ id: "321d", name: "peter", type: "admin", password: "$2a$12$BMFas1cz.aRExdu6LxITregmcQ4IPWr061JMqloMTcVwAR0AfdAtC", email: "peter@sem.com", habitsGroup: "123", gender: 'boy'},
-		{ id: "593kdsa", name: "ali", type: "teacher", password: "$2a$12$fk1sXnbqK5Oi88mESXEji.RG0gZJb4N84jBW6jydsVl330dvp81Nq", email: "ali@sem.com", habitsGroup: "123", gender: 'girl'},
-		{ id: 'c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888',name: '7158e8d519766b8e5ed99d24151c2ae53de337d026a85f4b74de957238a4',type: 'student',password: '9719377ba92fb56e3265656645700ad0ccbf290ac5dc4f5eeddb98859743',email: null,habitsGroup: '8pk', validationToken: '7777',validationSecret: 'plums' }];
-
-var groups = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },
-				{ id: "1234", name: "7pk", year: 7, teacher: "Peter" },
-				{ id: "12345", name: "Everyone else", year: 3000, teacher: "No one"} ];
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -39,21 +36,23 @@ var groups = [ { id: "123", name: "8jn", year: 8, teacher: "Jon" },
 
 // Users
 var HabitsUser = function( id, name, pass, type, email, habitsGroup, gender ){
-	this.id = id;
+	this._id = id;
 	this.name = name;
 	this.type = type;
 	this.password = pass;
 	this.email = email;
 	this.habitsGroup = habitsGroup;
 	this.gender = gender;
+	this.docType = config.userDocType;
 };
 
 // Groups
 var HabitsGroup = function( id, name, year, teacher ){
-	this.id = id;
+	this._id = id;
 	this.name = name;
 	this.year = year;
 	this.teacher = teacher;
+	this.docType = config.groupDocType;
 };
 
 
@@ -145,52 +144,76 @@ function listValidationTokens( fn ){
 
 // LIST users
 function listUsers( fn ){
-	fn( null, users );
+	usersDB( listusernames, function(err, data){
+		if( err ){
+			fn( err, null);
+		} else{
+			var users = [];
+			data.rows.forEach( function(row){
+				users.push( row.value );
+			} );
+			fn( null, users );
+		}
+	} );
 }
 
 
 // FIND user by name
 function findUserbyName( name, fn ){
-	for ( var i = 0; i < users.length; i++ ){
-		if ( users[i].name === name ){
-			fn( null, users[i] );
-			return;
+
+	usersDB( listusernames+'?key="' + name + '"', function(err, data){
+		if( err ){
+			fn( err, null );
+		} else{
+			if( data.rows.length > 0 && data.rows[0].value ){
+				fn( null, data.rows[0].value );
+			} else{
+				fn( new Error("No such user"), null );
+			}
 		}
-	}
-	fn( new Error("No such user"), null );
+	});
 }
+
 
 // FIND user by id
 function findUserbyId( id, fn ){
-	for ( var i = 0; i < users.length; i++ ){
-		if ( users[i].id === id ){
-			fn( null, users[i] );
-			return;
+	usersDB( listuserids+'?key="' + id + '"', function(err, data){
+		if( err ){
+			fn( err, null );
+		} else{
+			if( data.rows.length > 0 && data.rows[0].value ){
+				fn( null, data.rows[0].value );
+			} else{
+				fn( new Error("No such user"), null );
+			}
 		}
-	}
-	fn( new Error("No such user"), null );
-	return;
+	});
 }
+
 
 // FIND user by validation token
 // this should be async
 function findUserbyValidationToken( token, fn ){
-	for ( var i = 0; i < users.length; i++ ){
-		if( users[i].validationToken === token ){
-			fn( null, users[i] );
-			return;
-		}
-	}
-	fn( new Error("No such user"), null );
-}
 
+	usersDB( listusertokens+'?key="' + token + '"', function(err, data){
+		if( err ){
+			fn( err, null );
+		} else{
+			if( data.rows.length > 0 && data.rows[0].value ){
+				fn( null, data.rows[0].value );
+			} else{
+				fn( new Error("No such user"), null );				
+			}
+		}
+	} );
+
+}
 
 
 // CREATE a User
 
 function createUser( params, fn ){ // check if the group exists perhaps
 
-	
 	var secret = params.secret || config.defaultUserSecret,
 	type = params.type || config.defaultUserType,
 	habitsGroup = params.habitsGroup || null,
@@ -207,10 +230,18 @@ function createUser( params, fn ){ // check if the group exists perhaps
 						var newUser = new HabitsUser( id, name, pass, type, email, habitsGroup, gender );
 						newUser.validationToken = token;
 						newUser.validationSecret = hashedSecret;
-
-						users.push( newUser ); // or done with DB
 						
-						fn( null, newUser, token );
+						usersDB( "", newUser, function(err, data){
+							if( err ) {
+								fn( err, null, null);
+							} else if ( data ){
+							
+								fn( null, newUser, token );	
+								
+							} else{
+								fn( new Error("Something went wrong when creating the user"), null, null );
+							}														
+						} );
 
 					} );
 				} );				
@@ -225,7 +256,7 @@ function createUser( params, fn ){ // check if the group exists perhaps
 // CREATE Users
 function createUsers( howMany, secret, habitsGroup, gender, fn ){ // habits group needs to be checked etc
 
-	if ( howMany < 1679616 ){ // the max possible combinations with random four characters
+	if ( howMany < 50 ){ // to limit the load even though you could generate 1679616 possible ones
 		
 		type = config.defaultUserType;
 		secret = secret || config.defaultUserSecret;
@@ -236,7 +267,7 @@ function createUsers( howMany, secret, habitsGroup, gender, fn ){ // habits grou
 		var clones = [];
 		var tokens = [];
 		
-		
+		// Async loop
 		var counter = 0;
 		var generateUsers = function(){
 			counter++;
@@ -255,8 +286,7 @@ function createUsers( howMany, secret, habitsGroup, gender, fn ){ // habits grou
 									newUser.validationSecret = hashedSecret;
 
 									tokens.push(token);
-									clones.push( newUser ); // or done with DB
-
+									clones.push( newUser );
 									generateUsers();
 							} );
 						} );
@@ -268,140 +298,133 @@ function createUsers( howMany, secret, habitsGroup, gender, fn ){ // habits grou
 			} else{
 				
 				// BULK SAVE them in the db now
-				users = users.concat( clones );
-				fn( null, tokens );
+				var docs = {
+					docs: clones
+				};
+				usersDB( "_bulk_docs", docs, function(err, response){
+					if (err) {
+						fn( err, null );
+					} else{
+						fn( null, tokens );
+					}
+				});
 	
 			}
 	
 		};
-		generateUsers();
+		generateUsers(); // start the loop
+		
 	} else{
-		fn( new Error("Can't generate that many"), null );
+		fn( new Error("Can't generate that many at once"), null );
 	}
 }
-
-
-
 
 
 
 // CLEANUP empty users
 function cleanupEmptyUsers( fn ){
 
-	listUsers( function(err, users){
-		
-		// This would probably be better done on the couch side
-		if (users){
-		
-			// Find which ones to remove
-			var usersToRemove = [];
-			for( var i = 0; i < users.length; i++ ){
-				if ( users[i].validationToken ) {
-					usersToRemove.push( users[i].id );
-				}
-			}
-			
-			var remove = function( id ){
-				for( var j = 0; j < users.length; j++){
-					if ( users[j].id === id ){
-						users.splice( j, 1 );
-						break;
-					}
-				}
-			};
-
-			// Go through them and remove them
-			for ( var j = 0; j < usersToRemove.length; j++){
-				remove( usersToRemove[j] );
-			}
-			if ( usersToRemove.length < 1 ){
-				fn( new Error("No empty users to delete") );
-			}else{
-				fn(null);	
-			}
-			
+	usersDB( listusertokens, function(err, data){
+		if ( err ){
+			fn( new Error("Couldn't do it") );
 		} else{
-			fn( new Error("Couldn't list users") );
+			if( data.rows.length > 0 ) {
+				
+				var docsToDelete = { docs: [] };
+				data.rows.forEach( function( row ){
+					var doc = { _id: row.value._id, _rev: row.value._rev, _deleted:true };
+					docsToDelete.docs.push( doc );
+				} );
+
+				usersDB( '_bulk_docs', docsToDelete, function(err, data){
+					if ( err ){
+						fn( new Error("Something went wrong when deleting") );
+					} else{
+						
+						// All good
+						fn( null );
+						
+					}
+				});
+			} else{
+				fn( new Error("No empty users to remove") );				
+			}
 		}
-		
-	});
-	
+	} );	
 }
+
+
+
 
 // EDIT user
 function editUser( id, params, fn ){
 
-	findUserbyId( id, function(err, user){
-		if ( user ){
+	
+	usersDB( listuserids+ '?key="'+ id +'"', function(err, data){
+		
+		if( err ){
+			fn( err, null );
+		}
+		if ( data.rows.length > 0){
 			
-
+			var user = data.rows[0].value;
 			user.type = params.type || user.type;
 			user.email = params.email || user.email;
 			user.habitsGroup = params.habitsGroup || user.habitsGroup;
 			user.gender = params.gender || user.gender;
 			
+			
 			var updateUser = function( user, callback ){
-
-				listUsers( function( err, users ){
-					for( var i = 0; i < users.length; i++ ){
-						if( users[i].id === user.id ){
-							users = users.splice( i, 1, user );
-							callback( null, user );
-						}
+				usersDB( "", user, function(err, data){
+					if( err ) {
+						callback( err, null );
+					} else{
+						callback( null, user );
 					}
 				} );
 			};
 			
-			if ( params.password ){
-				// do stuff
+			if( params.password ){
+				
 				hashPassword( params.password, function(err, hashedPassword){
 					user.password = hashedPassword;
-					
-					updateUser( user, function(err, user){
-						if(err){
-							fn( err, null);
-							return;
-						}
-						fn( null, user );
-					} );
-					
-				} );
+					updateUser( user, fn );
+				});
 				
-			} else{
-				updateUser( user, function(err, user){
-					if(err){
-						fn( err, null);
-						return;
-					}
-					fn( null, user );
-				} );
+			} else {
+				// just update it
+				updateUser( user, fn );
 			}
-			
-		}else{
-			fn( new Error("No such user"), null );
+
+		} else{
+			fn( new Error("Could not find the user"), null );	
 		}
+
 		
 	} );
+
 }
 
 
 
 // Register user
 function registerUser( id, name, password, email, fn ){
-	findUserbyId( id, function( err, user ){
-		if(err){
+
+	// Check id
+	usersDB( listuserids+ '?key="'+ id +'"', function(err, data){
+		if(err || !data.rows || data.rows.length < 1 ){
 			fn( new Error("No such user"), null);
 		}else if( !name || !password || !email ){
 			fn( new Error("Not enough data"), null);
 		} else{
-			// Basic check done, let us continue
+	
 			
-			// CHeck if the username exists
-			findUserbyName( name, function(err, existinguser){
-				if(existinguser){
-					fn( new Error("User already exists"), null );
+			// Check username		
+			usersDB( listusernames+ '?key="'+ name +'"', function(err, results){
+				if ( err || (results.rows && results.rows.length > 0) ){
+					fn( new Error("Username already exists"), null);
 				} else{
-
+					
 					// All good let's register the lad
 					hashPassword( password, function(err, hashedPass){
 						if( err ){
@@ -409,6 +432,7 @@ function registerUser( id, name, password, email, fn ){
 							return;
 						} else{
 							
+							var user = data.rows[0].value;
 							user.password = hashedPass;
 							user.name = name;
 							user.email = email;
@@ -416,31 +440,25 @@ function registerUser( id, name, password, email, fn ){
 							user.validationToken = null;
 							user.validationSecret = null;
 							
-							var updateUser = function( user, callback ){
-								listUsers( function( err, users ){
-									for( var i = 0; i < users.length; i++ ){
-										if( users[i].id === user.id ){
-											users = users.splice( i, 1, user );
-											callback( null, user );
-										}
-									}
-								} );
-							};
-							updateUser( user, fn );
+							usersDB( "", user, function( err, response ){
+								if( err ){
+									fn( err, null );
+								}else{
+									fn( null, user);
+								}
+							} );
 							
 						}
 					} );
+
 					
 				}
+				
 			} );
-			
 		}
-	} );
+	});
+
 }
-
-
-
-
 
 
 // Change Password
@@ -458,27 +476,23 @@ function requestChangeOfPassword( id ){
 // DELETE user
 function deleteUser( id, fn ){
 
-	findUserbyId( id, function( err, user ){
-		
-		if ( user ){
-			
-			var index = 0;
-			for ( var i = 0; i < users.length; i++ ){
-				if ( users[i].id === id ){
-					index = i;
-				}
-			}
-			//console.log( "Removing %s", users[index].name );
-			users.splice( index, 1 );
-			fn( null );
-			
+	usersDB( listuserids+ '?key="'+ id +'"', function(err, data){
+		if(err || !data.rows || data.rows.length < 1 ){
+			fn( new Error("No such user") );
 		} else{
-			fn( new Error("No Such user") );
+			
+			var user = data.rows[0].value;
+			user._deleted = true;
+			usersDB( "", user, function(err, data){
+				if( err ){
+					fn( err);
+				} else{
+					fn( null );
+				}
+			} );	
 		}
-		
-	} );		
+	});
 }
-
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -489,43 +503,71 @@ function deleteUser( id, fn ){
 
 // LIST groups
 function listGroups( fn ){
-	fn( null, groups );
+	usersDB( listgroupnames, function(err, data){
+		if( err ){
+			fn( err, null);
+		} else{
+			var groups = [];
+			data.rows.forEach( function(row){
+				groups.push( row.value );
+			} );
+			fn( null, groups );
+		}
+	} );
 }
 
 
 // FIND group by id
 function findGroupbyId( id, fn ){
-	for ( var i = 0; i < groups.length; i++ ){
-		if ( groups[i].id === id ){
-			fn( null, groups[i] );
-			return;
+	usersDB( listgroupids+'?key="' + id + '"', function(err, data){
+		if( err ){
+			fn( err, null );
+		} else{
+			if( data.rows.length > 0 && data.rows[0].value ){
+				fn( null, data.rows[0].value );
+			} else{
+				fn( new Error("No such group"), null );
+			}
 		}
-	}
-	fn( new Error("No such group"), null );
-	return;
+	});
 }
+
 
 
 // CREATE a new group
 function createGroup( name, year, teacher, fn ){
 	
-	if ( !name ){
+	if ( !name || !year || !teacher ){
 		fn( new Error("No name") );
 	} else {
-		// Generate an id
-		randomHash( function(err, id){
-			if(!err){				
-				var newHabitsGroup = new HabitsGroup( id, name, year, teacher );
-				groups.push( newHabitsGroup );
-				fn( null, newHabitsGroup );
-			} else {
+
+	
+		// Check if already exists
+		usersDB( listgroupnames+'?key="' + name + '"', function(err, data){
+			if ( err ){
 				fn( err, null );
+			} else if ( data.rows && data.rows.length > 0 ){
+				fn( new Error("Group already exists"), null );
+			} else{
+
+
+				// all good
+				randomHash( function(err, id){
+					var newHabitsGroup = new HabitsGroup( id, name, year, teacher );
+					
+					
+					usersDB( "", newHabitsGroup, function(err, response){
+						if(err){
+							fn( err, null );
+						} else{
+							fn( null, newHabitsGroup );
+						}
+					} );
+				} );				
 			}
-		} );
+		});
 	}
 }
-
-
 
 // EDIT a group
 function editGroup( id, name, year, teacher, fn ){
@@ -535,72 +577,51 @@ function editGroup( id, name, year, teacher, fn ){
 	} 
 	
 	findGroupbyId( id, function(err, theGroup){
-	
-		if ( !theGroup || err ){
-			fn( new Error("No such group") );	
+		if(err){
+			fn(err, null);
 		} else{
-			theGroup.name = name;
-			theGroup.year = year;
-			theGroup.teacher = teacher;
+			theGroup.name = name || theGroup.name;
+			theGroup.year = year || theGroup.year;
+			theGroup.teacher = teacher || theGroup.teacher;
 			
-			// add the new group to the DB
-			// for the moment array splicing
-			var index = 0;
-			for ( var i = 0; i < groups.length; i++ ){
-				if ( groups[i].id === id ){
-					index = i;
+			usersDB( "", theGroup, function(err, data){
+				if( err ){
+					fn(err, null);
+				} else{
+					fn( null, theGroup );
 				}
-			}
-			//console.log( "Removing %s's group", groups[index].teacher );
-			groups.splice( index, 1, theGroup );
-			fn( null, theGroup );
-		}		
-		
-	} );
-	
+			});
+			
+		}
+	} );	
 }
+
 
 // DELETE Group
 function deleteGroup( id, fn ){
 
+	if ( !id ){
+		fn( new Error("No ID") );
+		return;
+	} 
+	
 	findGroupbyId( id, function(err, theGroup){
-		if ( !theGroup || err ){
-			fn( new Error("No such group") );
+		if(err){
+			fn( new Error("Coulnd't find the group to delete") );
 		} else{
-
-			var index = 0;
-			for ( var i = 0; i < groups.length; i++ ){
-				if ( groups[i].id === id ){
-					index = i;
+			
+			theGroup._deleted = true;
+			usersDB( "", theGroup, function(err, data){
+				if( err ){
+					fn(err);
+				} else{
+					fn( null );
 				}
-			}
-			//console.log( "Removing %s's group", groups[index].teacher );
-			for ( var i = 0; i < users.length; i++ ){
-						if( users[i].habitsGroup === id ) {
-							users[i].habitsGroup = null;
-						}
-					}
-			groups.splice( index, 1 );
-			fn(null);					
-			// really should do something with the users
-/*
-			listUsers( function(err, users){
-				if (!err){
-					for ( var i = 0; i < users.length; i++ ){
-						if( users[i].habitsGroup === id ) {
-							users[i].habitsGroup = null;
-						}
-					}
-					groups.splice( index, 1 );
-					fn(null);					
-				}else{
-					fn( err );
-				}
-			} );
-*/
-		}		
-		
+			});
+			
+		}
 	} );
+
 }
 
 
@@ -613,16 +634,9 @@ function deleteGroup( id, fn ){
 ///////////////////////////////////////////////////////////////////////////
 
 console.log( "---------------------------" );
+// have been testing all along
+// need to learn to write unit tests in a separate file
 
-
-/*
-registerUser( "c8f6908f3f96023f4ff63af13d5d8299f5abc878841888db24c67b1cb888", 
-				"Mike", "sadf", "magic@mike.com", function( err,user ){
-	if(err)console.log(err);
-	console.log( util.inspect( user, {colors: true} ) );
-					
-} );
-*/
 
 
 ////////////////////////////////////////////////////////////

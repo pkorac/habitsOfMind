@@ -1,7 +1,8 @@
 // Requires
 var	express = require('express'),
 	flash = require('connect-flash'),
-	url = require('url');
+	url = require('url'),
+	util = require('util');
 
 var db = require('./db'),
 	config = require('./config');

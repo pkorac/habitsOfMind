@@ -8,7 +8,7 @@ exports.landing = function(req,res){
 			next();
 		}else{	
 			
-			res.render('students/landing', {id: user.id,
+			res.render('students/landing', {id: user._id,
 											username: user.name,
 											email: user.email,
 											gender: user.gender,
@@ -34,7 +34,6 @@ exports.editProfileSubmit = function(req,res,next){
 				res.redirect( '/students/' );
 			} else{
 				
-				console.log( util.inspect( updatedUser, {colors: true} ) );
 				req.flash( config.flashMessage, "Details Saved");
 				res.redirect( '/students/' );							
 			}			

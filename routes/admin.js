@@ -12,7 +12,12 @@ exports.landing = function( req, res ){
 // USERS
 exports.listUsers = function( req, res ){
 	db.listUsers( function(err, users){
-		res.render('admin/userslist', {users: users } );
+		if (err ) {
+			//console.log( err );
+			next();
+		} else{
+			res.render('admin/userslist', {users: users } );
+		}
 	} );
 };
 
@@ -72,13 +77,16 @@ exports.editUser = function(req,res,next){
 	var id = req.query.id;
 	if ( id ){
 		db.findUserbyId( id, function(err, user){
-			if( user ) {
+			if( err ) {
+				//console.log( err );
+				next();
+			} else if( user ) {
 				res.render( 'admin/useredit', { 
 						username: user.name,
 						usertype: user.type,
 						email: user.email || "",
 						habitsGroup: user.habitsGroup,
-						id: user.id,
+						id: user._id,
 						allTypes: config.userTypes,
 						genders: config.genders,
 						gender: user.gender
@@ -94,11 +102,11 @@ exports.editUser = function(req,res,next){
 
 // Edit user submit
 exports.editUserSubmit = function(req,res,next){
-	
+		
 	if( req.body ){
 	
 		var edit = {
-			id: req.body.id,
+			_id: req.body.id,
 			email: req.body.email,
 			habitsGroup: req.body.habitsGroup,
 			type: req.body.usertype,
@@ -107,11 +115,13 @@ exports.editUserSubmit = function(req,res,next){
 		};
 		if ( edit.password.length < 1 )edit.password = null;	
 	
-		db.editUser( edit.id, edit, function(err, user){
-
+		db.editUser( edit._id, edit, function(err, user){		
 			if( user ){
-				res.redirect("/admin/users/edit/?id="+user.id);
-			}else{
+				res.redirect("/admin/users/edit?id="+user._id);
+			}else if( err ){
+				//console.log( err );
+				next();
+			}else {
 				next();
 			}
 		} );
@@ -194,7 +204,7 @@ exports.createGroupSubmit = function(req,res,next){
 					return;
 				} else{
 					// all good let's populate it with users now
-					res.render('admin/groupcreated', { id: newGroup.id });
+					res.render('admin/groupcreated', { id: newGroup._id });
 				}
 			} );						
 			
@@ -287,7 +297,7 @@ exports.editGroup = function(req,res,next){
 													teacher: habitsGroup.teacher,
 													year: habitsGroup.year,
 													name: habitsGroup.name,
-													id: habitsGroup.id});
+													id: habitsGroup._id});
 	
 				}				
 			} );		
@@ -338,7 +348,7 @@ exports.deleteGroup = function(req,res,next){
 			if( err ){
 				next();
 			} else{
-				res.render('admin/groupdelete', { id: theGroup.id,
+				res.render('admin/groupdelete', { id: theGroup._id,
 												  name: theGroup.name });
 			}
 		} );

@@ -38,7 +38,7 @@ exports.registerRoute = '/register';
 exports.flashMessage = 'message';
 
 
-// Setup
+// DATABASE SETUP
 exports.firstGroup = {
 	"_id": "007",
 	"name": "Everyone else", 
@@ -53,21 +53,37 @@ exports.firstUser  = {
 	"docType": "user"
 };
 
+
 exports.views = {};
 exports.views.lists = {
 	_id: "_design/lists",
 	language: "javascript",
 	views: {
-		listusers: {
-			map: 'function(doc) { if( doc.docType === "user" ) emit( doc._id, doc ); }'
+		listusernames: {
+			map: 'function(doc) { if( doc.docType === "user" ) emit( doc.name, doc ); }',
+			url: "_design/lists/_view/listusernames"
 		},
-		listgroups:{
-			map: 'function(doc) { if( doc.docType === "group" ) emit( doc._id, doc ); }'
+		listuserids: {
+			map: 'function(doc) { if( doc.docType === "user" ) emit( doc._id, doc ); }',
+			url: "_design/lists/_view/listuserids"
+		},
+		listusertokens: {
+			map: 'function(doc) { if( doc.docType === "user" && doc.validationToken ) emit( doc.validationToken, doc ); }',
+			url: "_design/lists/_view/listusertokens"
+		},
+		listgroupnames:{
+			map: 'function(doc) { if( doc.docType === "group" ) emit( doc.name, doc ); }',
+			url: "_design/lists/_view/listgroupnames"
+		},
+		listgroupids:{
+			map: 'function(doc) { if( doc.docType === "group" ) emit( doc._id, doc ); }',
+			url: "_design/lists/_view/listgroupids"
 		}
 	}
 };
 
-
+exports.userDocType = "user";
+exports.groupDocType = "group";
 
 
 
