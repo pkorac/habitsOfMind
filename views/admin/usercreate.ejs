@@ -45,9 +45,9 @@
 	    	<select name="groupid">
 				<% for ( var i = 0; i < groups.length; i++ ){ %>
 					<% if ( i == 0 ) { %>
-						<option value="<%= groups[i].id %>" selected><%= groups[i].name %></option>	
+						<option value="<%= groups[i]._id %>" selected><%= groups[i].name %></option>	
 					<% } else { %>
-						<option value="<%= groups[i].id %>"><%= groups[i].name %></option>
+						<option value="<%= groups[i]._id %>"><%= groups[i].name %></option>
 					<% } %>
 				<% } %>
 			</select>

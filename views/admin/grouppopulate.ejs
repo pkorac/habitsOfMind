@@ -22,10 +22,10 @@
 	    	<label>Select group</label>	    	
 	    	<select name="groupid">
 				<% for ( var i = 0; i < groups.length; i++ ){ %>
-					<% if ( groups[i].id === id ) { %>
-						<option value="<%= groups[i].id %>" selected><%= groups[i].name %></option>	
+					<% if ( groups[i]._id === id ) { %>
+						<option value="<%= groups[i]._id %>" selected><%= groups[i].name %></option>	
 					<% } else { %>
-						<option value="<%= groups[i].id %>"><%= groups[i].name %></option>
+						<option value="<%= groups[i]._id %>"><%= groups[i].name %></option>
 					<% } %>
 				<% } %>
 			</select>

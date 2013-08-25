@@ -20,8 +20,8 @@
 	<% for ( var i = 0; i < users.length; i ++ ){ %>
 		<li>
 		<strong><%= users[i].name %></strong><br />
-		<a href="edit/?id=<%= users[i].id %>">Edit</a> | 
-		<a href="delete/?id=<%= users[i].id %>&username=<%= users[i].name %>"> Delete</a>
+		<a href="edit/?id=<%= users[i]._id %>">Edit</a> | 
+		<a href="delete/?id=<%= users[i]._id %>&username=<%= users[i].name %>"> Delete</a>
 		</li>
 	<% } %>
 	</ul>

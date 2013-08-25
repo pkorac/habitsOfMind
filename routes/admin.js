@@ -78,7 +78,7 @@ exports.editUser = function(req,res,next){
 						usertype: user.type,
 						email: user.email || "",
 						habitsGroup: user.habitsGroup,
-						id: user.id,
+						id: user._id,
 						allTypes: config.userTypes,
 						genders: config.genders,
 						gender: user.gender
@@ -110,7 +110,7 @@ exports.editUserSubmit = function(req,res,next){
 		db.editUser( edit.id, edit, function(err, user){
 
 			if( user ){
-				res.redirect("/admin/users/edit/?id="+user.id);
+				res.redirect("/admin/users/edit/?id="+user._id);
 			}else{
 				next();
 			}
@@ -194,7 +194,7 @@ exports.createGroupSubmit = function(req,res,next){
 					return;
 				} else{
 					// all good let's populate it with users now
-					res.render('admin/groupcreated', { id: newGroup.id });
+					res.render('admin/groupcreated', { id: newGroup._id });
 				}
 			} );						
 			
@@ -287,7 +287,7 @@ exports.editGroup = function(req,res,next){
 													teacher: habitsGroup.teacher,
 													year: habitsGroup.year,
 													name: habitsGroup.name,
-													id: habitsGroup.id});
+													id: habitsGroup._id});
 	
 				}				
 			} );		
@@ -338,7 +338,7 @@ exports.deleteGroup = function(req,res,next){
 			if( err ){
 				next();
 			} else{
-				res.render('admin/groupdelete', { id: theGroup.id,
+				res.render('admin/groupdelete', { id: theGroup._id,
 												  name: theGroup.name });
 			}
 		} );

@@ -37,6 +37,7 @@ function clearDB( db, callback ){
 					callback(new Error("Something went wrong with the clearing."));
 				}
 			} );
+			
 		} else{
 			callback(new Error("Couldn't find anything here. Check the database url"));
 		}						
