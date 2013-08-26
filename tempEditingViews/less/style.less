@@ -1,0 +1,74 @@
+@import "colours.less";
+@import "bootstrap/bootstrap.less";
+
+/* Core Layout */
+
+html, body{
+	height: 100%;
+}
+body{
+//	padding-top: @navbar-height+@font-size-base;
+	padding-top: @navbar-height*2.617924;
+}
+
+#wrap{
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	/* Negative indent footer by its height */
+	margin: 0 auto -@navbar-height*1.618px;
+	/* Pad bottom by footer height */
+	padding: 0 0 60px;
+}
+
+#header {
+	.userarea{ 
+		color: @brand-primary;
+		font-weight: bold;
+	}
+	.userarea:hover{
+		color: darken( @brand-primary, 15%);
+	}
+	.login{ 
+		color: @brand-success; 
+		font-weight: bold;
+	}
+	.login:hover{
+		color: darken( @brand-success, 15%);
+	}
+	.navbar-toggle{
+		border: none;
+	}
+	.navbar-toggle:hover{
+		background: darken(@navbar-default-bg, 4%);
+	}
+}
+
+
+#footer{
+	border-top: 1px solid  darken(@navbar-default-bg, 4%);
+	height: @navbar-height*1.618px;
+}
+
+#footer .container{
+	line-height: @navbar-height*1.618px;
+}
+
+#content{
+
+}
+
+
+
+
+
+
+
+
+
+
+// Helper classes
+.placeholder{
+	background: @gray-lighter;
+	min-height: 200px;
+}
