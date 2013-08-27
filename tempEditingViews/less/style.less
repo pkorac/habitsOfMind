@@ -7,9 +7,12 @@ html, body{
 	height: 100%;
 }
 body{
-//	padding-top: @navbar-height+@font-size-base;
-	padding-top: @navbar-height*2.617924;
+	padding-top: @navbar-height*1.618;
 }
+@media (min-width: @screen-sm) {
+	body{ padding-top: @navbar-height*2.617924; }
+}
+
 
 #wrap{
 	min-height: 100%;
@@ -18,7 +21,7 @@ body{
 	/* Negative indent footer by its height */
 	margin: 0 auto -@navbar-height*1.618px;
 	/* Pad bottom by footer height */
-	padding: 0 0 60px;
+	padding: 0 0 @navbar-height*4.235801032;
 }
 
 #header {
@@ -36,14 +39,23 @@ body{
 	.login:hover{
 		color: darken( @brand-success, 15%);
 	}
+	.logout{
+		color: @brand-warning;
+	}
+	.logout:hover{
+		color: darken( @brand-warning, 15%);
+	}
 	.navbar-toggle{
-		border: none;
+//		border: none;
 	}
 	.navbar-toggle:hover{
 		background: darken(@navbar-default-bg, 4%);
 	}
 }
 
+#middle{
+
+}
 
 #footer{
 	border-top: 1px solid  darken(@navbar-default-bg, 4%);
@@ -54,21 +66,168 @@ body{
 	line-height: @navbar-height*1.618px;
 }
 
-#content{
 
+
+/* Content Classes */
+.title{
+	.nav{
+		margin-top: 7px;
+	}
+	.heading { 
+		font-size: 42px;
+		margin-bottom: 7px;
+		padding-bottom: 7px;
+		border-bottom: 1px solid  @gray-lighter;
+	}
+	.subheading{
+		.lead;
+		font-size: 21px;
+	}
+
+}
+@media (min-width: @screen-sm) {
+	.title .nav{ .pull-right; }	
+}
+
+
+
+.content{
+}
+
+
+//
+/* HABITS */
+//
+.edit-habits{
+	margin-top: @line-height-computed*2;
+	.text-center;
+}
+
+.habit-box{
+	padding: 30px 30px 20px;
+	margin-bottom: @line-height-computed*2;
+	border-radius: @border-radius-base;
+	border: 1px solid @gray-lighter;
+	
+	.question{
+		font-size: 21px;
+		font-weight: 300;
+		margin-bottom: 30px;
+		
+	}
+	
+	.explanation{
+		margin-top: 20px;
+		font-weight: 300;
+		clear: both;
+	}
+	
+	.slider-holder{
+		position: relative;
+		margin-top: @line-height-computed*3;
+		margin-bottom: @line-height-computed*6;
+	}
+	
+	.habit-slider{
+		-webkit-appearance: none;
+	    -moz-apperance: none;
+	    width: 78%;
+	    height: 4px;
+	    padding: 0;
+	    background: @gray-lighter;
+	    border-radius: @border-radius-base;
+		float: left;
+	}	
+	.habit-slider::-webkit-slider-thumb{
+	    -webkit-appearance:none; 
+	    -moz-apperance:none; 
+	    width:30px;
+	    height:30px;
+	    -webkit-border-radius:20px;
+	    -moz-border-radius:20px; 
+	    -ms-border-radius:20px; 
+	    -o-border-radius:20px; 
+	    border-radius:20px;
+	    border: none;
+	    background: @gray;
+	}
+	.slider-left, .slider-right{ 
+		width: 10%;
+		height: @font-size-small;
+		float: left;
+		margin-top: -@font-size-small*0.5;
+		font-size: @font-size-small;
+		color: @gray-light;
+	}
+	.slider-left{		
+		left: 0px;
+		text-align: right;
+		margin-right: 1%;
+
+	}
+	.slider-right{
+		right: 0px;
+		text-align: left;
+		margin-left: 1%;
+	}
+}
+.habit-box {
+	.inquisitive-thumb::-webkit-slider-thumb{ .inquisitive-fill; }
+	.imaginative-thumb::-webkit-slider-thumb{ .imaginative-fill; }
+	.persistent-thumb::-webkit-slider-thumb{ .persistent-fill; }
+	.collaborative-thumb::-webkit-slider-thumb{ .collaborative-fill; }
+	.disciplined-thumb::-webkit-slider-thumb{ .disciplined-fill; }
 }
 
 
 
 
 
+
+// Habits text colours
+.inquisitive{ color: @inquisitive; }
+.imaginative{ color: @imaginative; }
+.persistent{ color: @persistent; }
+.collaborative{ color: collaborative; }
+.disciplined{ color: disciplined; }
+
+
+// Habits background
+.inquisitive-fill{ background: @inquisitive; }
+.imaginative-fill{ background: @imaginative; }
+.persistent-fill{ background: @persistent; }
+.collaborative-fill{ background: @collaborative; }
+.disciplined-fill{ background: @disciplined; }
+
+
+
+/* Sign in page */
+.form-signin{
+	background: @gray-lighter;
+}
+#form-signin{
+	width: 330px;
+	margin: 0 auto;
+	.form-control{
+		position: relative;
+	}
+	.form-control:focus{
+		z-index: 2;
+	}
+	#inputName{
+	  border-bottom-left-radius: 0;
+	  border-bottom-right-radius: 0;
+	  margin-bottom: -1px;
+	}
+	#inputPassword{
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		margin-bottom: @font-size-base;
+	}
+}
 
 
 
 
 
 // Helper classes
-.placeholder{
-	background: @gray-lighter;
-	min-height: 200px;
-}

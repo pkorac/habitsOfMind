@@ -9,11 +9,13 @@
 // Grays
 // -------------------------
 
+
 @gray-darker:            lighten(#000, 13.5%); // #222
 @gray-dark:              lighten(#000, 20%);   // #333
 @gray:                   lighten(#000, 33.5%); // #555
 @gray-light:             lighten(#000, 60%);   // #999
 @gray-lighter:           lighten(#000, 93.5%); // #eee
+
 
 // Brand colors
 // -------------------------
@@ -52,7 +54,8 @@
 @line-height-computed:    floor(@font-size-base * @line-height-base); // ~20px
 
 @headings-font-family:    @font-family-base;
-@headings-font-weight:    500;
+//@headings-font-weight:    500;
+@headings-font-weight:    700;
 @headings-line-height:    1.1;
 
 // Iconography
@@ -229,8 +232,8 @@
 // Padding, to be divided by two and applied to the left and right of all columns
 @grid-gutter-width:         30px;
 // Point at which the navbar stops collapsing
-//@grid-float-breakpoint:     @screen-tablet;
-@grid-float-breakpoint:     640px;
+@grid-float-breakpoint:     @screen-tablet;
+//@grid-float-breakpoint:     640px;
 
 // Navbar
 // -------------------------
@@ -268,7 +271,8 @@
 // Navbar toggle
 @navbar-default-toggle-hover-bg:           #ddd;
 @navbar-default-toggle-icon-bar-bg:        #ccc;
-@navbar-default-toggle-border-color:       #ddd;
+//@navbar-default-toggle-border-color:       #ddd;
+@navbar-default-toggle-border-color:       transparent;
 
 
 // Inverted navbar
