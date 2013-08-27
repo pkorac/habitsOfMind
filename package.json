@@ -11,15 +11,16 @@
     "url": "git@github.com:pkorac/habitsOfMind.git"
   },
   "dependencies": {
-	  "bcrypt": "*",
-	  "express": "3.3.5",
-	  "connect-flash": "0.1.1",
-	  "ejs": "0.8.3",
-	  "couch-request": "*"
+    "bcrypt": "*",
+    "express": "3.3.5",
+    "connect-flash": "0.1.1",
+    "ejs": "0.8.3",
+    "couch-request": "*",
+    "ejs-locals": "~1.0.2"
   },
   "engines": {
     "node": "0.10.x",
-    "npm":  "1.3.x"
+    "npm": "1.3.x"
   },
   "author": "Peter Koraca",
   "license": "MIT"
