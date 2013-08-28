@@ -3,12 +3,19 @@ var db = require('../db'),
 	util = require('util');
 
 exports.landing = function(req,res){
+	res.render('students/landing', {title: req.session.username,
+									subtitle: "How are you today?"
+	} );
+};
+
+exports.editProfile = function(req,res,next){
 	db.findUserbyName( req.session.username, function(err, user){
 		if( err ) {
 			next();
 		}else{	
 			
-			res.render('students/landing', {id: user._id,
+			res.render('students/edit', {title: "Student area",
+											id: user._id,
 											username: user.name,
 											email: user.email,
 											gender: user.gender,
@@ -17,7 +24,7 @@ exports.landing = function(req,res){
 											message: req.flash(config.flashMessage) } );
 		}
 	} );
-};
+}
 
 exports.editProfileSubmit = function(req,res,next){
 	if ( req.body ){
@@ -41,4 +48,10 @@ exports.editProfileSubmit = function(req,res,next){
 	} else{
 		next();
 	}	
+};
+
+exports.history = function(req,res){
+	res.render('students/history', { title: req.session.username,
+									 subtitle: null
+	} );
 };

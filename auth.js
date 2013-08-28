@@ -7,7 +7,7 @@ var	express = require('express'),
 var db = require('./db'),
 	config = require('./config');
 
-
+var app = {};
 ///////////////////////////////////////////////////////////////////////////
 //
 // Authentication functions
@@ -72,20 +72,17 @@ function logout(req,res,next){
 
 // AUTHENTICATION CHECK
 function check( req, res, next ){
-	var path = url.parse(req.url).pathname;
-	path = path.split("/")[1];
+	var path = url.parse(req.url).pathname;	
+	path = "/"+path.split('/')[1]+"/";	
 	
 	if ( path && req.session && req.session.auth === true ){ // am I authenticated		
-		var allowedRoutes = config.userTypes[ req.session.usertype ]; // which routes can I go to		
-		if ( !allowedRoutes ) console.log( "something went wrong ");
-				
-		for ( var i = 0; i < allowedRoutes.length; i ++){
-			if ( allowedRoutes[i] === path ) {
-				//console.log("Good to go here");
-				next();
-				return;
-			}
-		}
+		var allowedRoute = config.userTypes[ req.session.usertype ]; // which routes can I go to		
+		if ( !allowedRoute ) console.log( "something went wrong ");
+		
+		if ( allowedRoute === path ) {
+			next();
+			return;
+		}			
 		//console.log( "Not allowed here" );
 		res.redirect( config.deniedRoute );		
 	} else{
@@ -93,6 +90,30 @@ function check( req, res, next ){
 	}
 }
 
+
+// SETTING THE APP USER TYPE DEFAULTS
+function setUserLocals( req, res, next, app ){
+	app.locals.current_route = url.parse(req.url).pathname;
+	
+	if( !app.locals.current_username || !app.locals.usertype){
+		if( req.session && req.session.username && req.session.usertype ){
+			app.locals.current_username = req.session.username;
+			app.locals.current_usertype = req.session.usertype;
+		} else{
+			// no user, let it be default
+			app.locals.current_username = null;
+			app.locals.current_usertype = null;
+		}
+	} else if(  app.locals.current_username !== req.session.username || 
+				app.locals.current_usertype !== req.session.usertype  ){
+		app.locals.current_username = req.session.username;
+		app.locals.current_usertype = req.session.usertype;		
+	}
+	
+	if ( !app.locals.all_usertypes ) app.locals.all_usertypes = config.userTypes;	
+
+	next();	
+}
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -103,6 +124,6 @@ function check( req, res, next ){
 exports.check = check;
 exports.login = login;
 exports.logout = logout;
-
+exports.setUserLocals = setUserLocals;
 
 

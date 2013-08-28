@@ -5,8 +5,63 @@ var db = require('../db'),
 
 // LANDING
 exports.landing = function( req, res ){
-	res.render('admin/landing', {title: "Admin area" });
+	res.render('admin/landing', { title: req.session.username,
+								  subtitle: "How do you do today?" });
 };
+
+exports.history = function( req, res ){
+	res.render('admin/history', { title: "History",
+								  subtitle: null });
+};
+
+
+exports.editProfile = function(req,res,next){
+	db.findUserbyName( req.session.username, function(err, user){
+		if( err ) {
+			next();
+		}else{	
+			
+			res.render('admin/edit', {  title: "Edit profile",
+										subtitle: null,
+										id: user._id,
+										username: user.name,
+										email: user.email,
+										gender: user.gender,
+										habitsClass: user.habitsClass,
+										genders: config.genders,
+										message: req.flash(config.flashMessage) } );
+		}
+	} );
+}
+
+exports.editProfileSubmit = function(req,res,next){
+	if ( req.body ){
+		
+		var id = req.body.id;
+		var params = {
+			email: req.body.email,
+			password: req.body.password
+		};
+		
+		db.editUser( id, params, function(err, updatedUser){
+			if( err ){
+				req.flash( config.flashMessage, err.message );
+				res.redirect( '/admin/' );
+			} else{
+				
+				req.flash( config.flashMessage, "Details Saved");
+				res.redirect( '/admin/' );							
+			}			
+		} );
+	} else{
+		next();
+	}	
+};
+
+exports.admin = function(req,res,next){
+	res.render('admin/admin', { title: "Admin area", subtitle: null } );
+}
+
 
 /////////////////////////////////////////////
 // USERS
@@ -16,7 +71,9 @@ exports.listUsers = function( req, res ){
 			//console.log( err );
 			next();
 		} else{
-			res.render('admin/userslist', {users: users } );
+			res.render('admin/userslist', { title: "Users",
+											subtitle: null,
+											users: users } );
 		}
 	} );
 };
@@ -39,7 +96,7 @@ exports.createUser = function(req,res){
 };
 
 // Craete User Submit
-exports.createUserSubmit = function(req,res){
+exports.createUserSubmit = function(req,res,next){
 	
 	if ( req.body ){
 
@@ -47,13 +104,14 @@ exports.createUserSubmit = function(req,res){
 			secret: req.body.secret,
 			type: req.body.usertype,
 			gender: req.body.gender,
-			groupid: req.body.groupid
+			habitsGroup: req.body.groupid
 		};
 		
-		if (params.secret && params.type && params.gender && params.groupid){
+		if (params.secret && params.type && params.gender && params.habitsGroup){
 			
 			// Create the user
 			db.createUser( params, function(err, newUser, token){
+			
 				if( err ){
 					next();
 				} else{
@@ -132,14 +190,15 @@ exports.editUserSubmit = function(req,res,next){
 
 // Delete user Page
 exports.deleteUser = function(req,res, next){
-	
+
 	if ( req.query ){
 		var id = req.query.id;
 		var username = req.query.username;
-		
-		if( id && username ){				
+		if( id && username ){	
+
 			res.render( 'admin/userdelete', { id: id, username: username } );				
 		} else{
+			console.log("fuck me");
 			next();
 		}
 	} else{

@@ -1,27 +1,6 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title><%= title %></title>
-	<link rel="stylesheet" href="css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
-	
-</head>
-<body>
-	
-	<h1><%= title %></h1>
+<% layout('boilerplate') -%>
 
-	<a href="/login">Log-in</a>
-	
-	<br /><br />
-	<ul>
-		<li><a href="/groups/">Groups</a></li>
-		<li><a href="/about">About</a></li>
-		<li><a href="/contact">Contact</a></li>
-	</ul>
-	
-	
+<% block('nav_home', "active") -%>
 
-</body>
-</html>
+<h1>Hello</h1>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>Habits of Mind</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" charset="utf-8">
+
+	<%- scripts %>
+	<%- stylesheets %>
+		
+</head>
+<body>
+
+<!-- Wrapper -->
+<div id="wrap">
+	<div class="container">
+
+
+		<!-- HEADER -->
+		<div id="header" class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<!-- <b class="caret"></b> -->
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							
+					</button>
+					<a class="navbar-brand" href="/">Habits of mind</a>
+				</div>
+			
+				
+				<div class="navbar-collapse collapse">
+				
+					<!-- Left Menu -->
+					<ul class="nav navbar-nav">
+						<% 
+							var path = current_route;
+							path = "/"+path.split('/')[1]+"/";
+							
+							var homeRouteActive = "";
+							var groupsRouteActive = "";
+							var aboutRouteActive = "";
+							var contactRouteActive = "";
+							var userareaRouteActive = "";
+							if( path === "//" ) homeRouteActive = "active";
+							if( path === "/groups/" ) groupsRouteActive = "active";
+							if( path === "/about/" ) aboutRouteActive = "active";
+							if( path === "/contact/") contactRouteActive = "active";
+							for( var type in all_usertypes ){
+								if ( path === all_usertypes[type] ) userareaRouteActive = "active";
+							}
+						%>
+						
+						
+						<li class="<%= homeRouteActive %>"><a href="/">Home</a></li>
+						<li class="<%= groupsRouteActive %>"><a href="/groups">Groups</a></li>
+						<li class="<%= aboutRouteActive %>"><a href="/about">About</a></li>
+						<li class="<%= contactRouteActive %>"><a href="/contact">Contact</a></li>						
+					</ul>
+					
+					<!-- Right Menu -->
+					<ul class="nav navbar-nav navbar-right">						
+						<li class="dropdown <%= userareaRouteActive %>">
+							<% include boiler_components/navbar_userarea %>
+						</li>
+					</ul>
+		
+				</div><!--/.nav-collapse -->
+			
+			</div>
+
+		</div> <!-- End Of HEADER -->
+
+			
+		<!-- MIDDLE -->
+		<div class="row" id="middle">
+			<div class="col-sm-1"></div>
+				<div class="col-sm-10">
+					
+					
+					<!-- Title -->
+					<div class="title">
+						
+						<% include boiler_components/title_useroptions %>
+						
+						<h1 class="heading"><%= title %></h1>
+						<% if ( subtitle ) { %>
+							<p class="subheading"><%= subtitle %></p>
+						<% } %>
+					</div>
+					
+					
+					<!-- Content or Admin -->
+					<%-body %>
+					
+<!--					<div class="row content">
+						<div class="col-sm-8 col-md-6">
+						</div>
+					</div>		
+//-->
+
+			
+					
+				</div>
+			</div>
+		</div> <!-- End of CONTENT -->
+
+		
+	</div><!--  End of container -->
+</div>
+
+
+
+
+<!-- FOOTER -->
+<div id="footer">
+	<div class="container">
+		<p class="text-muted"><small>© 2013 Thomas Tallis School &amp; Peter Koraca</small></p>
+	</div>
+</div>
+
+	
+	
+
+
+<!-- Javascript Embeds -->
+<script type="text/javascript" src="/js/jquery.js" ></script>
+<script type="text/javascript" src="/js/bootstrap.min.js" ></script>
+
+</body>
+</html>

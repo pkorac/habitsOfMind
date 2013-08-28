@@ -32,12 +32,14 @@ module.exports = function(app, config, auth){
 	////////////////////////////////////////////////////////////////////////////////	
 	// Students
 	app.get('/students/', auth.check, students.landing );
-	app.post('/students/landing', auth.check, students.editProfileSubmit ); // post
+	app.get('/students/history', auth.check, students.history );
+	app.get('/students/edit', auth.check, students.editProfile );
+	app.post('/students/edit', auth.check, students.editProfileSubmit ); // post
 
 
 	////////////////////////////////////////////////////////////////////////////////	
 	// Groups
-	app.get('/groups/', groups.landing);
+	app.get('/groups', groups.landing);
 
 	
 	////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +57,12 @@ module.exports = function(app, config, auth){
 	////////////////////////////////////////////////////////////////////////////////
 	// Admin
 	app.get('/admin/', auth.check, admin.landing );
+	app.get('/admin/history', auth.check, admin.history );
+	app.get('/admin/admin', auth.check, admin.admin );
+	app.get('/admin/edit', auth.check, admin.editProfile );
+	app.post('/students/edit', auth.check, admin.editProfileSubmit ); // post
+
+
 
 	app.get('/admin/users/', auth.check, admin.listUsers );
 	

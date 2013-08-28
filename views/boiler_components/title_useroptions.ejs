@@ -1,0 +1,29 @@
+<% 
+	var path = current_route;
+	path = path.split('/');
+	
+	var userarea = false;
+	for( var type in all_usertypes ){
+		if ( ("/"+path[1]+"/") === all_usertypes[type] ) userarea = true;;
+	}	
+	
+	if ( userarea && current_username && current_usertype ) { 	
+
+		var homeActive = "";
+		var historyActive = "";
+		var adminActive = "";
+		
+		if ( path[2] === "") homeActive = "active";
+		if ( path[2] === "history") historyActive = "active";
+		if ( path[2] === "admin") adminActive = "active";
+%>
+
+	<ul class="nav nav-pills">	
+		<li class="<%= homeActive %>"><a href="<%= all_usertypes[current_usertype] %>">My habits</a></li>
+		<li class="<%= historyActive %>"><a href="<%= all_usertypes[current_usertype] %>history">History</a></li>
+		<% if ( current_usertype === "admin" || current_usertype === "teacher" ) { %> 
+			<li class="<%= adminActive %>"><a href="<%= all_usertypes[current_usertype] %>admin">Admin</a></li>
+		<% } %>
+	</ul>
+
+<% } %>

@@ -1,31 +1,21 @@
+<% script("/js/jquery.tablesorter.min.js", "text/javascript") -%>
 
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Users</title>
-	<link rel="stylesheet" href="../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% layout('../boilerplate') %>
 
-	
-</head>
-<body>
-	
-	<h1>Admin area</h1>
-	<h3>Users</h3>
-	
-	<a href="create">Create New</a>
-	
-	<ul>
-	<% for ( var i = 0; i < users.length; i ++ ){ %>
-		<li>
-		<strong><%= users[i].name %></strong><br />
-		<a href="edit/?id=<%= users[i]._id %>">Edit</a> | 
-		<a href="delete/?id=<%= users[i]._id %>&username=<%= users[i].name %>"> Delete</a>
-		</li>
-	<% } %>
-	</ul>
-	
+<div class="row">
+	<div class="col-sm-6">
+		<h2>List</h2>
+	</div>
+	<div class="col-sm-6 text-right">
+		<a href="create" class="btn btn-success create-button">Create New</a>
+	</div>
+</div>
 
-</body>
-</html>
+
+<div class="row">
+	<div class="col-sm-6">
+
+<% include ../boiler_components/userlist %>
+
+	</div>
+</div>

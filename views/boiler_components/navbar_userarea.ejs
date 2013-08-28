@@ -1,0 +1,18 @@
+<% if ( current_username && current_usertype ) { %>
+	
+	<a href="#" class="dropdown-toggle userarea" data-toggle="dropdown">
+		
+		<%= current_username %>
+		<b class="caret"></b></a>
+		
+	<ul class="dropdown-menu">
+		<li><a href="<%= all_usertypes[current_usertype] %>">My page</a></li>
+		<li><a href="<%= all_usertypes[current_usertype] %>edit">Edit profile</a></li>
+		<li><a href="/logout">Log-out</a></li>
+	</ul>
+	
+<% } else{ %>
+
+	<li><a href="/login" class="login">Log-in</a></li>
+
+<% } %>

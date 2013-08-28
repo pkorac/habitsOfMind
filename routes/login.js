@@ -12,7 +12,7 @@ exports.login = function(req,res){
 exports.loginSuccess = function(req, res){
 	if ( req.session.usertype ){
 		// Redirect to the first screen a user has
-		res.redirect( config.userTypes[ req.session.usertype ][0] + "/" );
+		res.redirect( config.userTypes[ req.session.usertype ] );
 	} else{
 		res.send("Logged in");		
 	}

@@ -1,0 +1,26 @@
+<table class="table table-codnensed">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Group</th>
+			<th class="text-right">Delete</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% for ( var i = 0; i < users.length; i ++ ){ %>
+			<tr>
+				<td><a href="edit/?id=<%= users[i]._id %>"><%= users[i].name %></a></td>
+				<td><%= users[i].type %></td>
+				<td><%= users[i].habitsGroup %></td>
+				<td class="text-right">
+					<a href="delete/?id=<%= users[i]._id %>&username=<%= users[i].name %>" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus-sign"></span> Delete</a>
+				</td>
+				
+
+			</tr>
+		<% } %>	
+		
+	</tbody>
+
+</table>

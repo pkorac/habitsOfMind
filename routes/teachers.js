@@ -3,7 +3,7 @@ var db = require('../db'),
 	config = require('../config');
 
 exports.landing = function(req,res){
-	res.render('teachers/landing', {  } );
+	res.render('teachers/landing', { title: "Teachers area" } );
 };
 
 

@@ -1,26 +1,12 @@
+<% layout('../boilerplate') -%>
 
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title><%= title %></title>
-	<link rel="stylesheet" href="../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% block('nav_groups', "active") -%>
 
-	
-</head>
-<body>
-	
-	<h1><%= title %></h1>
 
-	
-	<ul>
-	<% for ( var i = 0; i < groups.length; i ++ ){ %>
-		<li>
-			<strong><%= groups[i].name %></strong>: <%= groups[i].teacher %>, year <%= groups[i].year %>		
-		</li>				
-	<% } %>
-	</ul>
-
-</body>
-</html>
+<ul>
+<% for ( var i = 0; i < groups.length; i ++ ){ %>
+	<li>
+		<strong><%= groups[i].name %></strong>: <%= groups[i].teacher %>, year <%= groups[i].year %>		
+	</li>				
+<% } %>
+</ul>
