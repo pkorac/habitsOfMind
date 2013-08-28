@@ -1,21 +1,10 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Group created</title>
-	<link rel="stylesheet" href="../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% layout('../boilerplate') %>
 
-	
-</head>
-<body>
-	
-	
-	<div class="alert alert-success">
-		Group Created
-	</div>
-	<a href="populate?id=<%= id %>">Populate</a> it with students now
-	
-	
-</body>
-</html>
+
+
+<div class="alert alert-success">
+	Group Created
+</div>
+
+<br/>
+<a href="../populate?id=<%= id %>">Populate</a> it with students now.

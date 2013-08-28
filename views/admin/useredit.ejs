@@ -1,68 +1,93 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Edit User</title>
-	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
-	
-</head>
-<body>
-	
+<% layout('../boilerplate') %>
 
-	<h3>Edit User</h3>
+
+
+<h2><%= username %></h2>
+
+<div>
+	<small><%= id %></small>
+</div>
+
+
+<div class="clearfix">&nbsp;</div>
+
+
+<% if ( messageSuccess.length > 0 ) { %>
+	<div class="alert alert-success"><%= messageSuccess %></div>
+<% } %>
+<% if ( messageError.length > 0 ) { %>
+	<div class="alert alert-danger"><%= messageError %></div>
+<% } %>
+
+
+<form role="form" method="post" action="">
+	<input type="hidden" name="id" value="<%= id %>" />
+
+	<div class="form-group">
+		<label for="inputEmail">Email address</label>
+		<input type="email" class="form-control" id="inputEmail" name="email" value="<%= email %>">
+	</div>
 	
-	<form method="post" action="/admin/users/edit">
-		<div>
-			<small><%= id %></small>
-		</div>
-		<div>
-			<h4><%= username %></h4>
-		</div>
-		<input type="hidden" name="id" value="<%= id %>" />
-		<div>
-	        <label>Email:</label>
-	        <input type="email" name="email" value="<%= email %>" />
-	    </div>
-	    <div>
-	        <label>Group:</label>
-	        <input type="text" name="habitsGroup" value="<%= habitsGroup %>" />
-	    </div>	    	    
-	    <div>
-			<label>Gender</label>
-			<select name="gender">
-				<% for ( var i = 0; i < genders.length; i ++ ) { %>
-					<% if ( gender === genders[i] ) { %>
-						<option value="<%= genders[i] %>" selected><%= genders[i] %></option>
-					<% } else { %>
-						<option value="<%= genders[i] %>"><%= genders[i] %></option>
-					<% } %>
+	<div class="form-group">
+		<label for="selectGroup">Group</label>
+		<select name="habitsGroup"id="selectGroup" class="form-control">
+			<% for ( var i = 0; i < groups.length; i++ ){ %>			
+				<% if ( groups[i]._id === habitsGroup ) { %>
+					<option value="<%= groups[i]._id %>" selected><%= groups[i].name %></option>	
+				<% } else { %>
+					<option value="<%= groups[i]._id %>"><%= groups[i].name %></option>
 				<% } %>
-			</select>			
-		</div>
-	    <div>
-	    	<label>Type</label>	    	
-	    	<select name="usertype">
-	    		<% for ( var type in allTypes ){ %>
-	    			<option value="<%= type %>" <% if( usertype === type ){ %>selected<% } %> ><%= type %></option>
+			<% } %>
+		</select>	
+	</div>
+	
+	
+	<div class="form-group">
+		<label for="selectGender">Gender</label>
+		<select name="gender" id="selectGender" class="form-control">
+			<% for ( var i = 0; i < genders.length; i ++ ) { %>
+				<% if ( gender === genders[i] ) { %>
+					<option value="<%= genders[i] %>" selected><%= genders[i] %></option>
+				<% } else { %>
+					<option value="<%= genders[i] %>"><%= genders[i] %></option>
 				<% } %>
-			</select>
-	    	
-	    </div>
-	    
-	    <div>
-	        <label>New Password:</label>
-	        <input type="password" name="password" />
-	    </div>
-
-	    <div>
-    		<input type="button" value="Cancel" onclick="javascript:history.back()" />
-	        <input type="submit" value="Save"/>
-	    </div>	
-	</form>
+			<% } %>
+		</select>	
+	</div>
 	
+	<div class="form-group">	
+		<label for="selectType">Type</label>	    	
+    	<select name="usertype" id="selectType" class="form-control">
+    		<% for ( var type in allTypes ){ %>
+    			<option value="<%= type %>" <% if( usertype === type ){ %>selected<% } %> ><%= type %></option>
+			<% } %>
+		</select>
+	</div>
 	
+	<div class="form-group">
+		<label for="inputPassword">Password</label>
+		<input type="password" class="form-control" id="inputPassword" name="password">
+	</div>
 
-</body>
-</html>
+	
+	<div class="clearfix">&nbsp;</div>
+
+	
+	<div class="row">
+		<div class="col-sm-6 text-left">
+			<a href="../" type="button" class="btn btn-default">Cancel</a>
+			<a href="../delete/?id=<%= id %>&username=<%= username %>" type="button" class="btn btn-danger">Delete</a>
+		</div>
+		<div class="col-sm-6 text-right">
+			<button type="submit" class="btn btn-success">Save</button>
+		</div>
+	</div>
+
+</form>
+
+
+
+
+
+

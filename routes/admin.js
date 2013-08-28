@@ -6,13 +6,17 @@ var db = require('../db'),
 // LANDING
 exports.landing = function( req, res ){
 	res.render('admin/landing', { title: req.session.username,
-								  subtitle: "How do you do today?" });
+								  subtitle: "How do you feel today?" });
 };
 
 exports.history = function( req, res ){
-	res.render('admin/history', { title: "History",
-								  subtitle: null });
+	res.render('admin/history', { title: req.session.username,
+								  subtitle: "History of my habits" });
 };
+
+exports.admin = function(req,res,next){
+	res.render('admin/admin', { title: req.session.username, subtitle: "Administrative options" } );
+}
 
 
 exports.editProfile = function(req,res,next){
@@ -26,10 +30,9 @@ exports.editProfile = function(req,res,next){
 										id: user._id,
 										username: user.name,
 										email: user.email,
-										gender: user.gender,
-										habitsClass: user.habitsClass,
-										genders: config.genders,
-										message: req.flash(config.flashMessage) } );
+										messageSuccess: req.flash(config.flashMessageSuccess),
+										messageError: req.flash(config.flashMessage)
+									} );
 		}
 	} );
 }
@@ -37,30 +40,36 @@ exports.editProfile = function(req,res,next){
 exports.editProfileSubmit = function(req,res,next){
 	if ( req.body ){
 		
-		var id = req.body.id;
-		var params = {
-			email: req.body.email,
-			password: req.body.password
-		};
+		if ( req.body.newPassword1 !== req.body.newPassword2 ){
+			req.flash( config.flashMessage, "Passwords don't match" );
+			res.redirect( req.path );
+			return;			
+
+		} else{
+
+			var id = req.body.id;
+			var params = {
+				email: req.body.email,
+				password: req.body.newPassword1
+			};
+			
+			db.editUser( id, params, function(err, updatedUser){
+				if( err ){
+					req.flash( config.flashMessage, err.message );
+					res.redirect( req.path );
+				} else{
+					
+					req.flash( config.flashMessageSuccess, "Details Saved");
+					res.redirect( req.path );							
+				}			
+			} );		
+		}
 		
-		db.editUser( id, params, function(err, updatedUser){
-			if( err ){
-				req.flash( config.flashMessage, err.message );
-				res.redirect( '/admin/' );
-			} else{
-				
-				req.flash( config.flashMessage, "Details Saved");
-				res.redirect( '/admin/' );							
-			}			
-		} );
 	} else{
 		next();
 	}	
 };
 
-exports.admin = function(req,res,next){
-	res.render('admin/admin', { title: "Admin area", subtitle: null } );
-}
 
 
 /////////////////////////////////////////////
@@ -79,17 +88,19 @@ exports.listUsers = function( req, res ){
 };
 
 // Create User Page
-exports.createUser = function(req,res){
+exports.createUser = function(req,res, next){
 
 	db.listGroups( function(err, groups){
 		if ( err ) {
 			next();
 		} else{
-			res.render( 'admin/usercreate', { allTypes: config.userTypes, 
-										defaultType: config.defaultUserType,
-										defaultSecret: config.defaultUserSecret,
-										genders: config.genders,
-										groups: groups } );	
+			res.render( 'admin/usercreate', { title: "Add a new user",
+												subtitle: null,
+												allTypes: config.userTypes, 
+												defaultType: config.defaultUserType,
+												defaultSecret: config.defaultUserSecret,
+												genders: config.genders,
+												groups: groups } );	
 		}		
 	});
 
@@ -116,7 +127,7 @@ exports.createUserSubmit = function(req,res,next){
 					next();
 				} else{
 					//console.log( util.inspect( newUser, {colors: true} ) );
-					res.render('admin/usercreated', { secret: params.secret, token: token });
+					res.render('admin/usercreated', { title: "User created", subtitle: null, secret: params.secret, token: token });
 				}
 				
 			} );
@@ -139,16 +150,29 @@ exports.editUser = function(req,res,next){
 				//console.log( err );
 				next();
 			} else if( user ) {
-				res.render( 'admin/useredit', { 
-						username: user.name,
-						usertype: user.type,
-						email: user.email || "",
-						habitsGroup: user.habitsGroup,
-						id: user._id,
-						allTypes: config.userTypes,
-						genders: config.genders,
-						gender: user.gender
-					} );	
+			
+				db.listGroups( function(err, groups){
+					if( err ){
+						next();
+					} else{
+						res.render( 'admin/useredit', { 
+							title: "Edit user",
+							subtitle: null,
+							username: user.name,
+							usertype: user.type,
+							email: user.email || "",
+							habitsGroup: user.habitsGroup,
+							groups: groups,
+							id: user._id,
+							allTypes: config.userTypes,
+							genders: config.genders,
+							gender: user.gender,
+							messageSuccess: req.flash(config.flashMessageSuccess),
+							messageError: req.flash(config.flashMessage)
+						} );	
+
+					}		
+				});
 			} else{
 				next();
 			}		
@@ -160,7 +184,7 @@ exports.editUser = function(req,res,next){
 
 // Edit user submit
 exports.editUserSubmit = function(req,res,next){
-		
+		console.log("get here");
 	if( req.body ){
 	
 		var edit = {
@@ -175,15 +199,17 @@ exports.editUserSubmit = function(req,res,next){
 	
 		db.editUser( edit._id, edit, function(err, user){		
 			if( user ){
-				res.redirect("/admin/users/edit?id="+user._id);
+				req.flash(config.flashMessageSuccess, "Saved");
+				res.redirect(req.path+"?id="+user._id);
 			}else if( err ){
-				//console.log( err );
 				next();
 			}else {
+
 				next();
 			}
 		} );
 	}else{
+		console.log("no body");
 		next();		
 	}
 };
@@ -196,7 +222,7 @@ exports.deleteUser = function(req,res, next){
 		var username = req.query.username;
 		if( id && username ){	
 
-			res.render( 'admin/userdelete', { id: id, username: username } );				
+			res.render( 'admin/userdelete', { title: "Delete user", subtitle: null, id: id, username: username } );				
 		} else{
 			console.log("fuck me");
 			next();
@@ -208,13 +234,12 @@ exports.deleteUser = function(req,res, next){
 
 // Delete User submit
 exports.deleteUserSubmit = function(req,res,next){
-	
 	var id = req.body.id;
 	var username = req.body.username;
 	if( id && username ){
 		db.deleteUser( id, function(err){
-			if(!err){				
-				res.render('admin/userdeleted', {username: username});
+			if(!err){		
+				res.render('admin/userdeleted', { title: "User deleted", subtitle: null, username: username});
 			} else{
 				next();
 			}
@@ -236,13 +261,17 @@ exports.listGroups = function(req,res,next){
 			next(); 
 			return;
 		}
-		res.render('admin/grouplist', { groups: groups });		
+		res.render('admin/grouplist', { title: "Groups",
+										subtitle: null,
+										groups: groups });		
 	} );
 };
 
 // Create group
 exports.createGroup = function(req,res,next){
-	res.render('admin/groupcreate', { year: config.defaultYear, message: req.flash(config.flashMessage) });
+	res.render('admin/groupcreate', { title: "New group", subtitle: null,
+									  year: config.defaultYear, 
+									  message: req.flash(config.flashMessage) });
 };
 
 // Create Group submit
@@ -259,21 +288,21 @@ exports.createGroupSubmit = function(req,res,next){
 			db.createGroup( name, year, teacher, function(err, newGroup){
 				if ( err ) {
 					req.flash(config.flashMessage,err.message );
-					res.redirect('/admin/groups/create');
+					res.redirect(req.path);
 					return;
 				} else{
 					// all good let's populate it with users now
-					res.render('admin/groupcreated', { id: newGroup._id });
+					res.render('admin/groupcreated', { title: "Group created", subtitle: null, id: newGroup._id });
 				}
 			} );						
 			
 		} else{
 			req.flash(config.flashMessage, "All fields must be filled out");
-			res.redirect( '/admin/groups/create');
+			res.redirect( req.path );
 		}		
 	} else{
 		req.flash(config.flashMessage, "All fields must be filled out");
-		res.redirect( '/admin/groups/create');
+		res.redirect( req.path );
 	}
 };
 
@@ -285,7 +314,8 @@ exports.populate = function(req,res){
 		if ( err ){
 			next();
 		}{
-			res.render('admin/grouppopulate', { groups: groups, 
+			res.render('admin/grouppopulate', { title: "Populate group", subtitle: null,
+												groups: groups, 
 												defaultSecret: config.defaultUserSecret,
 												message: req.flash(config.flashMessage),
 												id: id} );
@@ -309,7 +339,7 @@ exports.populateSubmit = function(req,res,next){
 				// Boy issues
 				if( err ){
 					req.flash(config.flashMessage, err.message );
-					res.redirect('/admin/groups/populate');
+					res.redirect(req.path);
 				} else{
 
 					// ADD GIRLS		
@@ -317,11 +347,14 @@ exports.populateSubmit = function(req,res,next){
 						// Girl issues
 						if( err ){
 							req.flash(config.flashMessage, err.message );
-							res.redirect('/admin/groups/populate');
+							res.redirect(req.path);
 						} else{
 
 							// all good
-							res.render( 'admin/grouppopulated', { boyTokens: boyTokens, girlTokens: girlTokens, secret: secret } );
+							res.render( 'admin/grouppopulated', { title: "Group populated", subtitle: null,
+																  boyTokens: boyTokens, 
+																  girlTokens: girlTokens, 
+																  secret: secret } );
 						}
 						
 					} );
@@ -330,11 +363,11 @@ exports.populateSubmit = function(req,res,next){
 			} );
 		} else{
 			req.flash(config.flashMessage, "All the fields must be filled out");
-			res.redirect('/admin/groups/populate');			
+			res.redirect(req.path);
 		}
 	} else{
 		req.flash(config.flashMessage, "All the fields must be filled out");
-		res.redirect('/admin/groups/populate');		
+		res.redirect(req.path);
 	} 
 };
 
@@ -352,7 +385,9 @@ exports.editGroup = function(req,res,next){
 					next();
 					return;
 				} else{
-					res.render('admin/groupedit', { message: req.flash(config.flashMessage),	
+					res.render('admin/groupedit', { title: "Edit group", subtitle: null,
+													messageSuccess: req.flash(config.flashMessageSuccess),
+													messageError: req.flash(config.flashMessage),
 													teacher: habitsGroup.teacher,
 													year: habitsGroup.year,
 													name: habitsGroup.name,
@@ -385,15 +420,15 @@ exports.editGroupSubmit = function(req,res,next){
 			db.editGroup( params.id, params.name, params.year, params.teacher, function(err, editedGroup){
 				if(err){
 					req.flash(config.flashMessage, err.message);
-					res.redirect('/admin/groups/edit/?id='+params.id);
+					res.redirect(req.path+'?id='+params.id);
 				}else{
-					req.flash(config.flashMessage, "Successfully saved");
-					res.redirect('/admin/groups/edit/?id='+params.id);
+					req.flash(config.flashMessageSuccess, "Successfully saved");
+					res.redirect(req.path+'?id='+params.id);
 				}
 			} );
 		} else{
 			req.flash(config.flashMessage, "All the fields must be filled out");
-			res.redirect('/admin/groups/edit/?id='+params.id);
+			res.redirect(req.path+'?id='+params.id);
 		}		
 	} else{
 		next();
@@ -407,8 +442,9 @@ exports.deleteGroup = function(req,res,next){
 			if( err ){
 				next();
 			} else{
-				res.render('admin/groupdelete', { id: theGroup._id,
-												  name: theGroup.name });
+				res.render('admin/groupdelete', {   title: "Delete group", subtitle: null,
+													id: theGroup._id,
+													name: theGroup.name });
 			}
 		} );
 	} else{
@@ -422,7 +458,7 @@ exports.deleteGroupSubmit = function(req,res){
 			if( err ){
 				next();
 			} else{
-				res.render('admin/groupdeleted');
+				res.render('admin/groupdeleted', {title: "Group deleted", subtitle: null});
 			}
 		} );
 	} else{
@@ -433,7 +469,7 @@ exports.deleteGroupSubmit = function(req,res){
 
 
 exports.cleanup = function(req,res){
-	res.render('admin/cleanup');
+	res.render('admin/cleanup', {title: "Cleanup", subtitle: null});
 };
 
 
@@ -441,9 +477,9 @@ exports.cleanupSubmit = function(req,res,next){
 	if(req.body && req.body.forsure){
 		db.cleanupEmptyUsers( function(err){
 			if ( err ){
-				res.send( err.message );
+				res.render("admin/cleanedupnot", { title: "Cleanup complete", subtitle: null});
 			}else{
-				res.render("admin/cleanedup");
+				res.render("admin/cleanedup", { title: "Cleanup complete", subtitle: null});
 			}
 		});
 	}

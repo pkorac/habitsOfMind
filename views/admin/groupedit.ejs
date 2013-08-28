@@ -1,42 +1,37 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Edit group</title>
-	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% layout('../boilerplate') %>
 
-	
-</head>
-<body>
-	
-	<h1>Edit group</h1>
-	
-	<% if ( message ) { %>
-	<%= message %>
-	<% } %>
-	
-	<form method="post" action="/admin/groups/edit">
-		<input type="hidden" name="id" value="<%= id %>" />
-		<div>
-	        <label>Teacher:</label>
-	        <input type="text" name="teacher" value="<%= teacher %>" />
-	    </div>
-		<div>
-	        <label>Year:</label>
-	        <input type="number" name="year" value="<%= year %>"/>
-	    </div>
-	    <div>
-	        <label>Name:</label>
-	        <input type="text" name="name" value="<%= name %>"/>
-	    </div>
-	    <div>
-    		<input type="button" value="Cancel" onclick="javascript:history.back()" />
-	        <input type="submit" value="Save"/>
-	    </div>	
-	</form>
-	
-	
 
-</body>
-</html>
+<% if ( messageSuccess.length > 0 ) { %>
+	<div class="alert alert-success"><%= messageSuccess %></div>
+<% } %>
+<% if ( messageError.length > 0 ) { %>
+	<div class="alert alert-danger"><%= messageError %></div>
+<% } %>
+
+
+<form method="post" action="">
+	<input type="hidden" name="id" value="<%= id %>" />
+	<div class="form-group">
+        <label>Teacher:</label>
+        <input class="form-control" type="text" name="teacher" value="<%= teacher %>" />
+    </div>
+	<div class="form-group">
+        <label>Year:</label>
+        <input class="form-control" type="number" name="year" value="<%= year %>"/>
+    </div>
+    <div class="form-group">
+        <label>Name:</label>
+        <input class="form-control" type="text" name="name" value="<%= name %>"/>
+    </div>
+
+    <div class="row">
+		<div class="col-sm-6 text-left">
+			<a href="../" type="button" class="btn btn-default">Cancel</a>
+			<a href="../delete/?id=<%= id %>" type="button" class="btn btn-danger">Delete</a>
+		</div>
+		<div class="col-sm-6 text-right">
+			<button type="submit" class="btn btn-success">Save</button>
+		</div>
+	</div>
+</form>
+

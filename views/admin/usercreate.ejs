@@ -1,64 +1,52 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Add User</title>
-	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% layout('../boilerplate') %>
 
-	
-</head>
-<body>
-	
-	<h1>Admin area</h1>
-	<h3>Add User</h3>
-	
-	<form method="post" action="/admin/users/create">
-		<div>
-			<label>Secret</label>
-			<input type="text" name="secret" value="<%= defaultSecret %>" />
-		</div>		
-	    <div>
-	    	<label>Type</label>
-	    	
-	    	<select name="usertype">
-	    		<% for ( var type in allTypes ){ %>
-	    			<option value="<%= type %>" <% if( defaultType === type ){ %>selected<% } %> ><%= type %></option>
+<form method="post" action="create">
+	<div class="form-group">
+		<label for="inputSecret">Secret</label>
+		<input class="form-control" type="text" id="inputSecret" name="secret" value="<%= defaultSecret %>" />
+	</div>		
+    <div class="form-group">
+    	<label for="selectType">Type</label>	    	
+    	<select name="usertype" class="form-control">
+    		<% for ( var type in allTypes ){ %>
+    			<option value="<%= type %>" <% if( defaultType === type ){ %>selected<% } %> ><%= type %></option>
+			<% } %>
+		</select>
+    	
+    </div>
+    <div class="form-group">
+		<label for="selectGender">Gender</label>
+		<select id="selectGender" name="gender" class="form-control">
+			<% for ( var i = 0; i < genders.length; i ++ ) { %> 
+				<% if ( i == 0 ) { %>
+					<option value="<%= genders[i] %>" selected><%= genders[i] %></option>
+				<% } else { %>
+					<option value="<%= genders[i] %>"><%= genders[i] %></option>
 				<% } %>
-			</select>
-	    	
-	    </div>
-	    <div>
-			<label>Gender</label>
-			<select name="gender">
-				<% for ( var i = 0; i < genders.length; i ++ ) { %> 
-					<% if ( i == 0 ) { %>
-						<option value="<%= genders[i] %>" selected><%= genders[i] %></option>
-					<% } else { %>
-						<option value="<%= genders[i] %>"><%= genders[i] %></option>
-					<% } %>
+			<% } %>
+		</select>			
+	</div>
+    <div class="form-group">
+    	<label for="groupSelect">Select group</label>	    	
+    	<select name="groupid" class="form-control" id="groupSelect">
+			<% for ( var i = 0; i < groups.length; i++ ){ %>
+				<% if ( i == 0 ) { %>
+					<option value="<%= groups[i]._id %>" selected><%= groups[i].name %></option>	
+				<% } else { %>
+					<option value="<%= groups[i]._id %>"><%= groups[i].name %></option>
 				<% } %>
-			</select>			
+			<% } %>
+		</select>
+	
+	<div class="clearfix">&nbsp;</div>
+	
+	
+    <div class="row">
+		<div class="col-sm-6 text-left">
+			<a href="../" type="button" class="btn btn-default">Cancel</a>
 		</div>
-	    <div>
-	    	<label>Select group</label>	    	
-	    	<select name="groupid">
-				<% for ( var i = 0; i < groups.length; i++ ){ %>
-					<% if ( i == 0 ) { %>
-						<option value="<%= groups[i]._id %>" selected><%= groups[i].name %></option>	
-					<% } else { %>
-						<option value="<%= groups[i]._id %>"><%= groups[i].name %></option>
-					<% } %>
-				<% } %>
-			</select>
-	    	
-	    </div>
-	    <div>
-	        <input type="submit" value="Create"/>
-	    </div>	
-	</form>
-	
-	
-
-</body>
-</html>
+		<div class="col-sm-6 text-right">
+			<button type="submit" class="btn btn-success">Add</button>
+		</div>
+	</div>
+</form>

@@ -1,4 +1,52 @@
 
-<% layout('../boilerplate') -%>
+<% layout('../boilerplate') %>
 
-Editing admin profile here
+
+
+<h2><%= username %></h2>
+
+<div>
+	<small><%= id %></small>
+</div>
+
+
+<div class="clearfix">&nbsp;</div>
+
+
+<% if ( messageSuccess.length > 0 ) { %>
+	<div class="alert alert-success"><%= messageSuccess %></div>
+<% } %>
+<% if ( messageError.length > 0 ) { %>
+	<div class="alert alert-danger"><%= messageError %></div>
+<% } %>
+
+
+<form role="form" method="post" action="">
+	<input type="hidden" name="id" value="<%= id %>" />
+
+	<div class="form-group">
+		<label for="inputEmail">Email address</label>
+		<input type="email" class="form-control" id="inputEmail" name="email" value="<%= email %>">
+	</div>
+	<br/>
+	<div class="form-group">
+		<label for="inputPassword1">New password twice</label>
+		<input type="password" class="form-control" id="inputPassword1" name="newPassword1">
+	</div>
+	
+	<div class="form-group">
+		<input type="password" class="form-control" id="inputPassword2" name="newPassword2">
+		<p class="help-block">Leave empty if you don't want to change.</p>
+	</div>
+
+	
+	<div class="clearfix">&nbsp;</div>
+
+	<button type="submit" class="btn btn-success btn-block">Save</button>
+</form>
+
+
+
+
+
+

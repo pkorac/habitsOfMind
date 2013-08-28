@@ -32,6 +32,7 @@ exports.registerRoute = '/register';
 
 // Flash message
 exports.flashMessage = 'message';
+exports.flashMessageSuccess = 'messageSuccess';
 
 
 // DATABASE SETUP

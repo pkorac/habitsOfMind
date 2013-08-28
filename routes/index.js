@@ -60,40 +60,41 @@ module.exports = function(app, config, auth){
 	app.get('/admin/history', auth.check, admin.history );
 	app.get('/admin/admin', auth.check, admin.admin );
 	app.get('/admin/edit', auth.check, admin.editProfile );
-	app.post('/students/edit', auth.check, admin.editProfileSubmit ); // post
+	app.post('/admin/edit', auth.check, admin.editProfileSubmit ); // post
 
 
 
-	app.get('/admin/users/', auth.check, admin.listUsers );
+	app.get('/admin/admin/users/', auth.check, admin.listUsers );
 	
-	app.get('/admin/users/create', auth.check, admin.createUser );
-	app.post('/admin/users/create', auth.check, admin.createUserSubmit ); // post
+	app.get('/admin/admin/users/create', auth.check, admin.createUser );
+	app.post('/admin/admin/users/create', auth.check, admin.createUserSubmit ); // post
 	
-	app.get('/admin/users/edit', auth.check, admin.editUser );
-	app.post('/admin/users/edit', auth.check, admin.editUserSubmit ); // post
+	app.get('/admin/admin/users/edit', auth.check, admin.editUser );
+	app.post('/admin/admin/users/edit', auth.check, admin.editUserSubmit ); // post
 	
-	app.get('/admin/users/delete', auth.check, admin.deleteUser );
-	app.post('/admin/users/delete', auth.check, admin.deleteUserSubmit ); // post
+	app.get('/admin/admin/users/delete', auth.check, admin.deleteUser );
+	app.post('/admin/admin/users/delete', auth.check, admin.deleteUserSubmit ); // post
+
+	app.get('/admin/admin/users/cleanup', auth.check, admin.cleanup );
+	app.post('/admin/admin/users/cleanup', auth.check, admin.cleanupSubmit ); // post
 
 	
-	app.get('/admin/groups/', auth.check, admin.listGroups );
+	app.get('/admin/admin/groups/', auth.check, admin.listGroups );
 	
-	app.get('/admin/groups/create', auth.check, admin.createGroup );
-	app.post('/admin/groups/create', auth.check, admin.createGroupSubmit ); // post
+	app.get('/admin/admin/groups/create', auth.check, admin.createGroup );
+	app.post('/admin/admin/groups/create', auth.check, admin.createGroupSubmit ); // post
 	
-	app.get('/admin/groups/populate', auth.check, admin.populate );
-	app.post('/admin/groups/populate', auth.check, admin.populateSubmit ); // post
+	app.get('/admin/admin/groups/populate', auth.check, admin.populate );
+	app.post('/admin/admin/groups/populate', auth.check, admin.populateSubmit ); // post
 	
-	app.get('/admin/groups/edit', auth.check, admin.editGroup );
-	app.post('/admin/groups/edit', auth.check, admin.editGroupSubmit ); // post	
+	app.get('/admin/admin/groups/edit', auth.check, admin.editGroup );
+	app.post('/admin/admin/groups/edit', auth.check, admin.editGroupSubmit ); // post	
 	
-	app.get('/admin/groups/delete', auth.check, admin.deleteGroup );
-	app.post('/admin/groups/delete', auth.check, admin.deleteGroupSubmit ); // post
+	app.get('/admin/admin/groups/delete', auth.check, admin.deleteGroup );
+	app.post('/admin/admin/groups/delete', auth.check, admin.deleteGroupSubmit ); // post
 
-	app.get('/admin/cleanup', auth.check, admin.cleanup );
-	app.post('/admin/cleanup', auth.check, admin.cleanupSubmit ); // post
 
-	app.get('/admin/test', auth.check, admin.test );
+//	app.get('/admin/test', auth.check, admin.test );
 	
 
 	////////////////////////////////////////////////////////////////////////////////

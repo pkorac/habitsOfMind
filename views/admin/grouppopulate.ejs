@@ -1,55 +1,47 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Add students to a group</title>
-	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% layout('../boilerplate') %>
 
-	
-</head>
-<body>
-	
-	<h1>Admin area</h1>
-	<h3>Add students to a group</h3>
-	
-	<% if ( message ){ %>
-		<%= message %>	
-	<% } %>
-	
-	<form method="post" action="/admin/groups/populate">
-	    <div>
-	    	<label>Select group</label>	    	
-	    	<select name="groupid">
-				<% for ( var i = 0; i < groups.length; i++ ){ %>
-					<% if ( groups[i]._id === id ) { %>
-						<option value="<%= groups[i]._id %>" selected><%= groups[i].name %></option>	
-					<% } else { %>
-						<option value="<%= groups[i]._id %>"><%= groups[i].name %></option>
-					<% } %>
+<% if ( message ){ %>
+	<%= message %>	
+<% } %>
+
+<form method="post" action="">
+    <div class="form-group">
+    	<label for="selectGroup">Select group</label>	    	
+    	<select name="groupid" id="selectGroup" class="form-control">
+			<% for ( var i = 0; i < groups.length; i++ ){ %>
+				<% if ( groups[i]._id === id ) { %>
+					<option value="<%= groups[i]._id %>" selected><%= groups[i].name %></option>	
+				<% } else { %>
+					<option value="<%= groups[i]._id %>"><%= groups[i].name %></option>
 				<% } %>
-			</select>
-	    	
-	    </div>
-		<div>
-			<label>Secret</label>
-			<input type="text" name="secret" value="<%= defaultSecret %>" />
-		</div>	
-		<div class="pull-left">
-			<label>Boys:</label>
-			<input type="number" name="howManyBoys" class="input-mini" value="0" />
-		</div>
-		<div class="pull-left">
-			<label>Girls:</label>
-			<input type="number" name="howManyGirls" class="input-mini" value="0" />
-		</div>
-		<div class="clearfix"></div>
-	    <div>
-	        <input type="submit" value="Add students" class="btn btn-primary"/>
-	    </div>	
-	</form>
-	
-	
+			<% } %>
+		</select>
+    	
+    </div>
+	<div class="form-group">
+		<label for="inputSecret">Secret</label>
+		<input id="inputSecret" class="form-control" type="text" name="secret" value="<%= defaultSecret %>" />
+	</div>	
 
-</body>
-</html>
+	<div class="row">
+		<div class="form-group col-xs-6">
+			<label for="boys">Boys</label>
+			<input type="number" class="form-control" id="boys" name="howManyBoys" placeholder="0">
+		</div>
+		<div class="form-group col-xs-6">
+			<label for="boys">Girls</label>
+			<input type="number" class="form-control" id="boys" name="howManyGirls" placeholder="0">
+			</div>
+	</div>
+
+
+	<div class="clearfix">&nbsp;</div>
+    <div class="row">
+		<div class="col-sm-6 text-left">
+			<a href="../" type="button" class="btn btn-default">Cancel</a>
+		</div>
+		<div class="col-sm-6 text-right">
+			<button type="submit" class="btn btn-success">Add</button>
+		</div>
+	</div>	
+</form>

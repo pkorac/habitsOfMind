@@ -1,24 +1,19 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Add User</title>
-	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% layout('../boilerplate') %>
 
-	
-</head>
-<body>
-	
-	<h3>Delete <%= username %></h3>
-	Are you sure?
-	<form method="post" action="/admin/users/delete/">
-		<input type="hidden" name="id" value="<%= id %>" />
-		<input type="hidden" name="username" value="<%= username %>" />
-		<input type="button" value="no" onclick="javascript:history.back()" />
-		<input type="submit" value="Yes" />
-	</form>
-	
+<p class="text-danger">Are you sure you want to delete <strong><%= username %></strong>?</p>
 
-</body>
-</html>
+<form method="post" action="">
+	<input type="hidden" name="id" value="<%= id %>" />
+	<input type="hidden" name="username" value="<%= username %>" />
+	
+	<div class="row">
+		<div class="col-sm-6 text-left">
+			<a href="../" type="button" class="btn btn-default">Cancel</a>
+		</div>
+		<div class="col-sm-6 text-right">
+			<button type="submit" class="btn btn-danger">Yes</button>
+		</div>
+	</div>
+
+
+</form>
