@@ -1,10 +1,7 @@
 <% layout('../boilerplate') %>
 
 <ul>
-<% for ( var i = 0; i < habits.length; i++ ) { 
-	var habit = habits[i];
-	var habitCapital = habit.charAt(0).toUpperCase() + habit.slice(1);
-%>
-	<li><a href="?habit=<%= habit %>"><%= habitCapital %></a></li>
-<% } %>
+<% habits.forEach( function(habit){ %>
+	<li><a href="?habit=<%= habit.habit %>"><%= habit.name %></a></li>	
+<% }); %>
 </ul>

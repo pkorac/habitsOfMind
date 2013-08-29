@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 // Users and routes
 //	- defines which user types and their landing pages can go where
 exports.userTypes = {
@@ -16,7 +18,9 @@ exports.defaultUserSecret = "plums";
 
 
 // Habits
-exports.habits = ["inquisitive", "persistent", "imaginative", "disciplined", "collaborative"];
+
+exports.habits = JSON.parse( fs.readFileSync('habits.json').toString() ).habits;
+
 
 // Hashing
 exports.hashDepth = 10;

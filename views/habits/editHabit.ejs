@@ -1,45 +1,25 @@
 <% layout('../boilerplate') %>
 
-<% block('title_class', habit ) %>
+<% block('title_class', habit.habit ) %>
 
-<%
-var habitCapital = habit.charAt(0).toUpperCase() + habit.slice(1);	
-%>
-
-<form>
-	<div class="edit-habits <%= habit %>-habit">
+<form method="POST" action="">
+	<input type="hidden" name="habit" value="<%= habit.habit %>" />
+	<div class="edit-habits <%= habit.habit %>-habit">
 		
-		<div class="habit-box">
-			<p class="question">How much have you wondered and questioned recently?</p>								
-			<div class="slider-holder">
-				<div class="slider-left"><p class="text-middle">A little</p></div>
-				<input type="range" class="habit-slider <%= habit %>-thumb" />
-				<div class="slider-right">A Lot</div>
-			</div>								
-			<p class="explanation">Have you asked interesting or unusual questions or thought "what if?"</p>
-		</div>
-
-
-		<div class="habit-box">
-			<p class="question">How much have you explored and investigated recently?</p>								
-			<div class="slider-holder">
-				<div class="slider-left"><p class="text-middle">A little</p></div>
-				<input type="range" class="habit-slider <%= habit %>-thumb" />
-				<div class="slider-right">A Lot</div>
-			</div>								
-			<p class="explanation">Have you thought about some problems and looked in interesting places for information to help solve them?</p>
-		</div>
-
-
-		<div class="habit-box">
-			<p class="question">How confident do you feel about your ability to challenge assumptions?</p>
-			<div class="slider-holder">
-				<div class="slider-left"><p class="text-middle">A little</p></div>
-				<input type="range" class="habit-slider <%= habit %>-thumb" />
-				<div class="slider-right">A Lot</div>
-			</div>								
-			<p class="explanation">Have you thought hard about particular issues and had unusual ideas?</p>
-		</div>
+		<% habit.subhabits.forEach( function(subhabit){ %>
+			
+			<div class="habit-box">
+				<p class="question"><%= subhabit.question %></p>
+				<div class="slider-holder">
+					<div class="slider-left"><p class="text-middle">A little</p></div>
+					<input name="<%= subhabit.id %>" type="range" class="habit-slider <%= habit.habit %>-thumb" />
+					<div class="slider-right">A Lot</div>
+				</div>								
+				<p class="explanation"><%= subhabit.explanation %></p>
+			</div>
+		
+		<% } ); %>
+		
 		
 		<div class="clearfix">&nbsp;</div>
 		<button type="submit" class="btn btn-success btn-block">Save</button>

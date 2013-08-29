@@ -1,0 +1,22 @@
+<% 
+	var path = current_route;
+	path = path.split('/');
+	
+	if ( path[2] === "admin" && path.length > 4) {
+
+%>	
+
+<ol class="breadcrumb">
+<%  for( var i = 2; i < path.length; i++ ){ %>
+	<% if( i == path.length-1 ) { %>		
+		<li class="active"><%= path.slice(i, i+1).join("/") %>
+	<% } else{ %>
+		<li><a href="<%= path.slice(0, i+1).join("/") %>/"><%= path.slice(i, i+1).join("/") %></a>
+	<% } %>
+	</li>	  
+<%  } %>
+  
+</ol>
+	
+
+<% } %>
