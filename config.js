@@ -15,8 +15,8 @@ exports.defaultYear = 7;
 exports.defaultUserSecret = "plums";
 
 
-
-// Database
+// Habits
+exports.habits = ["inquisitive", "persistent", "imaginative", "disciplined", "collaborative"];
 
 // Hashing
 exports.hashDepth = 10;

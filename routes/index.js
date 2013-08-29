@@ -5,6 +5,7 @@ var landing = require('./landing'),
 	students = require('./students'),	
 	teachers = require('./teachers'),
 	groups = require('./groups'),
+	habits = require('./habits'),
 	admin = require('./admin'),
 	lost = require('./lost'),
 	denied = require('./denied');
@@ -58,6 +59,7 @@ module.exports = function(app, config, auth){
 	// Admin
 	app.get('/admin/', auth.check, admin.landing );
 	app.get('/admin/history', auth.check, admin.history );
+	app.get('/admin/habits', auth.check, habits.editHabit );
 	app.get('/admin/admin', auth.check, admin.admin );
 	app.get('/admin/edit', auth.check, admin.editProfile );
 	app.post('/admin/edit', auth.check, admin.editProfileSubmit ); // post

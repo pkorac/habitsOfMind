@@ -6,7 +6,8 @@ var db = require('../db'),
 // LANDING
 exports.landing = function( req, res ){
 	res.render('admin/landing', { title: req.session.username,
-								  subtitle: "How do you feel today?" });
+								  subtitle: "How do you feel today?",
+								  habits: config.habits });
 };
 
 exports.history = function( req, res ){
