@@ -58,6 +58,14 @@ var HabitsGroup = function( id, name, year, teacher ){
 	this.docType = config.groupDocType;
 };
 
+// Habits
+var HabitsHabit = function( name, subhabits, user, group ){
+	this.habit = name;
+	this.subhabits = subhabits;
+	this.user = user;
+	this.group = group;	
+	this.date = new Date();
+};
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -637,9 +645,11 @@ function deleteGroup( id, fn ){
 
 function saveHabit( params, fn ){
 	if ( params.user && params.group && params.habit && params.subhabits && params.subhabits.length == 3 ){
-		params.date = (new Date()).toUTCString();
-		console.log( util.inspect( params, {colors: true} ) );
-		dataDB( "", params, function(err, response){
+
+
+		var newHabit = new HabitsHabit( params.habit, params.subhabits, params.user, params.gorup );
+		
+		dataDB( "", newHabit, function(err, response){
 			if( err ){
 				fn(err, null);
 			} else{
@@ -669,7 +679,7 @@ saveHabit( params, function(err, data){
 
 function habitsByUser( username, fn ){
 	// group=true&startkey=["ali"]&endkey=["ali",{}]
-	dataDB( listhabitsbyuser+'?group=true&startkey=["'+ username +'"]&endkey=["'+username+'",{}]', function(err, data){
+	dataDB( listhabitsbyuser+'?group_level=3&startkey=["'+ username +'"]&endkey=["'+username+'",{}]', function(err, data){
 		if( err ){
 			fn(err, null);
 		} else{
@@ -683,13 +693,6 @@ function habitsByGroup( fn ){
 }
 
 
-habitsByUser( "admin", function(err, data){
-	if( err ){
-		console.log( err );
-	} else{
-		console.log( util.inspect( data, {colors: true, depth:10} ) );
-	}
-});
 
 
 ////////////////////////////////////////////////////////////

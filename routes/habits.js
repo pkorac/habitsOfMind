@@ -37,7 +37,7 @@ exports.editHabitSubmit = function( req, res, next){
 			group: null,
 			habit: req.body.habit
 		};
-		
+
 		db.findUserbyName( params.user, function(err, theUser){
 			if( err ){
 				next();
@@ -50,7 +50,6 @@ exports.editHabitSubmit = function( req, res, next){
 						console.log( err );
 						next();
 					} else{
-
 						config.habits.forEach( function(habit){
 							if ( habit.habit === req.query.habit ){
 								res.render( 'habits/editedHabit', {   title: habit.name, 
@@ -76,7 +75,11 @@ exports.history = function(req, res, next){
 				next();
 			} else{
 				
-				res.render('habits/history', {title: req.session.username, subtitle: "My habits history" });	
+				console.log( util.inspect( habits, {colors: true, depth: 10} ) );
+				res.render('habits/history', { title: req.session.username, 
+												subtitle: "My habits history",
+												habits: habits.rows,
+												allHabits: config.habits });	
 				
 			}
 		} );
