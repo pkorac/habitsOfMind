@@ -2,6 +2,6 @@
 
 <ul>
 <% habits.forEach( function(habit){ %>
-	<li><a href="?habit=<%= habit.habit %>"><%= habit.name %></a></li>	
+	<li><a href="edit?habit=<%= habit.habit %>"><%= habit.name %></a></li>	
 <% }); %>
 </ul>

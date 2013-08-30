@@ -1,5 +1,13 @@
 var config = require('../config'), util = require('util');
 
+// LIST HABITS
+exports.habitsList = function(req,res,next){
+	res.render( 'habits/habitsList', {  title: req.session.username, 
+											subtitle: "My Habits",
+											habits: config.habits });
+};
+
+// EDIT HABIT
 exports.editHabit = function(req, res, next){
 	if ( req.query && req.query.habit ){
 		config.habits.forEach( function(habit){
@@ -13,12 +21,11 @@ exports.editHabit = function(req, res, next){
 			
 		} );
 	} else{				
-		res.render( 'habits/habitsList', {  title: req.session.username, 
-											subtitle: "My Habits",
-											habits: config.habits });
+		res.redirect( "../"+req.path );
 	}
 }
 
+// EDIT HABIT SUBMIT
 exports.editHabitSubmit = function( req, res, next){
 
 	console.log( util.inspect( req.body, {colors: true} ) );	
@@ -35,4 +42,9 @@ exports.editHabitSubmit = function( req, res, next){
 	} else{
 		next();
 	}
+};
+
+// HABITS HISTORY
+exports.habitsHistory = function(req, res, next){
+		
 };
