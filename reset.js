@@ -95,25 +95,39 @@ rl.question("Are you sure you want to clear the databases?\nThis will delete ALL
 								//console.log(".\nFirst user's password is: " + rndPass +"\n.");
 								
 								// STEP 5
-								// Create views
+								// Create USER views
 								var views = {
-									docs: [config.views.lists]	
+									docs: [config.userViews.lists]	
 								};
 								profilesDB( "_bulk_docs", views, function(err, response){
 									if( err ){
 										console.log( err );
 									} else{
 									
-										console.log( "Views generated\n." );										
-										console.log( "and all your base are belong to us\n.\n." );
+										// STEP 6
+										// Create DATA views
 										
+										var dataViews = {
+											docs: [config.dataViews.lists]
+										}
 										
-										console.log( "-------------------------" );
-										console.log( "Done" );
-										console.log( "You can now log-in with: ");
-										console.log( "Username: " + username );
-										console.log( "Password: " + rndPass );
-										console.log( "-------------------------" );
+										dataDB( "_bulk_docs", dataViews, function(err, data){
+											if( err ){
+												console.log( err );
+											} else{
+												console.log( "Views generated\n." );								
+												console.log( "and all your base are belong to us\n.\n." );
+												
+												
+												console.log( "-------------------------" );
+												console.log( "Done" );
+												console.log( "You can now log-in with: ");
+												console.log( "Username: " + username );
+												console.log( "Password: " + rndPass );
+												console.log( "-------------------------" );													
+											}
+											
+										} );										
 									}
 								});
 							}

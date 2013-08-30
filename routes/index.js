@@ -58,11 +58,11 @@ module.exports = function(app, config, auth){
 	////////////////////////////////////////////////////////////////////////////////
 	// Admin
 	app.get('/admin/', auth.check, admin.landing );
-	app.get('/admin/history', auth.check, admin.history );
 	
 	app.get('/admin/habits', auth.check, habits.habitsList );
 	app.get('/admin/habits/edit', auth.check, habits.editHabit );
 	app.post('/admin/habits/edit', auth.check, habits.editHabitSubmit ); // post
+	app.get('/admin/history', auth.check, habits.history );
 	
 	app.get('/admin/admin', auth.check, admin.admin );
 	app.get('/admin/edit', auth.check, admin.editProfile );	

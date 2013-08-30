@@ -15,14 +15,17 @@ var util = require('util'),
 // Credentials for the database (defined in creds.json)
 var creds = JSON.parse( fs.readFileSync( 'creds.json' ).toString() ); // database credentials
 var usersDB = couchrequest( {databaseUrl: creds.profilesDB} ); // user profiles
+var dataDB = couchrequest( {databaseUrl: creds.dataDB} ); // user profiles
 
 
 // View urls (defined in config.js)
-var listusernames = config.views.lists.views.listusernames.url;
-var listuserids = config.views.lists.views.listuserids.url;
-var listusertokens = config.views.lists.views.listusertokens.url;
-var listgroupnames = config.views.lists.views.listgroupnames.url;
-var listgroupids = config.views.lists.views.listgroupids.url;
+var listusernames = config.userViews.lists.views.listusernames.url;
+var listuserids = config.userViews.lists.views.listuserids.url;
+var listusertokens = config.userViews.lists.views.listusertokens.url;
+var listgroupnames = config.userViews.lists.views.listgroupnames.url;
+var listgroupids = config.userViews.lists.views.listgroupids.url;
+var listhabitsbygroup = config.dataViews.lists.views.habitsByGroup.url;
+var listhabitsbyuser = config.dataViews.lists.views.habitsByUser.url
 
 
 
@@ -54,6 +57,7 @@ var HabitsGroup = function( id, name, year, teacher ){
 	this.teacher = teacher;
 	this.docType = config.groupDocType;
 };
+
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -497,7 +501,7 @@ function deleteUser( id, fn ){
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// CLASS' Functions
+// GROUPS' Functions
 //
 ///////////////////////////////////////////////////////////////////////////
 
@@ -625,6 +629,67 @@ function deleteGroup( id, fn ){
 }
 
 
+///////////////////////////////////////////////////////////////////////////
+//
+// HABITS' Functions
+//
+///////////////////////////////////////////////////////////////////////////
+
+function saveHabit( params, fn ){
+	if ( params.user && params.group && params.habit && params.subhabits && params.subhabits.length == 3 ){
+		params.date = (new Date()).toUTCString();
+		console.log( util.inspect( params, {colors: true} ) );
+		dataDB( "", params, function(err, response){
+			if( err ){
+				fn(err, null);
+			} else{
+				fn( null, response);
+			}
+		} );
+		
+	} else{
+		fn( new Error("Parameters mismatch"), null);
+	}
+}
+
+
+/*
+var params = {
+	subhabits: [Math.random(), Math.random(), Math.random()],
+	user: config.firstUser.name,
+	group: config.firstGroup._id,
+	habit: config.habits[Math.floor(Math.random()*config.habits.length)].habit
+};
+saveHabit( params, function(err, data){
+	if( err ) console.log( err );
+	console.log( util.inspect( data, {colors: true} ) );
+} );
+*/
+
+
+function habitsByUser( username, fn ){
+	// group=true&startkey=["ali"]&endkey=["ali",{}]
+	dataDB( listhabitsbyuser+'?group=true&startkey=["'+ username +'"]&endkey=["'+username+'",{}]', function(err, data){
+		if( err ){
+			fn(err, null);
+		} else{
+			fn(null, data);
+		}
+	} );
+}
+
+function habitsByGroup( fn ){
+	
+}
+
+
+habitsByUser( "admin", function(err, data){
+	if( err ){
+		console.log( err );
+	} else{
+		console.log( util.inspect( data, {colors: true, depth:10} ) );
+	}
+});
 
 
 ////////////////////////////////////////////////////////////
@@ -673,7 +738,10 @@ exports.editGroup = editGroup;
 exports.deleteGroup = deleteGroup;
 
 
-
+// Habits
+exports.saveHabit = saveHabit;
+exports.habitsByUser = habitsByUser;
+exports.habitsByGroup = habitsByGroup;
 
 
 

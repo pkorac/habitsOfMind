@@ -1,4 +1,6 @@
-var config = require('../config'), util = require('util');
+var config = require('../config'),
+	db = require('../db'),
+	util = require('util');
 
 // LIST HABITS
 exports.habitsList = function(req,res,next){
@@ -27,24 +29,65 @@ exports.editHabit = function(req, res, next){
 
 // EDIT HABIT SUBMIT
 exports.editHabitSubmit = function( req, res, next){
+	if( req.body && req.body.habit ){
+		
+		var params = {
+			subhabits: [req.body._0, req.body._1, req.body._2],
+			user: req.session.username,
+			group: null,
+			habit: req.body.habit
+		};
+		
+		db.findUserbyName( params.user, function(err, theUser){
+			if( err ){
+				next();
+			} else{
+								
+				params.group = theUser.habitsGroup;
+				
+				db.saveHabit( params, function(err, data){
+					if( err ){
+						console.log( err );
+						next();
+					} else{
 
-	console.log( util.inspect( req.body, {colors: true} ) );	
-	if( req.body ){
-		config.habits.forEach( function(habit){
-			
-			if ( habit.habit === req.body.habit ){
-				res.render('habits/editedHabit', {  title: "Saved", 
-												subtitle: null,
-												habit: habit });
+						config.habits.forEach( function(habit){
+							if ( habit.habit === req.query.habit ){
+								res.render( 'habits/editedHabit', {   title: habit.name, 
+																	subtitle: "Thank you",
+																	habit: habit } );
+							}
+						} );						
+
+					}
+				} );
 			}
 		} );
-		
 	} else{
 		next();
 	}
 };
 
 // HABITS HISTORY
-exports.habitsHistory = function(req, res, next){
-		
+exports.history = function(req, res, next){
+	
+		db.habitsByUser( req.session.username, function(err, habits){
+			if(err){
+				next();
+			} else{
+				
+				res.render('habits/history', {title: req.session.username, subtitle: "My habits history" });	
+				
+			}
+		} );
 };
+
+
+
+
+
+
+
+
+
+// Have fun

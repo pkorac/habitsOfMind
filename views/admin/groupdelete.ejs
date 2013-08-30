@@ -1,7 +1,8 @@
 <% layout('../boilerplate') %>
 
 
-<p class="text-danger">Are you sure you want to delete <strong><%= name %>?</p>
+<p class="text-danger">Are you sure you want to delete <strong><%= name %>?</strong></p>
+<p class="text-danger">This will delete not only the group, but remove ALL of its users and data!</p>
 
 <form method="post" action="">
 	<input type="hidden" name="id" value="<%= id %>" />

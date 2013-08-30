@@ -12,7 +12,7 @@
 				<p class="question"><%= subhabit.question %></p>
 				<div class="slider-holder">
 					<div class="slider-left"><p class="text-middle">A little</p></div>
-					<input name="<%= subhabit.id %>" type="range" class="habit-slider <%= habit.habit %>-thumb" />
+					<input name="_<%= subhabit.id %>" type="range" class="habit-slider <%= habit.habit %>-thumb" min="0" max="1" step="0.0001" />
 					<div class="slider-right">A Lot</div>
 				</div>								
 				<p class="explanation"><%= subhabit.explanation %></p>
