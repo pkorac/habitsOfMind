@@ -4,57 +4,67 @@ $(function(){
 	var pel = $("#paper");
 	var width = pel.width();
 	var height = pel.height();
-	var paper = new Raphael( "paper", width, height );
+	var paper = new Raphael( "paper", width, height );			
 	
-	var numberOfCurves = 15;		
-	
-	var colours = ["#e4eb00", "#5a768f", "#830c6c", "#88ab2e", "#f05209"];		
-	
-	
-	
-	function randomCurve( colour ){
-	
-		var howMany = 15;
-		var maxHeight = height*0.3;
-		var padding = 0.08*width;
-		var maxWidth = ( width - 2*padding )/howMany;
-	
-		var x = padding;
-		var y = height - ( height-maxHeight )*0.5;
+	//var colours = ["#e4eb00", "#5a768f", "#830c6c", "#88ab2e", "#f05209"];		
+	var colours = {
+		inquisitive: "#edcf48",
+		collaborative: "#f95525",
+		persistent: "#39a8d5",
+		disciplined: "#86ad3e",
+		imaginative: "#fa078a",
 		
-		var values = new Array();
-		for ( var i = 0; i < howMany; i++ ){
-			values[i] = Math.random();
-		}
+	}
+	var padding = 20;
+
+	var startDate = new Date();
+	startDate.setHours( startDate.getHours()-2 );
+	var endDate = new Date();
+	var timeSpan = endDate - startDate;
+
+	// For each habit	
+	for( var i = 0; i < habitsData.length; i++ ) {
 		
+		var records = habitsData[i].records;
+
+		// Draw all the values
+		var lineString = ["M", padding, height-padding];
 		
-		var curveString = "";
-		for ( var i =0 ; i < values.length; i++ ){
+		var curveString = ["M", padding, height-padding, "R"];
+		
+		for ( var j = 0; j < records.length; j++ ){			
+			var recordedDate = new Date( records[j].date );			
+			var position = recordedDate - startDate;
+			if ( position > 0 ){
+				position /= timeSpan;
+				
+				var x = padding + ( (width-padding*2)*position );
+				var y = height - ( padding + ( (height-padding*2)*records[j].value ) );
+				var circle = paper.circle( x, y, 10 );
+				circle.attr( {stroke: "none", fill: colours[ habitsData[i].id ] } );
+				lineString += " L" + x + " " + y;
+				
+				// Connecting Lines
+//				if( j == 0 ) curveString = ["M", x, y, "R"]
+				curveString += x + " " + y + " " ;
 	
-			// Guide lines			
-			var lineString = ["M", x, y, "L", x, y - maxHeight*values[i] ];
-			var line = paper.path( lineString ).attr({ stroke: "#e6e8e9", "stroke-dasharray": "- " });
-	
-			
-			// Connecting Lines
-			if ( i == 0 ) curveString += "M" + x + " " + (y - maxHeight*values[i]) + "R";
-			if ( i < values.length-1 ){				
-				curveString += (x+maxWidth) + " " + ( y - maxHeight*values[i+1] ) + " " ;
+			} else{
+				// the date is out of range
 			}
-			
-			x += maxWidth;					
-			
 		}
-	
+		lineString += ["L", width-padding, padding];
+//		var line = paper.path( lineString ).attr( { stroke: colours[habitsData[i].id] } );
+		
+		curveString += [width-padding, height-padding];
 		var curve = paper.path( curveString ).attr({
-			stroke: colour,
-			"stroke-opacity": 1
+			"stroke-opacity": 1,
+			stroke: colours[habitsData[i].id]
 		});
 		
+
 	}
 	
-	for ( var i = 0; i < numberOfCurves; i ++){		
-		randomCurve( colours[i%colours.length] );
-	}
-
+	
+	
+	
 });

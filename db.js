@@ -679,9 +679,10 @@ saveHabit( params, function(err, data){
 
 function habitsByUser( username, depth, fn ){
 	// group=true&startkey=["ali"]&endkey=["ali",{}]
+	
+	// START AND END KEYS ARE WRONG!!!!!
 	var path = listhabitsbyuser+'?group_level='+depth+'&startkey=["'+ username +'"]&endkey=["'+username+'",{}]';
-	console.log( path );
-	dataDB( listhabitsbyuser+'?group_level='+depth+'&startkey=["'+ username +'"]&endkey=["'+username+'",{}]', function(err, data){
+	dataDB( path, function(err, data){
 		if( err ){
 			fn(err, null);
 		} else{
