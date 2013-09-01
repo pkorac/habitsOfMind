@@ -1,7 +1,7 @@
 <% layout('../boilerplate') %>
 
 <ul>
-<% habits.forEach( function(habit){ %>
-	<li><a href="edit?habit=<%= habit.habit %>"><%= habit.name %></a></li>	
-<% }); %>
+<% for( var habit in habits ){ %>
+	<li><a href="edit?habit=<%= habit %>"><%= habits[habit].name %></a></li>	
+<% } %>
 </ul>

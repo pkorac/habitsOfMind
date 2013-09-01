@@ -19,8 +19,7 @@ exports.defaultUserSecret = "plums";
 
 // Habits
 
-exports.habits = JSON.parse( fs.readFileSync('habits.json').toString() ).habits;
-
+exports.habits = JSON.parse( fs.readFileSync('habits.json').toString() );
 
 // Hashing
 exports.hashDepth = 10;

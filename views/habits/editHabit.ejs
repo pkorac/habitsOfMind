@@ -1,9 +1,9 @@
 <% layout('../boilerplate') %>
 
-<% block('title_class', habit.habit ) %>
+<% block('title_class', habitid ) %>
 
 <form method="POST" action="">
-	<input type="hidden" name="habit" value="<%= habit.habit %>" />
+	<input type="hidden" name="habit" value="<%= habitid %>" />
 	<div class="edit-habits <%= habit.habit %>-habit">
 		
 		<% habit.subhabits.forEach( function(subhabit){ %>
@@ -12,7 +12,7 @@
 				<p class="question"><%= subhabit.question %></p>
 				<div class="slider-holder">
 					<div class="slider-left"><p class="text-middle">A little</p></div>
-					<input name="_<%= subhabit.id %>" type="range" class="habit-slider <%= habit.habit %>-thumb" min="0" max="1" step="0.0001" />
+					<input name="_<%= subhabit.id %>" type="range" class="habit-slider <%= habitid %>-thumb" min="0" max="1" step="0.0001" />
 					<div class="slider-right">A Lot</div>
 				</div>								
 				<p class="explanation"><%= subhabit.explanation %></p>

@@ -1,131 +1,122 @@
 {
-	"habits":
-		[
-			{	"habit": "inquisitive", 
-				"name": "Inquisitive",
-				"description": "",
-				"encouragement": "Thanks for completing this section. Albert Einstein once wrote \"Curiosity is more important than knowledge.\" Keep asking those interesting questions.",
-				"subhabits": [
-					{
-						"id": 0,
-						"name": "",
-						"question": "How much have you wondered and questioned recently?",
-						"explanation": "Have you asked interesting or unusual questions or thought \"what if?\""
-					},
-					{
-						"id": 1,
-						"name": "",
-						"question": "How much have you explored and investigated recently?",
-						"explanation": "Have you thought about some problems and looked in interesting places for information to help solve them?"
-					},
-					{
-						"id": 2,
-						"name": "",
-						"question": "How much have you wondered and questioned recently?",
-						"explanation": "Have you asked interesting or unusual questions or thought \"what if?\""
-					}
-				]
-			},
-			{	"habit": "collaborative", 
-				"name": "Collaborative",
-				"description": "",
-				"encouragement": "Thanks for answering these questions. As Helen Keller once wrote \"Alone we can do so little. Together we can do so much.\" Look for opportunities to collaborate with others.",
-				"subhabits": [
-					{
-						"id": 0,
-						"name": "",
-						"question": "How much have you collaborated with others recently?",
-						"explanation": "Have you listened carefully to others or worked in a pair or with a group?"
-					},
-					{
-						"id": 1,
-						"name": "",
-						"question": "How much have you given and received feedback recently?",
-						"explanation": "Have you commented on someone else's work or reflected on comments about yours?"
-					},
-					{
-						"id": 2,
-						"name": "",
-						"question": "How much have you shared your work with others recently?",
-						"explanation": "Have you read aloud, contributed to a display, published online or shared your work in other ways?"
-					}
-				]
-			},
-			{	"habit": "persistent", 
-				"name": "Persistent",
-				"description": "",
-				"encouragement": "Thank you for taking the time to respond. \"The best way out is always through\", according to the poet Robert Frost. Whatever happens, keep going.",
-				"subhabits": [
-					{
-						"id": 0,
-						"name": "",
-						"question": "How often have you kept going recently when the learning was difficult?",
-						"explanation": "Have you worked through challenging tasks and not given up?"
-					},
-					{
-						"id": 1,
-						"name": "",
-						"question": "How often have you dared to be different recently?",
-						"explanation": "Have you tried something new or thought differently to others?"
-					},
-					{
-						"id": 2,
-						"name": "",
-						"question": "How often have you tolerated uncertainty recently?",
-						"explanation": "Have you felt unsure about something but carried on anyway?"
-					}
-				]
-			},
-			{	"habit": "disciplined", 
-				"name": "Disciplined",
-				"description": "",
-				"encouragement": "Thanks for your answers. Aristotle thought that the mark of an educated mind was \"to be able to entertain a thought without accepting it.\" Remember to take time to reflect on what you've learned.",
-				"subhabits": [
-					{
-						"id": 0,
-						"name": "",
-						"question": "How often have you crafted and improved your work recently?",
-						"explanation": "Have you re-drafted, refined or developed your work?"
-					},
-					{
-						"id": 1,
-						"name": "",
-						"question": "How often have you reflected critically on your work recently?",
-						"explanation": "Have you thought about the strengths and weaknesses of your work?"
-					},
-					{
-						"id": 2,
-						"name": "",
-						"question": "How often have you developed your techniques recently?",
-						"explanation": "Have you learned new ways of doing things or improved the way that you work?"
-					}
-				]
-			},
-			{	"habit": "imaginative", 
-				"name": "Imaginative",
-				"description": "",
-				"encouragement": "Thank you for responding. \"You can't depend on your eyes when your imagination is out of focus,\" according to the novelist Mark Twain. Don't forget to connect the dots.",
-				"subhabits": [
-					{
-						"id": 0,
-						"name": "",
-						"question": "How often have you used your intuition recently?",
-						"explanation": "Have you trusted your feelings about something?"
-					},
-					{
-						"id": 1,
-						"name": "",
-						"question": "How often have you made connections recently?",
-						"explanation": "Have you thought about the links between different topics?"
-					},
-					{
-						"id": 2,
-						"name": "",
-						"question": "How often have you played with possibilities recently?",
-						"explanation": "Have you experimented with new ideas, techniques or processes?"
-					}
-				]
-			}
-			
-		]
+	"inquisitive": {	"name": "Inquisitive",
+						"description": "",
+						"encouragement": "Thanks for completing this section. Albert Einstein once wrote \"Curiosity is more important than knowledge.\" Keep asking those interesting questions.",
+						"subhabits": [
+							{
+								"id": 0,
+								"name": "",
+								"question": "How much have you wondered and questioned recently?",
+								"explanation": "Have you asked interesting or unusual questions or thought \"what if?\""
+							},
+							{
+								"id": 1,
+								"name": "",
+								"question": "How much have you explored and investigated recently?",
+								"explanation": "Have you thought about some problems and looked in interesting places for information to help solve them?"
+							},
+							{
+								"id": 2,
+								"name": "",
+								"question": "How much have you wondered and questioned recently?",
+								"explanation": "Have you asked interesting or unusual questions or thought \"what if?\""
+							}
+						]
+	},
+	"collaborative": {	"name": "Collaborative",
+						"description": "",
+						"encouragement": "Thanks for answering these questions. As Helen Keller once wrote \"Alone we can do so little. Together we can do so much.\" Look for opportunities to collaborate with others.",
+						"subhabits": [
+							{
+								"id": 0,
+								"name": "",
+								"question": "How much have you collaborated with others recently?",
+								"explanation": "Have you listened carefully to others or worked in a pair or with a group?"
+							},
+							{
+								"id": 1,
+								"name": "",
+								"question": "How much have you given and received feedback recently?",
+								"explanation": "Have you commented on someone else's work or reflected on comments about yours?"
+							},
+							{
+								"id": 2,
+								"name": "",
+								"question": "How much have you shared your work with others recently?",
+								"explanation": "Have you read aloud, contributed to a display, published online or shared your work in other ways?"
+							}
+						]
+	},
+	"persistent": {		"name": "Persistent",
+						"description": "",
+						"encouragement": "Thank you for taking the time to respond. \"The best way out is always through\", according to the poet Robert Frost. Whatever happens, keep going.",
+						"subhabits": [
+							{
+								"id": 0,
+								"name": "",
+								"question": "How often have you kept going recently when the learning was difficult?",
+								"explanation": "Have you worked through challenging tasks and not given up?"
+							},
+							{
+								"id": 1,
+								"name": "",
+								"question": "How often have you dared to be different recently?",
+								"explanation": "Have you tried something new or thought differently to others?"
+							},
+							{
+								"id": 2,
+								"name": "",
+								"question": "How often have you tolerated uncertainty recently?",
+								"explanation": "Have you felt unsure about something but carried on anyway?"
+							}
+						]
+	},
+	"disciplined":	{	"name": "Disciplined",
+						"description": "",
+						"encouragement": "Thanks for your answers. Aristotle thought that the mark of an educated mind was \"to be able to entertain a thought without accepting it.\" Remember to take time to reflect on what you've learned.",
+						"subhabits": [
+							{
+								"id": 0,
+								"name": "",
+								"question": "How often have you crafted and improved your work recently?",
+								"explanation": "Have you re-drafted, refined or developed your work?"
+							},
+							{
+								"id": 1,
+								"name": "",
+								"question": "How often have you reflected critically on your work recently?",
+								"explanation": "Have you thought about the strengths and weaknesses of your work?"
+							},
+							{
+								"id": 2,
+								"name": "",
+								"question": "How often have you developed your techniques recently?",
+								"explanation": "Have you learned new ways of doing things or improved the way that you work?"
+							}
+						]
+	},
+	"imaginative": {	"name": "Imaginative",
+						"description": "",
+						"encouragement": "Thank you for responding. \"You can't depend on your eyes when your imagination is out of focus,\" according to the novelist Mark Twain. Don't forget to connect the dots.",
+						"subhabits": [
+							{
+								"id": 0,
+								"name": "",
+								"question": "How often have you used your intuition recently?",
+								"explanation": "Have you trusted your feelings about something?"
+							},
+							{
+								"id": 1,
+								"name": "",
+								"question": "How often have you made connections recently?",
+								"explanation": "Have you thought about the links between different topics?"
+							},
+							{
+								"id": 2,
+								"name": "",
+								"question": "How often have you played with possibilities recently?",
+								"explanation": "Have you experimented with new ideas, techniques or processes?"
+							}
+						]
+	}
 }
