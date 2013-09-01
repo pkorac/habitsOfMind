@@ -6,9 +6,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" charset="utf-8">
 
-	<%- scripts %>
+	<script type="text/javascript"><%- blocks.globaljs %></script>
+	
+
 	<%- stylesheets %>
-		
+
+	
 </head>
 <body>
 
@@ -132,6 +135,8 @@
 <!-- Javascript Embeds -->
 <script type="text/javascript" src="/js/jquery.js" ></script>
 <script type="text/javascript" src="/js/bootstrap.min.js" ></script>
+
+<%- scripts %>
 
 </body>
 </html>

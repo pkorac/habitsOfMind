@@ -647,8 +647,8 @@ function saveHabit( params, fn ){
 	if ( params.user && params.group && params.habit && params.subhabits && params.subhabits.length == 3 ){
 
 
-		var newHabit = new HabitsHabit( params.habit, params.subhabits, params.user, params.gorup );
-		
+		var newHabit = new HabitsHabit( params.habit, params.subhabits, params.user, params.group );
+
 		dataDB( "", newHabit, function(err, response){
 			if( err ){
 				fn(err, null);
@@ -677,9 +677,11 @@ saveHabit( params, function(err, data){
 */
 
 
-function habitsByUser( username, fn ){
+function habitsByUser( username, depth, fn ){
 	// group=true&startkey=["ali"]&endkey=["ali",{}]
-	dataDB( listhabitsbyuser+'?group_level=3&startkey=["'+ username +'"]&endkey=["'+username+'",{}]', function(err, data){
+	var path = listhabitsbyuser+'?group_level='+depth+'&startkey=["'+ username +'"]&endkey=["'+username+'",{}]';
+	console.log( path );
+	dataDB( listhabitsbyuser+'?group_level='+depth+'&startkey=["'+ username +'"]&endkey=["'+username+'",{}]', function(err, data){
 		if( err ){
 			fn(err, null);
 		} else{

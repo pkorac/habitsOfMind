@@ -96,24 +96,9 @@ exports.dataViews.lists = {
 			reduce: 'function ( keys, values, rereduce ){\n\tif( rereduce ){\n\n\t\tvar sub1 = 0;\n\t\tvar sub2 = 0;\n\t\tvar sub3 = 0;\n\t\tvar sumall = 0;\n\t\t\n\t\tfor ( var i = 0; i < values.length; i++ ){\n\t\t\tsub1 += values[i].subhabits[0];\n\t\t\tsub2 += values[i].subhabits[1];\n\t\t\tsub3 += values[i].subhabits[2];\n\t\t\tsumall += values[i].all;\n\t\t}\n\n\t\treturn { subhabits: [sub1, sub2, sub3], all: sumall };\n\t} else{\n\t\tvar sub1 = 0;\n\t\tvar sub2 = 0;\n\t\tvar sub3 = 0;\n\t\tfor( var i = 0; i < values.length; i++){\n\t\t\tsub1 += parseFloat(values[i][0]);\n\t\t\tsub2 += parseFloat(values[i][1]);\n\t\t\tsub3 += parseFloat(values[i][2]);\n\t\t}\n\t\treturn { \n\t\t\tsubhabits: [sub1, sub2, sub3], \n\t\t\tall: values.length\n\t\t};\n\t}\n}',
 			url: "_design/lists/_view/habitsByGroup"
 		},
-		habitsByUserSub0: {
-			map: 'function (doc) {\nvar d = new Date( doc.date );\nvar years = d.getFullYear();\nvar months = d.getMonth();\nvar days = d.getDate();\nvar hours = d.getHours();\nvar minutes = d.getMinutes();\n  emit([doc.user, doc.habit, years, months, days, hours, minutes], doc.subhabits[0]);\n\n}',
-			reduce: '_stats',
-			url: "_design/lists/_view/habitsByUserSub0"
-		},
-		habitsByUserSub1: {
-			map: 'function (doc) {\nvar d = new Date( doc.date );\nvar years = d.getFullYear();\nvar months = d.getMonth();\nvar days = d.getDate();\nvar hours = d.getHours();\nvar minutes = d.getMinutes();\n  emit([doc.user, doc.habit, years, months, days, hours, minutes], doc.subhabits[1]);\n\n}',
-			reduce: '_stats',
-			url: "_design/lists/_view/habitsByUserSub1"
-		},
-		habitsByUserSub2: {
-			map: 'function (doc) {\nvar d = new Date( doc.date );\nvar years = d.getFullYear();\nvar months = d.getMonth();\nvar days = d.getDate();\nvar hours = d.getHours();\nvar minutes = d.getMinutes();\n  emit([doc.user, doc.habit, years, months, days, hours, minutes], doc.subhabits[2]);\n\n}',
-			reduce: '_stats',
-			url: "_design/lists/_view/habitsByUserSub2"
-		},
 		habitsByUser: {
-			map: 'function (doc) {\n   if( doc.subhabits && doc.habit && doc.user && doc.date && doc.group ){\n\n\tvar d = new Date( doc.date );\n\tvar years = d.getFullYear();\n\tvar months = d.getMonth();\n\tvar days = d.getDate();\n\tvar hours = d.getHours();\n\tvar minutes = d.getMinutes();\n\n\tvar med = 0;\n\tfor ( var i = 0; i < doc.subhabits.length; i++){\n\t\tmed += parseFloat( doc.subhabits[i] );\n\t}\n\tmed /= doc.subhabits.length;\n\temit([doc.user, doc.habit, years, months, days, hours, minutes], med);\n   }\n}',
-			reduce: '_stats',
+			map: 'function (doc) {\n  emit([doc.user, doc.habit, doc.date], doc.subhabits);\n}',
+			reduce: 'function ( keys, values, rereduce ){\n\tif( rereduce ){\n\n\t\tvar sub1 = 0;\n\t\tvar sub2 = 0;\n\t\tvar sub3 = 0;\n\t\tvar sumall = 0;\n\t\t\n\t\tfor ( var i = 0; i < values.length; i++ ){\n\t\t\tsub1 += values[i].subhabits[0];\n\t\t\tsub2 += values[i].subhabits[1];\n\t\t\tsub3 += values[i].subhabits[2];\n\t\t\tsumall += values[i].all;\n\t\t}\n\n\t\treturn { subhabits: [sub1, sub2, sub3], all: sumall };\n\t} else{\n\t\tvar sub1 = 0;\n\t\tvar sub2 = 0;\n\t\tvar sub3 = 0;\n\t\tfor( var i = 0; i < values.length; i++){\n\t\t\tsub1 += parseFloat(values[i][0]);\n\t\t\tsub2 += parseFloat(values[i][1]);\n\t\t\tsub3 += parseFloat(values[i][2]);\n\t\t}\n\t\treturn { \n\t\t\tsubhabits: [sub1, sub2, sub3], \n\t\t\tall: values.length\n\t\t};\n\t}\n}',
 			url: "_design/lists/_view/habitsByUser"
 		}
 	}

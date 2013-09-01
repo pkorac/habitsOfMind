@@ -71,12 +71,14 @@ exports.editHabitSubmit = function( req, res, next){
 // HABITS HISTORY
 exports.history = function(req, res, next){
 	
-		db.habitsByUser( req.session.username, function(err, data){
+		db.habitsByUser( req.session.username, 5, function(err, data){
+		
 			if(err){
+				if ( err ) console.log( err );
 				next();
 			} else{
 
-				console.log( util.inspect( data, {colors: true, depth: 5} ) );				
+				console.log( util.inspect( data, {colors: true, depth: 10} ) );				
 				var habits = []; // has a name and a record
 
 

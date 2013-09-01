@@ -1,6 +1,12 @@
 
 <% layout('../boilerplate') %>
 
+<% block('globaljs', "var habitsData = " + JSON.stringify( habits ) ) %>
+
+<% script('/js/raphael-min.js') %>
+<% script('/js/habitsHistory.js') %>
+
+<div id="paper"></div>
 
 <ul>
 	<% for ( var i = 0; i < habits.length; i++ ){ %>	
