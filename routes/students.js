@@ -14,14 +14,14 @@ exports.editProfile = function(req,res,next){
 			next();
 		}else{	
 			
-			res.render('students/edit', {title: "Student area",
-											id: user._id,
-											username: user.name,
-											email: user.email,
-											gender: user.gender,
-											habitsClass: user.habitsClass,
-											genders: config.genders,
-											message: req.flash(config.flashMessage) } );
+			res.render('students/edit', {  title: "Edit profile",
+										subtitle: null,
+										id: user._id,
+										username: user.name,
+										email: user.email,
+										messageSuccess: req.flash(config.flashMessageSuccess),
+										messageError: req.flash(config.flashMessage)
+									} );
 		}
 	} );
 }
@@ -29,29 +29,32 @@ exports.editProfile = function(req,res,next){
 exports.editProfileSubmit = function(req,res,next){
 	if ( req.body ){
 		
-		var id = req.body.id;
-		var params = {
-			email: req.body.email,
-			password: req.body.password
-		};
+		if ( req.body.newPassword1 !== req.body.newPassword2 ){
+			req.flash( config.flashMessage, "Passwords don't match" );
+			res.redirect( req.path );
+			return;			
+
+		} else{
+
+			var id = req.body.id;
+			var params = {
+				email: req.body.email,
+				password: req.body.newPassword1
+			};
+			
+			db.editUser( id, params, function(err, updatedUser){
+				if( err ){
+					req.flash( config.flashMessage, err.message );
+					res.redirect( req.path );
+				} else{
+					
+					req.flash( config.flashMessageSuccess, "Details Saved");
+					res.redirect( req.path );							
+				}			
+			} );		
+		}
 		
-		db.editUser( id, params, function(err, updatedUser){
-			if( err ){
-				req.flash( config.flashMessage, err.message );
-				res.redirect( '/students/' );
-			} else{
-				
-				req.flash( config.flashMessage, "Details Saved");
-				res.redirect( '/students/' );							
-			}			
-		} );
 	} else{
 		next();
 	}	
-};
-
-exports.history = function(req,res){
-	res.render('students/history', { title: req.session.username,
-									 subtitle: null
-	} );
 };

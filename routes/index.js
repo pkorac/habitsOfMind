@@ -33,9 +33,14 @@ module.exports = function(app, config, auth){
 	////////////////////////////////////////////////////////////////////////////////	
 	// Students
 	app.get('/students/', auth.check, students.landing );
-	app.get('/students/history', auth.check, students.history );
-	app.get('/students/edit', auth.check, students.editProfile );
-	app.post('/students/edit', auth.check, students.editProfileSubmit ); // post
+	app.get('/students/habits', auth.check, habits.habitsList );
+	app.get('/students/habits/edit', auth.check, habits.editHabit );
+	app.post('/students/habits/edit', auth.check, habits.editHabitSubmit ); // post
+	app.get('/students/history', auth.check, habits.history );
+	
+	app.get('/students/edit', auth.check, admin.editProfile );	
+	app.post('/students/edit', auth.check, admin.editProfileSubmit ); // post
+
 
 
 	////////////////////////////////////////////////////////////////////////////////	
@@ -46,14 +51,24 @@ module.exports = function(app, config, auth){
 	////////////////////////////////////////////////////////////////////////////////
 	// Teachers
 	app.get('/teachers/', auth.check, teachers.landing );
-	app.get('/teachers/groups/', auth.check, teachers.listGroups );
 	
-	app.get('/teachers/groups/create', auth.check, teachers.createGroup );
-	app.post('/teachers/groups/create', auth.check, teachers.createGroupSubmit ); // post
+	app.get('/teachers/habits', auth.check, habits.habitsList );
+	app.get('/teachers/habits/edit', auth.check, habits.editHabit );
+	app.post('/teachers/habits/edit', auth.check, habits.editHabitSubmit ); // post
+	app.get('/teachers/history', auth.check, habits.history );
 	
-	app.get('/teachers/groups/populate', auth.check, teachers.populate );
-	app.post('/teachers/groups/populate', auth.check, teachers.populateSubmit ); // post	
-
+	app.get('/teachers/admin', auth.check, teachers.admin );
+	app.get('/teachers/edit', auth.check, teachers.editProfile );	
+	app.post('/teachers/edit', auth.check, teachers.editProfileSubmit ); // post
+	
+	app.get('/teachers/admin/groups/', auth.check, teachers.listGroups );
+	
+	app.get('/teachers/admin/groups/create', auth.check, teachers.createGroup );
+	app.post('/teachers/admin/groups/create', auth.check, teachers.createGroupSubmit ); // post
+	
+	app.get('/teachers/admin/groups/populate', auth.check, teachers.populate );
+	app.post('/teachers/admin/groups/populate', auth.check, teachers.populateSubmit ); // post
+		
 	
 	////////////////////////////////////////////////////////////////////////////////
 	// Admin

@@ -1,44 +1,31 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Group Populated</title>
-	<link rel="stylesheet" href="../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% layout('../boilerplate') %>
 
-	
-</head>
-<body>
-	
-	
-	<div class="alert alert-success">
-		Group Populated
-	</div>
-	
-	<div>
-		<p>The secret for the group is <strong><%= secret %></strong> and here are the registration numbers: </p>
-		
-		<% if ( boyTokens.length > 0 ) { %>
-			<h3>Boys</h3>
-			<ul>
-				<% for (var i = 0; i < boyTokens.length; i++ ){ %>
-					<li><strong><%= boyTokens[i] %></strong></li>
-				<% } %>
-			</ul>
-		<% } %>
+<div class="alert alert-success">
+	Users added
+</div>
 
-		<% if ( girlTokens.length > 0 ) { %>		
-		<h3>Girls</h3>
-		<ul>
-			<% for (var i = 0; i < girlTokens.length; i++ ){ %>
-				<li><strong><%= girlTokens[i] %></strong></li>
-			<% } %>
-		</ul>
+
+<h3>The secret:</h3>
+<h4><span class="label label-primary"><%= secret %></span></h4>
+
+<% if ( boyTokens.length > 0 ) { %>
+	<h3>Boys' tokens:</h3>
+	<ul class="list-unstyled">
+		<% for (var i = 0; i < boyTokens.length; i++ ){ %>
+			<li><h4><span class="label label-success"><%= boyTokens[i] %></span></h4></li>
 		<% } %>
-		
-		
-	</div>
-	
-	
-</body>
-</html>
+	</ul>
+<% } %>
+
+<% if ( girlTokens.length > 0 ) { %>		
+<h3>Girls' tokens:</h3>
+<ul class="list-unstyled">
+	<% for (var i = 0; i < girlTokens.length; i++ ){ %>
+		<li><h4><span class="label label-warning"><strong><%= girlTokens[i] %></span></h4></li>
+	<% } %>
+</ul>
+<% } %>
+
+<div class="clearfix">&nbsp;</div>
+<div class="clearfix">&nbsp;</div>
+<a href="../" type="button" class="btn btn-default btn-block">Done</a>

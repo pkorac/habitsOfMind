@@ -1,12 +1,10 @@
 <% layout('../boilerplate') -%>
 
-<% block('nav_groups', "active") -%>
-
 
 <ul>
 <% for ( var i = 0; i < groups.length; i ++ ){ %>
 	<li>
-		<strong><%= groups[i].name %></strong>: <%= groups[i].teacher %>, year <%= groups[i].year %>		
+		<a href="?groupid=<%= groups[i]._id %>"><strong><%= groups[i].name %></strong>: <%= groups[i].teacher %>, year <%= groups[i].year %></a>
 	</li>				
 <% } %>
 </ul>

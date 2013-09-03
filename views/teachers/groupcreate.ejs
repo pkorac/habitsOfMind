@@ -1,40 +1,31 @@
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - New Group</title>
-	<link rel="stylesheet" href="../../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
+<% layout('../boilerplate') %>
 
-	
-</head>
-<body>
-	
-	<h1>New Group</h1>
-	
-	<% if ( message ) { %>
-	<%= message %>
-	<% } %>
-	
-	<form method="post" action="/teachers/groups/create">
-		<div>
-	        <label>Teacher:</label>
-	        <input type="text" name="teacher"/>
-	    </div>
-		<div>
-	        <label>Year:</label>
-	        <input type="number" name="year"/>
-	    </div>
-	    <div>
-	        <label>Name:</label>
-	        <input type="text" name="habitsGroup"/>
-	    </div>
-	    <div>
-	        <input type="submit" value="Create"/>
-	    </div>	
-	</form>
-	
-	
+<% if ( message ) { %>
+<%= message %>
+<% } %>
 
-</body>
-</html>
+<form method="post" action="">
+	<div class="form-group">
+        <label for="inputTeacher">Teacher:</label>
+        <input id="inputTeacher" class="form-control" type="text" name="teacher"/>
+    </div>
+	<div class="form-group">
+        <label for="inputYear">Year:</label>
+        <input id="inputYear" class="form-control" type="number" name="year"/>
+    </div>
+    <div class="form-group">
+        <label for="inputName">Name:</label>
+        <input id="inputName" class="form-control" type="text" name="habitsGroup"/>
+    </div>
+    
+    <div class="clearfix">&nbsp;</div>
+    
+    <div class="row">
+		<div class="col-sm-6 text-left">
+			<a href="../" type="button" class="btn btn-default">Cancel</a>
+		</div>
+		<div class="col-sm-6 text-right">
+			<button type="submit" class="btn btn-success">Create</button>
+		</div>
+	</div>	
+</form>

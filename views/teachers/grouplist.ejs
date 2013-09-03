@@ -1,53 +1,35 @@
+<% layout('../boilerplate') %>
 
-<!doctype html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Admin - Groups</title>
-	<link rel="stylesheet" href="../../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
 
-	
-</head>
-<body>
-	
-<div class="container-fluid">
 
-	<div class="row-fluid">
 
-	<div class="span12">
-		<h1>Admin area</h1>
-		<h3>Groups</h3>
-		
-		<a href="create">Create New</a> |
-		<a href="populate">Add students</a>
-		
-	
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>Group name</th>
-					<th>Year</th>
-					<th>Teacher</th>
-				</tr>
-			</thead>
-			<tbody>
-		
-			<% for ( var i = 0; i < groups.length; i ++ ){ %>
-				<tr>
-					<td><%= groups[i].name %></td>
-					<td><%= groups[i].year %></td>
-					<td><%= groups[i].teacher %></td>
-				</tr>
-			<% } %>
-			
-			</tbody>
-		</table>
-		
+<div class="row">
+	<div class="col-sm-6">
+		<h2>List</h2>
 	</div>
-	
+	<div class="col-sm-6 text-right">
+		<a href="populate" class="btn btn-default create-button">Add students</a>
+		<a href="create" class="btn btn-success create-button">Add a group</a>
 	</div>
-	
 </div>
-</body>
-</html>
+
+<table class="table table-codnensed">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Year</th>
+			<th class="text-right">Teacher</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% for ( var i = 0; i < groups.length; i ++ ){ %>
+			<tr>
+				<td><%= groups[i].name %></td>
+				<td><%= groups[i].year %></td>
+				<td class="text-right"><%= groups[i].teacher %></td>
+			</tr>
+		<% } %>	
+		
+	</tbody>
+
+</table>

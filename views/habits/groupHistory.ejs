@@ -1,0 +1,44 @@
+
+<% layout('../boilerplate') %>
+
+<% block('globaljs', "var habitsData = " + JSON.stringify( habits ) ) %>
+
+<% script('/js/raphael-min.js') %>
+<% script('/js/habitsHistory.js') %>
+
+<h2>On average we are:</h2>
+<div id="habitsAveragesBox">
+	<% for ( var i = 0; i < habitsAverages.length; i++ ) { %>	
+	<div class="habitBar">
+		<div class="habitsBarTextTop">Very</div>
+		<div class="habitsBarTextBottom">a bit</div>
+		<div class="habitsBarTextHabit"><%= habitsAverages[i].habitName %></div>
+		<div class="habitsBarFill <%= habitsAverages[i].habit %>-fill" style="height: <%= habitsAverages[i].value*100 %>%"></div>
+	</div>
+	<% } %>
+	
+</div>
+
+<div class="clearfix"></div>
+<br /><br />
+
+
+
+
+<h2>In the past we felt:</h2>
+<div id="paper"></div>
+
+
+<!-- 
+<ul>
+	<% for ( var i = 0; i < habits.length; i++ ){ %>	
+		<li class="<%= habits[i].id %>"><%= habits[i].id %>
+			<ul>
+				<% for ( var j = 0; j < habits[i].records.length; j++ ){ %>
+					<li><%= habits[i].records[j].value %></li>
+				<% } %>	
+			</ul>
+		</li>
+	<% } %>
+</ul>
+//-->

@@ -10,10 +10,12 @@ exports.landing = function( req, res ){
 								  habits: config.habits });
 };
 
+/*
 exports.history = function( req, res ){
 	res.render('admin/history', { title: req.session.username,
 								  subtitle: "History of my habits" });
 };
+*/
 
 exports.admin = function(req,res,next){
 	res.render('admin/admin', { title: req.session.username, subtitle: "Administrative options" } );

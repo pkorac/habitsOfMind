@@ -678,9 +678,7 @@ saveHabit( params, function(err, data){
 
 
 function habitsByUser( username, depth, fn ){
-	// group=true&startkey=["ali"]&endkey=["ali",{}]
 	
-	// START AND END KEYS ARE WRONG!!!!!
 	var path = listhabitsbyuser+'?group_level='+depth+'&startkey=["'+ username +'"]&endkey=["'+username+'",{}]';
 	dataDB( path, function(err, data){
 		if( err ){
@@ -691,8 +689,18 @@ function habitsByUser( username, depth, fn ){
 	} );
 }
 
-function habitsByGroup( fn ){
+function habitsByGroup( groupid, depth, fn ){		
 	
+	// START AND END KEYS ARE WRONG!!!!!
+	var path = listhabitsbygroup+'?group_level='+depth+'&startkey=["'+groupid+'"]&endkey=["'+groupid+'",{}]';
+	dataDB( path, function(err, data){
+		if( err ){
+			console.log( err );
+			fn(err, null);
+		} else{
+			fn(null, data);
+		}
+	} );
 }
 
 
