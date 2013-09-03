@@ -6,7 +6,28 @@
 <% script('/js/raphael-min.js') %>
 <% script('/js/habitsHistory.js') %>
 
+<h2>On average I am:</h2>
+<div id="habitsAveragesBox">
+	<% for ( var i = 0; i < habitsAverages.length; i++ ) { %>	
+	<div class="habitBar">
+		<div class="habitsBarTextTop">Very</div>
+		<div class="habitsBarTextBottom">a bit</div>
+		<div class="habitsBarTextHabit"><%= habitsAverages[i].habitName %></div>
+		<div class="habitsBarFill <%= habitsAverages[i].habit %>-fill" style="height: <%= habitsAverages[i].value*100 %>%"></div>
+	</div>
+	<% } %>
+	
+</div>
+
+<div class="clearfix"></div>
+<br /><br />
+
+
+
+
+<h2>In the past I felt:</h2>
 <div id="paper"></div>
+
 
 <!-- 
 <ul>

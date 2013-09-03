@@ -1,7 +1,7 @@
 <% layout('../boilerplate') %>
 
-<ul>
+<ul id="habitsList" class="list-unstyled">
 <% for( var habit in habits ){ %>
-	<li><a href="edit?habit=<%= habit %>"><%= habits[habit].name %></a></li>	
+	<li class="habitsListItem "><a class="<%= habit %>-fill" href="edit?habit=<%= habit %>"><%= habits[habit].name %></a></li>	
 <% } %>
 </ul>

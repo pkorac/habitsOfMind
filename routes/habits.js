@@ -5,7 +5,7 @@ var config = require('../config'),
 // LIST HABITS
 exports.habitsList = function(req,res,next){
 	res.render( 'habits/habitsList', {  title: req.session.username, 
-											subtitle: "My Habits",
+											subtitle: "Edit my Habits",
 											habits: config.habits });
 };
 
@@ -71,6 +71,7 @@ exports.editHabitSubmit = function( req, res, next){
 // HABITS HISTORY
 exports.history = function(req, res, next){
 	
+		// Get detail
 		db.habitsByUser( req.session.username, 8, function(err, data){
 		
 			if(err){
@@ -103,12 +104,25 @@ exports.history = function(req, res, next){
 						}
 				}
 				
-				
-				res.render('habits/history', {  title: "My habits history",
-												subtitle: null,
-												habits: habits
-				} );
-				
+				// Get Average
+				db.habitsByUser( req.session.username, 2, function(err, data){
+					if ( err ){
+						console.log( err );
+						next();
+					} else{
+						var habitsAverages = [];
+						for( var i = 0; i < data.rows.length; i++ ){
+							habitsAverages.push( { habit: data.rows[i].key[1],
+												   habitName: config.habits[data.rows[i].key[1]].name,
+												  value: data.rows[i].value.sum/data.rows[i].value.count } );
+						}
+						res.render('habits/history', {  title: req.session.username,
+														subtitle: "My habits history",
+														habits: habits,
+														habitsAverages: habitsAverages
+						} );	
+					}
+				});				
 			}
 		} );
 };
