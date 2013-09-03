@@ -6110,7 +6110,7 @@ body {
   background: #eeeeee;
 }
 #form-signin {
-  width: 330px;
+  width: 300px;
   margin: 0 auto;
 }
 #form-signin .form-control {
@@ -6128,6 +6128,10 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   margin-bottom: 14px;
+}
+/* Registration Page */
+.registrationContainer {
+  width: 300px;
 }
 /* Tables and editing */
 .create-button {

@@ -2,39 +2,71 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<title>Registration - add details</title>
-	<link rel="stylesheet" href="../css/bootstrap.min.css" title="Bootstrap" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="../css/bootstrap-responsive.min.css" title="Bootstrap responsive" type="text/css" media="screen" charset="utf-8">
-
+	<title>Habits of Mind</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
 	
 </head>
-<body>
-	
-	<h1>Registration - add details</h1>
+<body class="form-signin">
 
-	<% if ( message ) { %>
-	<%= message %>
-	<% } %>
+<!-- Wrapper -->
+<div id="wrap">
+	<div class="container registrationContainer">
+
+		<!-- Title -->
+		<div class="title">			
+			
+			<h1 class="heading">Registration</h1>
+				<p class="subheading">Please enter the registration token and the secret</p>
+		</div>
+
+
+		<% if ( message ) { %>
+		<%= message %>
+		<% } %>
+		
+		<form method="POST" action="/register/details">
+		    <input type="hidden" name="id" value="<%= id %>" />
+			<div class="form-group">
+		        <label for="inputName">User name:</label>
+		        <input type="text" id="inputName" name="username" class="form-control"/>
+		    </div>
+		    <div class="form-group">
+		        <label for="inputEmail">Email:</label>
+		        <input type="email" id="inputEmail" name="email" class="form-control"/>
+		    </div>
+		    <div class="form-group">
+		        <label for="inputPassword">Password:</label>
+		        <input type="password" id="inputPassword" name="password" class="form-control"/>
+		    </div>
+		    <div class="form-group">
+		    	<button type="submit" class="btn btn-primary btn-block">Create profile</button>
+		    </div>	
+		</form>
+
+
+
 	
-	<p>Enter your secret and registration code</p>
-	<form method="POST" action="/register/details">
-        <input type="hidden" name="id" value="<%= id %>" />
-		<div>
-	        <label>User name:</label>
-	        <input type="text" name="username"/>
-	    </div>
-	    <div>
-	        <label>Email:</label>
-	        <input type="email" name="email"/>
-	    </div>
-	    <div>
-	        <label>Password:</label>
-	        <input type="password" name="password"/>
-	    </div>
-	    <div>
-	        <input type="submit" value="Register"/>
-	    </div>	
-	</form>
+	</div><!--  End of container -->
+</div>
+
+
+
+
+<!-- FOOTER -->
+<div id="footer">
+	<div class="container">
+		<p class="text-muted text-center"><small>&copy; 2013 Thomas Tallis School &amp; Peter Koraca</small></p>
+	</div>
+</div>
+
+	
+	
+
+
+<!-- Javascript Embeds -->
+<script type="text/javascript" src="js/jquery.js" ></script>
+<script type="text/javascript" src="js/bootstrap.min.js" ></script>
 
 </body>
 </html>

@@ -72,7 +72,7 @@ exports.registerDetails = function(req,res,next){
 				if(err){
 					//console.log(err);
 					req.flash( config.flashMessage, err.message );
-					res.render('registerAddDetails', {message: req.flash(config.flashMessage), id: id} );
+					res.render('registerAddDetails', {message: req.flash(config.flashMessage), id: id } );
 				} else if(user){
 					
 					res.render('registered', {username: user.name});
