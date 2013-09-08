@@ -6220,8 +6220,15 @@ body {
   text-decoration: none;
   text-align: center;
   line-height: 100px;
+  border-radius: 4px;
 }
 .habitsListItem a:hover {
   opacity: 0.8;
   text-decoration: none;
+}
+#landing_logo {
+  width: 34.29999997%;
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 200px;
 }

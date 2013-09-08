@@ -19,7 +19,7 @@ app.configure( function(){
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
 	app.engine("ejs", engine);
-	app.set('view cache', true );
+//	app.set('view cache', true );
 	app.use(express.compress());
 	app.use( express.static('public') );
 //	app.use(express.logger('dev'));
