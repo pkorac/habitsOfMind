@@ -679,29 +679,179 @@ saveHabit( params, function(err, data){
 
 function habitsByUser( username, depth, fn ){
 	
-	var path = listhabitsbyuser+'?group_level='+depth+'&startkey=["'+ username +'"]&endkey=["'+username+'",{}]';
+	// Depth:
+	// - THISYEAR
+	// - THISMONTH
+	// - THISWEEK
+
+	var path = listhabitsbyuser;
+	
+	var spanOneWeek = 1000*60*60*24*7;
+	var spanOneMonth = spanOneWeek*4;			
+	var spanOneYear = 1000*60*60*24*366; // to be continued
+
+	
+	var now = new Date();
+	
+	var thisyear = now.getFullYear();
+	var thismonth = now.getMonth();
+	var today = now.getDate();	
+
+	var then = new Date();			
+
+	//?group_level=5&startkey=["THISMONTH","admin",2013,8]&endkey=["THISMONTH","admin",2013,8,{}]
+	
+	// Configure the path
+	if ( depth === "THISYEAR" ){
+		
+		then = new Date( now-spanOneYear );
+		var thatYear = then.getFullYear();
+		
+		path += '?group_level=6&startkey=["THISYEAR","'+ username +'",'+ thatYear +']&endkey=["THISYEAR","'+ username +'",'+ thisyear +',{}]';
+	} else if (depth === "THISMONTH" ){
+	
+		then = new Date( now-spanOneMonth );
+		var thatYear = then.getFullYear();
+		var thatMonth = then.getMonth();
+		
+		path += '?group_level=7&startkey=["THISMONTH","'+ username +'",'+ thatYear +','+ thatMonth +']&endkey=["THISMONTH","'+ username +'",'+ thisyear +','+ thismonth +',{}]';
+	} else if ( depth === "THISWEEK" ){
+	
+		then = new Date( now-spanOneMonth );
+		var thatYear = then.getFullYear();
+		var thatMonth = then.getMonth();
+		var thatDay = then.getDate();
+	
+		path += '?group_level=8&startkey=["THISWEEK","'+ username +'",'+ thatYear +','+ thatMonth +','+ thatDay +']&endkey=["THISWEEK","'+ username +'",'+ thisyear +','+ thismonth +','+ today +',{}]';
+	} else{
+		fn( new Error("Depth not specified"), null );
+		return;
+	}
+	
+	// Make the call
 	dataDB( path, function(err, data){
 		if( err ){
 			fn(err, null);
 		} else{
-			fn(null, data);
+			var habits = [];
+			for ( var i = 0; i < data.rows.length; i++ ){
+				var habit = {
+						habit: data.rows[i].key[ data.rows[i].key.length-1 ],
+						value: data.rows[i].value.sum/data.rows[i].value.count
+					};
+				if ( depth === "THISYEAR") habit.date = new Date( data.rows[i].key[2], data.rows[i].key[3], data.rows[i].key[4] );
+				if ( depth === "THISMONTH") habit.date = new Date( data.rows[i].key[2], data.rows[i].key[3], data.rows[i].key[4], data.rows[i].key[5] );
+				if ( depth === "THISWEEK") habit.date = new Date( data.rows[i].key[2], data.rows[i].key[3], data.rows[i].key[4], data.rows[i].key[5], data.rows[i].key[6] );
+				habits.push( habit );
+			}
+			fn(null, habits);
 		}
 	} );
+
+
 }
 
-function habitsByGroup( groupid, depth, fn ){		
+/*
+habitsByUser( "admin", "THISYEAR", function(err, data){
+	console.log( err );
+	console.log( util.inspect( data, {colors: true, depth: 10} ) );
+	console.log( data.length );
+} );
+*/
+
+
+
+
+
+
+
+
+function habitsByGroup( groupid, depth, fn ){
 	
-	// START AND END KEYS ARE WRONG!!!!!
-	var path = listhabitsbygroup+'?group_level='+depth+'&startkey=["'+groupid+'"]&endkey=["'+groupid+'",{}]';
+	// Depth:
+	// - THISYEAR
+	// - THISMONTH
+	// - THISWEEK
+
+	var path = listhabitsbygroup;
+	
+	var spanOneWeek = 1000*60*60*24*7;
+	var spanOneMonth = spanOneWeek*4;			
+	var spanOneYear = 1000*60*60*24*366; // to be continued
+
+	
+	var now = new Date();
+	
+	var thisyear = now.getFullYear();
+	var thismonth = now.getMonth();
+	var today = now.getDate();	
+
+	var then = new Date();			
+
+	//?group_level=5&startkey=["THISMONTH","admin",2013,8]&endkey=["THISMONTH","admin",2013,8,{}]
+	
+	// Configure the path
+	if ( depth === "THISYEAR" ){
+		
+		then = new Date( now-spanOneYear );
+		var thatYear = then.getFullYear();
+		
+		path += '?group_level=6&startkey=["THISYEAR","'+ groupid +'",'+ thatYear +']&endkey=["THISYEAR","'+ groupid +'",'+ thisyear +',{}]';
+	} else if (depth === "THISMONTH" ){
+	
+		then = new Date( now-spanOneMonth );
+		var thatYear = then.getFullYear();
+		var thatMonth = then.getMonth();
+		
+		path += '?group_level=7&startkey=["THISMONTH","'+ groupid +'",'+ thatYear +','+ thatMonth +']&endkey=["THISMONTH","'+ groupid +'",'+ thisyear +','+ thismonth +',{}]';
+	} else if ( depth === "THISWEEK" ){
+	
+		then = new Date( now-spanOneMonth );
+		var thatYear = then.getFullYear();
+		var thatMonth = then.getMonth();
+		var thatDay = then.getDate();
+	
+		path += '?group_level=8&startkey=["THISWEEK","'+ groupid +'",'+ thatYear +','+ thatMonth +','+ thatDay +']&endkey=["THISWEEK","'+ groupid +'",'+ thisyear +','+ thismonth +','+ today +',{}]';
+	} else{
+		fn( new Error("Depth not specified"), null );
+		return;
+	}
+	
+	// Make the call
 	dataDB( path, function(err, data){
 		if( err ){
-			console.log( err );
 			fn(err, null);
 		} else{
-			fn(null, data);
+			var habits = [];
+			for ( var i = 0; i < data.rows.length; i++ ){
+				var habit = {
+						habit: data.rows[i].key[ data.rows[i].key.length-1 ],
+						value: data.rows[i].value.sum/data.rows[i].value.count
+					};
+				if ( depth === "THISYEAR") habit.date = new Date( data.rows[i].key[2], data.rows[i].key[3], data.rows[i].key[4] );
+				if ( depth === "THISMONTH") habit.date = new Date( data.rows[i].key[2], data.rows[i].key[3], data.rows[i].key[4], data.rows[i].key[5] );
+				if ( depth === "THISWEEK") habit.date = new Date( data.rows[i].key[2], data.rows[i].key[3], data.rows[i].key[4], data.rows[i].key[5], data.rows[i].key[6] );
+				habits.push( habit );
+			}
+			fn(null, habits);
 		}
 	} );
+
+
 }
+
+
+
+
+
+/*
+habitsByGroup( "007", "THISYEAR", function(err, data){
+	console.log( err );
+	console.log( util.inspect( data, {colors: true, depth: 10} ) );
+	console.log( data.length );
+} );
+*/
+
 
 
 

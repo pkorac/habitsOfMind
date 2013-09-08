@@ -51,6 +51,8 @@ function clearDB( db, callback ){
 var creds = JSON.parse( fs.readFileSync( 'creds.json' ).toString() ); // database credentials
 		var profilesDB = couchrequest( {databaseUrl: creds.profilesDB} ); // user profiles
 		var dataDB = couchrequest( {databaseUrl: creds.dataDB} ); // user profiles
+		
+		console.log( util.inspect( creds, {colors: true} ) );
 
 // STEP 1
 // Ask to be sure

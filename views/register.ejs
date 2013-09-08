@@ -20,9 +20,14 @@
 				<p class="subheading">Please enter the registration token and the secret</p>
 		</div>
 
-		<% if ( message ) { %>
-		<%= message %>
+
+		<% if ( message.length > 0 ) { %>
+		<div class="alert alert-dismissable alert-danger">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<%= message %>
+			</div>
 		<% } %>
+
 		
 		<form method="POST" action="/register">
 			<div class="form-group">
@@ -60,6 +65,7 @@
 <!-- Javascript Embeds -->
 <script type="text/javascript" src="js/jquery.js" ></script>
 <script type="text/javascript" src="js/bootstrap.min.js" ></script>
+<script type="text/javascript" src="js/main.js" ></script>
 
 </body>
 </html>

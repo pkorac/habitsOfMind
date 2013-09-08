@@ -1,4 +1,4 @@
-var fs = require('fs');
+var fs = require('fs'), util = require('util');
 
 // Users and routes
 //	- defines which user types and their landing pages can go where
@@ -20,6 +20,8 @@ exports.defaultUserSecret = "plums";
 // Habits
 
 exports.habits = JSON.parse( fs.readFileSync('habits.json').toString() );
+//var hab = JSON.parse( fs.readFileSync('habits.json').toString() );
+//console.log( util.inspect( hab, {colors: true} ) );
 
 // Hashing
 exports.hashDepth = 10;
@@ -92,7 +94,7 @@ exports.dataViews.lists = {
 	language: "javascript",
 	views: {
 		habitsByGroup: {
-			map: 'function (doc) {\n   if( doc.subhabits && doc.habit && doc.date && doc.group ){\n\n\tvar d = new Date( doc.date );\n\tvar years = d.getFullYear();\n\tvar months = d.getMonth();\n\tvar days = d.getDate();\n\tvar hours = d.getHours();\n\tvar minutes = d.getMinutes();\n\n\tvar med = 0;\n\tfor ( var i = 0; i < doc.subhabits.length; i++){\n\t\tvar value = parseFloat( doc.subhabits[i] );\n\t\tif ( value ){\n\t\t\tmed += value;\n\t\t}\n\t}\n\tmed /= doc.subhabits.length;\n\temit([doc.group, doc.habit, years, months, days, hours, minutes], med);\n   }\n}',
+			map: 'function (doc) {\n   if( doc.subhabits && doc.habit && doc.user && doc.date && doc.group ){\n\n\tvar d = new Date( doc.date );\n\tvar years = d.getFullYear();\n\tvar months = d.getMonth();\n\tvar days = d.getDate();\n\tvar hours = d.getHours();\n\tvar minutes = d.getMinutes();\n\n\tvar med = 0;\n\tfor ( var i = 0; i < doc.subhabits.length; i++){\n\t\tvar value = parseFloat( doc.subhabits[i] );\n\t\tif ( value ){\n\t\t\tmed += value;\n\t\t}\n\t}\n\tmed /= doc.subhabits.length;\n\temit(["THISYEAR", doc.group, years, months, days, doc.habit], med);\n\temit(["THISMONTH", doc.group, years, months, days, hours, doc.habit], med);\n\temit(["THISWEEK", doc.group, years, months, days, hours, minutes, doc.habit], med);\n   }\n}',
 			reduce: '_stats',
 			url: "_design/lists/_view/habitsByGroup"
 		},
@@ -112,11 +114,12 @@ exports.dataViews.lists = {
 			url: "_design/lists/_view/habitsByUserSub2"
 		},
 		habitsByUser: {
-			map: 'function (doc) {\n   if( doc.subhabits && doc.habit && doc.user && doc.date && doc.group ){\n\n\tvar d = new Date( doc.date );\n\tvar years = d.getFullYear();\n\tvar months = d.getMonth();\n\tvar days = d.getDate();\n\tvar hours = d.getHours();\n\tvar minutes = d.getMinutes();\n\n\tvar med = 0;\n\tfor ( var i = 0; i < doc.subhabits.length; i++){\n\t\tvar value = parseFloat( doc.subhabits[i] );\n\t\tif ( value ){\n\t\t\tmed += value;\n\t\t}\n\t}\n\tmed /= doc.subhabits.length;\n\temit([doc.user, doc.habit, years, months, days, hours, minutes], med);\n   }\n}',
+			map: 'function (doc) {\n   if( doc.subhabits && doc.habit && doc.user && doc.date && doc.group ){\n\n\tvar d = new Date( doc.date );\n\tvar years = d.getFullYear();\n\tvar months = d.getMonth();\n\tvar days = d.getDate();\n\tvar hours = d.getHours();\n\tvar minutes = d.getMinutes();\n\n\tvar med = 0;\n\tfor ( var i = 0; i < doc.subhabits.length; i++){\n\t\tvar value = parseFloat( doc.subhabits[i] );\n\t\tif ( value ){\n\t\t\tmed += value;\n\t\t}\n\t}\n\tmed /= doc.subhabits.length;\n\temit(["THISYEAR", doc.user, years, months, days, doc.habit], med);\n\temit(["THISMONTH", doc.user, years, months, days, hours, doc.habit], med);\n\temit(["THISWEEK", doc.user, years, months, days, hours, minutes, doc.habit], med);\n   }\n}',
 			reduce: '_stats',
 			url: "_design/lists/_view/habitsByUser"
 		}
 	}
 };
+
 
 // Have fun

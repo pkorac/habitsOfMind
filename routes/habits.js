@@ -69,62 +69,53 @@ exports.editHabitSubmit = function( req, res, next){
 };
 
 // HABITS HISTORY
-exports.history = function(req, res, next){
+exports.history = function(req, res, next){	
+	// 
+	var habits = {};
 	
-		// Get detail
-		db.habitsByUser( req.session.username, 8, function(err, data){
-		
-			if(err){
-				if ( err ) console.log( err );
-				next();
-			} else{
+	// Get yearly
+	db.habitsByUser( req.session.username, "THISYEAR", function(err, yeardata){
+		if ( err ){
+			console.log(err);
+			next();
+		} else{
+			
+			habits.year = yeardata;
 
+			// Get monthly
+			db.habitsByUser( req.session.username, "THISMONTH", function(err, monthdata){
+				if( err ){
+					console.log( err );
+					next();
+				} else{
 				
-				var habits = []; // has an id and a record
+					habits.month = monthdata;
+					
+					
+					// Get weekly
+					db.habitsByUser( req.session.username, "THISWEEK", function(err, weekdata){
+						if( err ){
+							console.log( err );
+							next();
+						} else{
+							
+							
+							habits.week = weekdata;						
 
-				for( var i = 0; i < data.rows.length; i++ ){
-						var slicedKey = data.rows[i].key.slice(2);
-						var date = new Date( slicedKey[0], slicedKey[1], slicedKey[2], slicedKey[3], slicedKey[4] );
-						
-						var record = {  date: date, 
-										value: data.rows[i].value.sum/data.rows[i].value.count,
-										max: data.rows[i].value.max,
-										min: data.rows[i].value.min };
-
-
-						if( i == 0 ){
-							// Push the first habit and record in
-							habits.push( { id: data.rows[i].key[1], records: [ record ] } );
-						} else if( i > 0 && habits[habits.length-1].id !== data.rows[i].key[1] ){
-							// Push new habit
-							habits.push( { id: data.rows[i].key[1], records: [ record ] } );
-						} else {
-							// Push new record into the last habit in the array
-							habits[habits.length-1].records.push( record );
+							res.render('habits/history', {  title: req.session.username,
+															subtitle: "My habits history",
+															habits: habits });
+							
+							
 						}
+					});
+										
 				}
-				
-				// Get Average
-				db.habitsByUser( req.session.username, 2, function(err, data){
-					if ( err ){
-						console.log( err );
-						next();
-					} else{
-						var habitsAverages = [];
-						for( var i = 0; i < data.rows.length; i++ ){
-							habitsAverages.push( { habit: data.rows[i].key[1],
-												   habitName: config.habits[data.rows[i].key[1]].name,
-												  value: data.rows[i].value.sum/data.rows[i].value.count } );
-						}
-						res.render('habits/history', {  title: req.session.username,
-														subtitle: "My habits history",
-														habits: habits,
-														habitsAverages: habitsAverages
-						} );	
-					}
-				});				
-			}
-		} );
+			
+			});
+		}
+
+	} );	
 };
 
 
