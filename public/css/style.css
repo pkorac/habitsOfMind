@@ -6022,7 +6022,7 @@ body {
   -webkit-appearance: none;
   -moz-apperance: none;
   width: 78%;
-  height: 4px;
+  height: 3px;
   padding: 0;
   background: #eeeeee;
   border-radius: 4px;
@@ -6046,8 +6046,9 @@ body {
   width: 10%;
   height: 12px;
   float: left;
-  margin-top: -6px;
+  margin-top: -8.399999999999999px;
   font-size: 12px;
+  font-weight: 300;
   color: #999999;
 }
 .habit-box .slider-left {

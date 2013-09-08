@@ -23,6 +23,7 @@ var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "S
 
 	var howMany = 300;
 	var animSpeed = 800;
+	var minRadius = 5;
 
 	var chaosMaxRadius = 10;
 	var chaosOpacity = 0.4;
@@ -157,7 +158,7 @@ var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "S
 	function newHabitCircle( habit, value, date ){
 		var x = chaosMaxRadius + Math.random()*(width-2*chaosMaxRadius);
 		var y = height*0.5
-		var r = 0.01;
+		var r = minRadius;
 
 		var colour = habitColours[habit];
 		
@@ -208,7 +209,7 @@ var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "S
 					var rndA = Math.random()*2*Math.PI;
 					var x = width*0.5 + Math.cos(rndA)*rndRX;
 					var y = height*0.5 + Math.sin(rndA)*rndRY;	
-					var r = habits[i].value*chaosMaxRadius;
+					var r = minRadius + (habits[i].value*chaosMaxRadius-minRadius);
 					var colour = habitColours[ habits[i].habit ];
 					
 					var animation = Raphael.animation( { cx: x, cy: y, r: r, "fill": colour, opacity: chaosOpacity }, animSpeed*2, "bounce" );
@@ -264,7 +265,7 @@ var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "S
 					var x = habitsxs[ habits[i].habit ] + Math.cos( rndA )*scatter;
 					var y = centery + Math.sin( rndA )*scatter;
 					
-					var r = habits[i].value*averagesMaxRadius;
+					var r = minRadius + (habits[i].value*(averagesMaxRadius-minRadius));
 					var colour = habitColours[ habits[i].habit ];
 					
 					var animation = Raphael.animation( { cx: x, cy: y, r: r, "fill": colour, opacity: averagesOpacity }, animSpeed, "<>" );
@@ -351,7 +352,7 @@ var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "S
 					
 					var x = maxRadius + position*(width-2*maxRadius);
 					var y = habitsys[ habits[i].habit ];
-					var r = habits[i].value*maxRadius;
+					var r = minRadius + (habits[i].value*(maxRadius-minRadius));
 					var colour = habitColours[ habits[i].habit ];
 					
 					var animation = Raphael.animation( { cx: x, cy: y, r: r, "fill": colour, opacity: detailsOpacity }, animSpeed, "<>" );

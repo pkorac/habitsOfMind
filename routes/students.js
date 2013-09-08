@@ -4,7 +4,7 @@ var db = require('../db'),
 
 exports.landing = function(req,res){
 	res.render('students/landing', {title: req.session.username,
-									subtitle: "How are you today?"
+									subtitle: "How are you learning today?"
 	} );
 };
 

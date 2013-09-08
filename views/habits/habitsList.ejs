@@ -1,7 +1,12 @@
 <% layout('../boilerplate') %>
 
+
+<p>Choose a habit below and answer the three questions using simple sliders</p>
+
 <ul id="habitsList" class="list-unstyled">
 <% for( var habit in habits ){ %>
 	<li class="habitsListItem "><a class="<%= habit %>-fill" href="edit?habit=<%= habit %>"><%= habits[habit].name %></a></li>	
 <% } %>
 </ul>
+
+<p>To be a really successful learner you need to develop good habits of mind. We believe the more you think about them the stronger they get. Use the prompts to record how you’re learning.</p>

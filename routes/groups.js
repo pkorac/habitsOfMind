@@ -14,7 +14,7 @@ exports.landing = function(req,res,next){
 
 			res.render( 'groups/landing', { 
 					title: "Tutor groups",
-					subtitle: "And their habits of mind",
+					subtitle: "Our habits",
 					groups: groups 
 				});
 		} );

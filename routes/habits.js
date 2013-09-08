@@ -5,7 +5,7 @@ var config = require('../config'),
 // LIST HABITS
 exports.habitsList = function(req,res,next){
 	res.render( 'habits/habitsList', {  title: req.session.username, 
-											subtitle: "Edit my Habits",
+											subtitle: "How are you learning?",
 											habits: config.habits });
 };
 
@@ -103,7 +103,7 @@ exports.history = function(req, res, next){
 							habits.week = weekdata;						
 
 							res.render('habits/history', {  title: req.session.username,
-															subtitle: "My habits history",
+															subtitle: "How have you been learning?",
 															habits: habits });
 							
 							

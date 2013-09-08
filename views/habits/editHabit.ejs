@@ -2,6 +2,9 @@
 
 <% block('title_class', habitid ) %>
 
+
+<p>Answer the questions using simple sliders. Move them to the right to increase the value.</p>
+
 <form method="POST" action="">
 	<input type="hidden" name="habit" value="<%= habitid %>" />
 	<div class="edit-habits <%= habit.habit %>-habit">
@@ -11,9 +14,9 @@
 			<div class="habit-box">
 				<p class="question"><%= subhabit.question %></p>
 				<div class="slider-holder">
-					<div class="slider-left"><p class="text-middle">A little</p></div>
+					<div class="slider-left"><p class="text-middle">less</p></div>
 					<input name="_<%= subhabit.id %>" type="range" class="habit-slider <%= habitid %>-thumb" min="0" max="1" step="0.0001" />
-					<div class="slider-right">A Lot</div>
+					<div class="slider-right">more</div>
 				</div>								
 				<p class="explanation"><%= subhabit.explanation %></p>
 			</div>

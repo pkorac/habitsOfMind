@@ -1,5 +1,8 @@
 var fs = require('fs'), util = require('util');
 
+// THE MAIN (https) URL OF THE WEBSITE
+exports.url = "https://pktallis.herokuapp.com";
+
 // Users and routes
 //	- defines which user types and their landing pages can go where
 exports.userTypes = {
@@ -7,7 +10,7 @@ exports.userTypes = {
 	"student": "/students/",
 	"teacher": "/teachers/"
 };
-exports.genders = ["boy", "girl"];
+exports.genders = ["male", "female"];
 exports.defaultGender = "boy";
 
 exports.defaultUserType = "student";

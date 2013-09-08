@@ -32,7 +32,10 @@ module.exports = function(app, config, auth){
 
 	////////////////////////////////////////////////////////////////////////////////	
 	// Students
-	app.get('/students/', auth.check, students.landing );
+//	app.get('/students/', auth.check, students.landing );
+	app.get('/students/', auth.check, function(req,res){
+		res.redirect('/students/habits/');
+	} );		
 	app.get('/students/habits', auth.check, habits.habitsList );
 	app.get('/students/habits/edit', auth.check, habits.editHabit );
 	app.post('/students/habits/edit', auth.check, habits.editHabitSubmit ); // post
@@ -50,7 +53,10 @@ module.exports = function(app, config, auth){
 	
 	////////////////////////////////////////////////////////////////////////////////
 	// Teachers
-	app.get('/teachers/', auth.check, teachers.landing );
+//	app.get('/teachers/', auth.check, teachers.landing );
+	app.get('/teachers/', auth.check, function(req,res){
+		res.redirect('/teachers/habits/');
+	} );
 	
 	app.get('/teachers/habits', auth.check, habits.habitsList );
 	app.get('/teachers/habits/edit', auth.check, habits.editHabit );
@@ -72,7 +78,10 @@ module.exports = function(app, config, auth){
 	
 	////////////////////////////////////////////////////////////////////////////////
 	// Admin
-	app.get('/admin/', auth.check, admin.landing );
+//	app.get('/admin/', auth.check, admin.landing );
+	app.get('/admin/', auth.check, function(req,res){
+		res.redirect('/admin/habits/');
+	} );
 	
 	app.get('/admin/habits', auth.check, habits.habitsList );
 	app.get('/admin/habits/edit', auth.check, habits.editHabit );
