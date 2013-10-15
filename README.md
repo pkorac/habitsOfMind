@@ -10,9 +10,35 @@ You can find out about how the project is progressing by visiting the [Tallis Ha
 
 [All the code](https://github.com/pkorac/habitsOfMind) produced for the project is opensource and under MIT licence. You can find our repository over at [github](https://github.com/pkorac/habitsOfMind). We hope to share the project with others that might benefit from it and find collaborators to help refine and develop it further.
 
+## Our Setup
+HabitsOfMind is a [NodeJS](http://nodejs.org) application that uses [CouchDB](http://couchdb.apache.org) for the databases.
+Therefore NodeJS and Apache CouchDB have to be installed.
+
+To make our lives easier we've used [Heroku](http://www.heroku.com) (for running Node) and [Cloudant](https://cloudant.com) (for the CouchDB databases).
+
 
 ## Installation
-1. Clone the repository
-'''git clone git@github.com:pkorac/habitsOfMind.git'''
+1. Setup the development environment
+   - NodeJS
+   - CouchDB
 
-2. 
+2. Clone the repository
+```
+git clone git@github.com:pkorac/habitsOfMind.git
+```
+
+3. Create two CouchDB databases
+   - one for user profiles
+   - one for users' data
+
+4. Edit the creds.json and fill in the appropriate credentials for both of the databases
+
+
+5. Run the reset.js (this will create the first admin user and all the necessary database views).
+``` node reset.js ```	
+
+
+6. Log-in and use the platform
+
+
+Have fun
