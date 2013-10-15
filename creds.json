@@ -1,0 +1,4 @@
+{
+	"profilesDB": "https://user:key@myaccount.cloudant.com/habitsusers/",
+	"dataDB": "https://user:key@myaccount.cloudant.com/habitsdata/"
+}
