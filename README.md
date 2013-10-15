@@ -39,8 +39,7 @@ git clone git@github.com:pkorac/habitsOfMind.git
 
 6. If you're using Heroku:
    - create a new app `heroku create`
-   - push the new code to it (`git push heroku master`).
-
+   - push the new code to it `git push heroku master`
 
 7. Log-in and use the platform
 
