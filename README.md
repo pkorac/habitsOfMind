@@ -37,8 +37,10 @@ git clone git@github.com:pkorac/habitsOfMind.git
 5. Run the reset.js (this will create the first admin user and all the necessary database views).
 ``` node reset.js ```	
 
+6. If you're using Heroku create a new app (`heroku create`) and push the new code to it (`git push heroku master`).
 
-6. Log-in and use the platform
+
+7. Log-in and use the platform
 
 
 Have fun
